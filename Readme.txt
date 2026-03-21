@@ -10,10 +10,23 @@ https://github.com/Panda381/PiLibSDK
 https://www.breatharian.eu/hw/pilibsdk/index_en.html
 
 
+Intro
+=====
+PiLibSDK is a bare-metal library for Raspberry Pi modules. "Bare-metal" means
+that programs run directly on the hardware without an operating system, they
+are not controlled by the operating system, and they have full access to the
+hardware. Raspberry Pi modules can thus be used in a similar way to microchips.
+Another advantage is that the device is fully operational within 3 seconds of
+powering on. Currently, the Raspberry Zero 1, Zero 2 W, Pi 2, and Pi 3 modules
+are supported. Support for the Pi 4 and Pi 5 modules is very limited, and they
+will likely not be supported in the future either, as their benefits for
+bare-metal use are minimal.
+
+
 License
 =======
 All of my source code and data are completely free to use for any purpose. The
-exception is certain files derived from third-party sources—these are subject
+exception is certain files derived from third-party sources - these are subject
 to the original author’s license. This includes most fonts, as well as portions
 of source files taken from the Circle library and Linux code - these sections
 are marked in the source files.
@@ -40,7 +53,7 @@ If you will use another paths, edit paths in _c1.bat (set GCC_PI_PATH).
 Directories
 ===========
 !ZeroPC_Zero2_64 ... content of SD card for device "ZeroPC" with module Zero 2 64-bit.
-_devices ... devices: pibase = base Pi module, zeroPC = ZeroPC module
+_devices ... devices: pibase = base Pi module, zeroPC = ZeroPC device
 _font ... fonts
 _lib ... libraries
 _sdk ... SDK (peripherals drivers)
@@ -48,7 +61,27 @@ _tools ... compilation tools
 ZeroPC ... source codes of samples for ZeroPC device
 
 
+ZeroPC
+======
+ZeroPC is a small computer based on the Raspberry Pi Zero 1 or Zero 2 modules.
+It is typically intended for use with the Zero 2 module in 64-bit mode. In
+addition to the module, the ZeroPC includes stereo PWM audio output,
+HDMI display output, an external connector for peripherals, and an internal
+keyboard consisting of 49 microswitches. A boot loader is available, allowing
+for easy program launching from an SD card.
 
+I recommend not soldering the Zero module directly to the motherboard; instead,
+use an 8mm slot - this will allow for easy replacement of the module if you
+want to use it in another device or if you want to use a different module, such
+as swapping the Zero 2 for a Zero 1.
+
+Detailed materials for ZeroPC hardware can be found in the
+"_devices/zeropc/diagram" folder.
+
+Source code and sample programs can be found in the "ZeroPC" folder.
+
+
+----------------
 
 Notes:
 
