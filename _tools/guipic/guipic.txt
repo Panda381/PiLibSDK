@@ -1,0 +1,33 @@
+Syntax: guipic input_file output_file name format
+     input_file = BMP, PNG, JPG, DDS or TGA file
+     output_file = C source file
+     name = name of picture structure
+     format (or command)
+        without alpha: CF_R8G8B8, CF_R5G6B5, CF_R3G3B2
+        with alpha: CF_A8B8G8R8, CF_A8R8G8B8, CF_A1R5G5B5, CF_A2R5G5B4
+                    CF_A4R4G4B4, CF_A8, CF_A4, CF_A3, CF_A2, CF_A1
+        compression: CF_DXT1C, CF_DXT1C2, CF_DXT1A, CF_DXT3, CF_DXT5
+                     (CF_DXT1C2 is double sized CF_DXT1C)
+        palettes: CF_PAL, CF_PALUNI, CF_PALUNIT, CF_PALUNI2, CF_PALUNI2T,
+                  CF_PALGEM, CF_PALGEMT, CF_PAL332, CF_PALCOMP,
+                  CF_PAL1, CF_PAL2, CF_PAL3, CF_PAL4, CF_PAL5
+        commands: GENPAL=export only palettes
+                  UNI, UNIT, UNI2, UNI2T, 332, COMP=generate uniform palette (ACT file format)
+
+
+
+Exporting a TGA image with transparency:
+
+- Select / Load Selection, Channel = Layer 0 Transparency (do not check Invert)
+- Select / Save Selection, Channel = New (Name can remain blank, Alpha 1 will be used)
+- Save As, switch to TGA, "Alpha Channels" must be checked, resolution 32 bits/pixel
+
+
+Importing a TGA image with transparency:
+
+- Open and load TGA
+- Layer / New / Layer from Background
+- Select / Load Selection, Channel = Alpha 1 (do not check Invert)
+- Layer / Layer Mask / Reveal Selection
+- Layer / Layer Mask / Apply
+- In Channels, select the Alpha 1 channel and cancel it

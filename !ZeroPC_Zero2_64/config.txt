@@ -1,0 +1,58 @@
+#
+# 64-bit mode preferred: Copy this file into name "config.txt"
+#
+
+disable_overscan=1
+hdmi_force_hotplug=1
+hdmi_drive=2
+gpu_mem=64
+force_turbo=1
+
+# Raspberry Pi Zero (32-bit)
+[pi0]
+kernel=KERNEL1.IMG
+core_freq=250
+arm_freq=700
+arm_64bit=0
+
+# Raspberry Pi 1 (32-bit)
+[pi1]
+kernel=KERNEL1.IMG
+core_freq=250
+arm_freq=700
+arm_64bit=0
+
+# Raspberry Pi Zero 2 W (64-bit)
+[pi02]
+kernel=KERNEL4.IMG
+core_freq=250
+arm_freq=1000
+arm_64bit=1
+
+# Raspberry Pi 2 (64-bit)
+[pi2]
+kernel=KERNEL4.IMG
+core_freq=250
+arm_freq=900
+arm_64bit=1
+
+# Raspberry Pi 3 (64-bit)
+[pi3]
+kernel=KERNEL4.IMG
+core_freq=400
+arm_freq=1200
+arm_64bit=1
+
+# Raspberry Pi 4 (64-bit)
+[pi4]
+kernel=KERNEL6.IMG
+core_freq=400
+arm_freq=1500
+arm_64bit=1
+
+# Raspberry Pi 5 (64-bit)
+[pi5]
+kernel=KERNEL7.IMG
+core_freq=600
+arm_freq=2400
+arm_64bit=1

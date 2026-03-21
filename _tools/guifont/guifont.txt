@@ -1,0 +1,5 @@
+Syntax: guifont input_file output_file name form
+     input_file = INI file, entered with path
+     output_file = C source file
+     name = name of font structure
+     form = data format CF_A8, CF_A4, CF_A3, CF_A2, CF_A1
