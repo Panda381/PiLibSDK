@@ -113,6 +113,13 @@ extern "C" {
 #define KEYFLAG_CTRLLOCK	B12	// Ctrl CapsLock (= 0x1000)
 #define KEYFLAG_ALTLOCK		B13	// Alt CapsLock (= 0x2000)
 
+// combined keys
+#define KEY_HOME	(KEY_LEFT | KEYFLAG_ALT) // key Home
+#define KEY_END		(KEY_RIGHT | KEYFLAG_ALT) // key End
+#define KEY_PGUP	(KEY_UP | KEYFLAG_ALT) // key PageUp
+#define KEY_PGDN	(KEY_DOWN | KEYFLAG_ALT) // key PageDown
+#define KEY_SCREENSHOT	(KEY_TAB | KEYFLAG_ALT)	// key Screenshot
+
 // key map, counters of pressed keys - key is pressed if counter > 0
 extern volatile u8 KeyMap[KEY_NUM];	// key pressed counters
 extern volatile u8 KeyRelMap[KEY_NUM];	// key release counters
@@ -147,10 +154,13 @@ INLINE Bool KeyPressed(int key) { return KeyMap[key] != 0; }
 void KeyScan(void);
 
 // remap scan code to ASCII character (returns NOCHAR on invalid key)
-//  key ... key scan code KEY_* with KEYFLAG_* flags
+//  key ... key scan code KEY_* with KEYFLAG_* flags, also with CapsLock flags
 char KeyToChar(int key);
 
-// get scan code from keyboard buffer (returns NOKEY if no scan code)
+// get scan code from keyboard buffer - with CapsLock flags (returns NOKEY if no scan code)
+int KeyGetCaps();
+
+// get scan code from keyboard buffer - without CapsLock flags (returns NOKEY if no scan code)
 int KeyGet();
 
 // get character from keyboard buffer (returns NOCHAR if no valid character)

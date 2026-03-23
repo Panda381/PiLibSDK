@@ -1,6 +1,6 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.10, in progress - under development
+Pre-alpha version 0.11, in progress - under development
 
 Copyright (c) 2026 Miroslav Nemecek
 
@@ -21,6 +21,9 @@ powering on. Currently, the Raspberry Zero 1, Zero 2 W, Pi 2, and Pi 3 modules
 are supported. Support for the Pi 4 and Pi 5 modules is very limited, and they
 will likely not be supported in the future either, as their benefits for
 bare-metal use are minimal.
+
+A boot loader is available for ZeroPC device, which allows easy launching of
+programs from an SD card.
 
 
 License
@@ -52,12 +55,18 @@ If you will use another paths, edit paths in _c1.bat (set GCC_PI_PATH).
 
 Directories
 ===========
-!ZeroPC_Zero2_64 ... content of SD card for device "ZeroPC" with module Zero 2 64-bit.
-_devices ... devices: pibase = base Pi module, zeroPC = ZeroPC device
+!PiBase_1 ... content of SD card for base Raspberry Zero 1 module
+!PiBase_3 ... content of SD card for base Raspberry Zero 2 W module in 32-bit mode
+!PiBase_4 ... content of SD card for base Raspberry Zero 2 W module in 64-bit mode
+!ZeroPC_1 ... content of SD card for device ZeroPC with module Zero 1
+!ZeroPC_3 ... content of SD card for device ZeroPC with module Zero 2 32-bit
+!ZeroPC_4 ... content of SD card for device ZeroPC with module Zero 2 64-bit
+_devices ... devices: PiBase = base Pi module, ZeroPC = ZeroPC device
 _font ... fonts
 _lib ... libraries
 _sdk ... SDK (peripherals drivers)
 _tools ... compilation tools
+PiBase ... source codes of samples for base Pi module
 ZeroPC ... source codes of samples for ZeroPC device
 
 
@@ -76,7 +85,7 @@ want to use it in another device or if you want to use a different module, such
 as swapping the Zero 2 for a Zero 1.
 
 Detailed materials for ZeroPC hardware can be found in the
-"_devices/zeropc/diagram" folder.
+"_devices/ZeroPC/diagram" folder.
 
 Source code and sample programs can be found in the "ZeroPC" folder.
 

@@ -254,6 +254,10 @@ extern sFile DirTmp;		// working directory
 // file info
 extern sFileInfo FileInfoTmp;	// file info
 
+// screenshot temporary buffer of one graphics line
+#define SCREENSHOT_MAXWIDTH	1920	// max. width of screenshot
+extern u8 ScreenShotBuf[SCREENSHOT_MAXWIDTH+4];
+
 // --- public functions
 
 // check if cluster is valid
@@ -531,23 +535,20 @@ INLINE Bool DiskFormatDef(u32 magic) { return DiskFormat(FS_NONE, 0, True, magic
 // check file extension
 Bool FileCheckExt(sFileInfo* fi, const char* ext);
 
-// check application in Flash memory (application starts at address APPSTART = XIP_BASE + BOOTLOADER_SIZE)
-//   applen ... pointer to get application length, without header (NULL = not needed)
-//   proglen ... pointer to get total program length, with boot loader and with header (NULL = not needed)
-//   appcrc ... pointer to get application CRC (NULL = not needed)
-//Bool CheckApp(u32* applen, u32* proglen, u32* appcrc);
+// kernel configuration file
+#define KERNEL_CFG	"KERNEL.CFG"
 
-// check boot loader data (boot loader data are at address LOADERDATA)
-//Bool CheckLoaderData();
+// get home path and filename
+//  path ... buffer to get path, with trailing 0 (without trailing "/", or only single "/" in case of root)
+//  pathmax ... max. length of the path, without trailing 0
+//  filename ... buffer to get filename (size >= 9), without extension, max. 8 characters + trailing 0 (IMG is default extension)
+// Returns length of the path, without trailing 0.
+int GetHomePath(char* path, int pathmax, char* filename);
 
-// check application home path (returns pointer to sAppPath, or NULL on error)
-//const sAppPath* CheckAppPath();
-
-// get application home path
-//   path ... buffer of size APPPATH_PATHMAX+1 (= 248) to get path with terminating 0
-//   def ... default path (used on error)
-// Sets home path as current directory. Returns length of the path.
-//int GetHomePath(char* path, const char* def);
+// Do one screen shot (returns False on error)
+//  Generates /NNNNNxxx.BMP in root of SD card. NNNNN=target filename, xxx=number.
+//  This may take a few seconds to write.
+Bool ScreenShot(void);
                                              
 #ifdef __cplusplus
 }

@@ -1,0 +1,25 @@
+^YZeroPC Boot Loader^0
+
+^WUP/DOWN^0 ...... move cursor
+^WLEFT/RIGHT^0 ... move page
+^WHOME/END^0 ..... start/end
+^WEnter^0 ........ run program
+^WBackSpace^0 .... directory up
+^WAlt+Tab^0 ...... Screenshot
+
+loading text *.TXT
+	- text width = 40 characters
+	- text height = 15 or 30 rows
+	- ^^ is prefix of control characters
+		^^^^ ... print ^^ character
+		^^1..^^9 ... print character with code 1..9
+		^^A..^^V ... print character with code 10..31
+		^^0 ... normal gray text
+		^^W ... white text
+		^^X ... green text
+		^^Y ... yellow text
+		^^Z ... red text
+		^^[ ... start invert
+		^^] ... stop invert
+
+Image BMP: RGB888 24-bit

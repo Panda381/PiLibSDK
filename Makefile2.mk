@@ -86,6 +86,9 @@ LDSCRIPT = ${PI_ROOT_PATH}/linker.ld
 # SDK subdir
 DEFINE += -D SDK_SUBDIR=${PI_SDK_DIR}
 
+# Run mode
+DEFINE += -D RUNMODE=${RUNMODE}
+
 # Architecture 32/64 bits
 DEFINE += -D AARCH=${AARCH}
 
@@ -94,6 +97,9 @@ DEFINE += -D RASPPI=${RASPPI}
 
 # Number of cores
 DEFINE += -D CORES=${CORES}
+
+# Target filename
+DEFINE += -D TARGET=\"${TARGET}\"
 
 # System stack size
 DEFINE += -D SYS_STACK_SIZE=${SYS_STACK_SIZE}

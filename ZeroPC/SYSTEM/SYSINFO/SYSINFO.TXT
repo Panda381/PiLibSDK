@@ -1,0 +1,14 @@
+^YSystem Information^0
+
+- Board
+- Firmware
+- Chip and CPU
+- Memory
+- Frequency
+- SD card
+- Temperature
+- Voltage
+- Frame Buffer
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

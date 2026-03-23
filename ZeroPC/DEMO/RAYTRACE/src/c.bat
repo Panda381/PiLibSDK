@@ -1,5 +1,5 @@
 @echo off
-rem Compilation...
+rem Compilation
 cd ..
 call c.bat
 cd src

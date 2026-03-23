@@ -1,5 +1,5 @@
 @echo off
-rem Delete...
+rem Delete
 cd ..
 call d.bat
 cd src

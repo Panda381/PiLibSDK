@@ -482,7 +482,7 @@ void KeyScan(void)
 }
 
 // remap scan code to ASCII character (returns NOCHAR on invalid key)
-//  key ... key scan code KEY_* with KEYFLAG_* flags
+//  key ... key scan code KEY_* with KEYFLAG_* flags, also with CapsLock flags
 char KeyToChar(int key)
 {
 	// get flags
@@ -512,8 +512,8 @@ char KeyToChar(int key)
 	return ch;
 }
 
-// get scan code from keyboard buffer (returns NOKEY if no scan code)
-int KeyGet()
+// get scan code from keyboard buffer - with CapsLock flags (returns NOKEY if no scan code)
+int KeyGetCaps()
 {
 #if !SYSTICK_KEYSCAN	// call KeyScan() function from SysTick system timer
 	// scan keyboard
@@ -545,6 +545,14 @@ int KeyGet()
 	return key;
 }
 
+// get scan code from keyboard buffer - without CapsLock flags (returns NOKEY if no scan code)
+int KeyGet()
+{
+	int key = KeyGetCaps();
+	if (key == NOKEY) return NOKEY;
+	return key & (KEY_MASK | KEYFLAG_SHIFT | KEYFLAG_CTRL | KEYFLAG_ALT);
+}
+
 // get character from keyboard buffer (returns NOCHAR if no valid character)
 char KeyChar()
 {
@@ -553,7 +561,7 @@ char KeyChar()
 	while (True)
 	{
 		// get key scan code
-		key = KeyGet();
+		key = KeyGetCaps();
 		if (key == NOKEY) return NOCHAR; // no key
 
 		// remap scan code to ASCII character

@@ -778,10 +778,6 @@ EnableMMU:
 .global DisableMMU
 DisableMMU:
 
-	// invalidate unified TLB
-	mov	r0,#0			// R0 <- 0
-	mcr	p15,0,r0,c8,c7, 0	// invalidate unified TLB
-
 	// barrier, flush prefetch buffer
 #if RASPPI == 1
 	mcr	p15,0,r0,c7,c10,4	// data synchronization barrier (R0 = 0 at this point)
@@ -800,6 +796,24 @@ DisableMMU:
 
 	// write SCTLR register
 	mcr	p15,0,r0,c1,c0,0	// write SCTLR
+
+	// barrier, flush prefetch buffer
+#if RASPPI == 1
+	mov	r0,#0
+	mcr	p15,0,r0,c7,c10,4	// data synchronization barrier (R0 = 0 at this point)
+	mcr	p15,0,r0,c7,c5,4	// instruction synchronization barrier (R0 = 0 at this point)
+#else
+	dsb	sy			// data synchronization barrier
+	isb				// instruction synchronization barrier
+#endif
+
+	// invalidate unified TLB
+	mov	r0,#0			// R0 <- 0
+	mcr	p15,0,r0,c8,c7, 0	// invalidate unified TLB
+
+	// invalidate instruction cache and branch predictor
+	mcr	p15,0,r0,c7,c5,0	// Invalidate I-Cache
+	mcr	p15,0,r0,c7,c5,6	// Invalidate Branch Target Cache (BTB)
 
 	// barrier, flush prefetch buffer
 #if RASPPI == 1
@@ -836,12 +850,19 @@ Trampoline:
 	subs	r1,r1,#1		// loop counter
 	bne	2b			// next word
 
+#if RASPPI > 1
+	// wait for transfer end
+	dsb	sy			// wait for transfer end
+#endif
+
 	// invalidate instruction cache
 	mov	r0,#0
 	mcr	p15,0,r0,c7,c5,0	// invalidate entire instruction cache
+	mcr	p15,0,r0,c7,c5,6	// invalidate branch target cache
 #if RASPPI == 1
 	mcr	p15,0,r0,c7,c5,4	// instruction synchronization barrier
 #else
+	dsb	sy			// wait for transfer end
 	isb				// instruction synchronization barrier
 #endif
 

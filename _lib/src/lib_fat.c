@@ -59,6 +59,32 @@ const char FSFat12Text[] = "FAT12   ";
 const char FSFat16Text[] = "FAT16   ";
 const char FSFat32Text[] = "FAT32   ";
 
+// BMP file header, 24 bits per pixel
+sBmp BmpHeader = {
+	// BMP file header (size 14 bytes)
+	0x4D42,			// u16	bfType;		// 0x00: magic, 'B' 'M' = 0x4D42
+	54 + (((WIDTH*3+3)&~3)*HEIGHT) + 2, // u32 bfSize; // 0x02: file size, aligned to DWORD = 54 + (((640*3+3)&~3)*480) + 2 = 921656 = 0xE1038
+	0,			// u16	bfReserved1;	// 0x06: = 0
+	0,			// u16	bfReserved2;	// 0x08: = 0
+	54,			// 0x0A: offset of data bits after file header = 54 (0x36)
+	// BMP info header (size 40 bytes)
+	40,			// u32	biSize;		// 0x0E: size of this info header = 40 (0x28)
+	WIDTH,			// s32	biWidth;	// 0x12: width = 640 (0x280)
+	-HEIGHT,		// s32	biHeight;	// 0x16: height, negate if flip row order = -480 (0xFFFFFE20)
+	1,			// u16	biPlanes;	// 0x1A: planes = 1
+	24,			// u16	biBitCount;	// 0x1C: number of bits per pixel = 24 (0x18)
+	0,			// u32	biCompression;	// 0x1E: compression = 0 (BI_NONE)
+	((WIDTH*3+3)&~3)*HEIGHT+2, // u32 biSizeImage;	// 0x22: size of data of image + aligned file = (((640*3+3)&~3)*480) + 2 = 921602 (0xE1002)
+	2834,			// s32	biXPelsPerMeter; // 0x26: X pels per meter = 2834 (= 0xB12)
+	2834,			// s32	biYPelsPerMeter; // 0x2A: Y pels per meter = 2834 (= 0xB12)
+	0,			// u32	biClrUsed;	// 0x2E: number of user colors (0 = all)
+	0,			// u32	biClrImportant;	// 0x32: number of important colors (0 = all)
+							// 0x36
+};
+
+// screenshot temporary buffer of one graphics line
+u8 ScreenShotBuf[SCREENSHOT_MAXWIDTH+4];
+
 // boot loader resident segment
 //u8 __attribute__((section(".bootloaderdata"))) LoaderData[BOOTLOADER_DATA];
 
@@ -3111,6 +3137,223 @@ Bool FileCheckExt(sFileInfo* fi, const char* ext)
 	}
 
 	return True;
+}
+
+// get home path and filename
+//  path ... buffer to get path, with trailing 0 (without trailing "/", or only single "/" in case of root)
+//  pathmax ... max. length of the path, without trailing 0, must be > 0
+//  filename ... buffer to get filename (size >= 9), without extension, max. 8 characters + trailing 0 (IMG is default extension)
+// Returns length of the path, without trailing 0.
+int GetHomePath(char* path, int pathmax, char* filename)
+{
+	int len, n;
+	int pathlen = 0;
+
+#if USE_ZEROPC
+
+	// mount disk
+	if (!DiskAutoMount()) goto DefaultPath;
+
+	// set root directory
+	SetDir("/");
+
+	// open file
+	sFile f;
+	if (!FileOpen(&f, KERNEL_CFG)) goto DefaultPath;
+
+	// read file
+	n = FileRead(&f, path, pathmax);
+	path[n] = 0; // stop mark
+
+	// find end of path
+	while ((u8)path[pathlen] > (u8)' ') pathlen++;
+	if (pathlen == 0)
+	{
+		path[0] = PATHCHAR;
+		pathlen = 1;
+	}
+	path[pathlen] = 0;
+
+	// read filename
+	char buf[16];
+	FileSeek(&f, pathlen+1);
+	n = FileRead(&f, buf, 15);
+	FileClose(&f);
+	buf[n] = 0; // stop mark
+
+	// find start of filename
+	n = 0;
+	while ((buf[n] != 0) && ((u8)buf[n] <= (u8)' ')) n++;
+
+	// copy filename
+	len = 0;
+	while ((len < 8) && (buf[n+len] != 0) && ((u8)buf[n+len] > (u8)' '))
+	{
+		filename[len] = buf[n+len];
+		len++;
+	}
+	filename[len] = 0;
+	if (len == 0) goto DefaultPath2;
+
+	return pathlen;
+
+DefaultPath:
+
+#endif // USE_ZEROPC
+
+	// use default path and filename
+	path[0] = PATHCHAR;
+	path[1] = 0;
+	pathlen = 1;
+
+DefaultPath2:
+
+	// setup default filename
+	len = StrLen(TARGET);
+	if (len > 8) len = 8;
+	memcpy(filename, TARGET, len);
+	filename[len] = 0;
+	return pathlen;
+}
+
+// Do one screen shot (returns False on error)
+//  Generates /NNNNNxxx.BMP in root of SD card. NNNNN=target filename, xxx=number.
+//  This may take a few seconds to write.
+Bool ScreenShot(void)
+{
+	int i, len, w, h, wbs, wbd, size;
+	sFile f;
+	Bool res, wasmount;
+	const u8* s;
+	u8* d;
+
+	// check screen max. size
+	if (FrameBuffer.screenwidth > SCREENSHOT_MAXWIDTH) return False;
+
+	// update data cache (to update frame buffer)
+	CleanDataCache();
+
+	// number of tries
+	int try = 1;
+
+	// prepare filename
+	char name[16];
+	name[0] = '/';
+	len = StrLen(TARGET);
+	memcpy(name + 1, TARGET, len);
+	len++;
+	if (len > 6) len = 6;
+	while (len < 8)
+	{
+		name[len] = '0';
+		len++;
+	}
+	name[len] = '1';
+	name[len+1] = '.';
+	name[len+2] = 'B';
+	name[len+3] = 'M';
+	name[len+4] = 'P';
+	name[len+5] = 0;
+
+	// check if disk was mounted
+	wasmount = DiskMounted();
+
+ScreenShotReset:
+
+	// auto-mount disk
+	res = DiskAutoMount();
+	if (!res) DiskUnmount();
+	if (DiskAutoMount())
+	{
+		// check if file exists
+		while (FileExist(name))
+		{
+			// increase filename
+			i = len;
+			for (; i >= 6;)
+			{
+				name[i]++;
+				if ((u8)name[i] <= (u8)'9') break;
+				name[i] = '0';
+				i--;
+			}
+		}
+
+		// create file
+		res = FileCreate(&f, name);
+		if (!res && (try > 0))
+		{
+			// next try
+			DiskUnmount();
+			try--;
+			goto ScreenShotReset;
+		}
+
+		// ok
+		if (res)
+		{
+			// get image parameters
+			w = FrameBuffer.screenwidth;
+			h = FrameBuffer.screenheight;
+			wbs = FrameBuffer.screenpitch - w*4;
+			wbd = (w*3 + 3) & ~3;
+			size = wbd*HEIGHT + 2;
+			s = (const u8*)FrameBuffer.screenbuf;
+
+			// prepare BMP file header
+			BmpHeader.biSizeImage = size;
+			BmpHeader.biHeight = -h;
+			BmpHeader.biWidth = w;
+			BmpHeader.bfSize = size + 54;
+
+			// write BMP file header
+			FileWrite(&f, &BmpHeader, sizeof(BmpHeader));
+
+			// align end of line
+			ScreenShotBuf[w*3] = 0;
+			ScreenShotBuf[w*3+1] = 0;
+			ScreenShotBuf[w*3+2] = 0;
+
+			// write image data
+			for (; h > 0; h--)
+			{
+				// convert one line
+				d = ScreenShotBuf;
+				for (i = w; i > 0; i--)
+				{
+					d[0] = s[2];
+					d[1] = s[1];
+					d[2] = s[0];
+					d += 3;
+					s += 4;
+				}
+				s += wbs;
+
+				// write one line
+				i = FileWrite(&f, ScreenShotBuf, wbd);
+				res = (i == wbd);
+				if (!res && (try > 0))
+				{
+					// next try
+					DiskUnmount();
+					try--;
+					goto ScreenShotReset;
+				}
+				if (!res) break;
+			}
+
+			// write file alignment
+			FileWrite(&f, ScreenShotBuf+w*3, 2);
+
+			// close file
+			FileClose(&f);
+			DiskFlush();
+		}
+	}
+
+	// unmount disk
+	if (!wasmount) DiskUnmount();
+	return res;
 }
 
 #endif // USE_FAT
