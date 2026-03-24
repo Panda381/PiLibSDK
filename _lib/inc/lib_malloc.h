@@ -9,6 +9,8 @@
 // Typical allocation speed: small blocks (up to 256 KB) around 1 us,
 // large blocks (over 256 KB) units to tens of microseconds.
 
+// Inter-core locks are not supported on non-cached memory.
+
 #if USE_MALLOC		// 1=use memory allocator, 0=not used (lib_malloc.*)
 
 #ifndef _LIB_MALLOC_H

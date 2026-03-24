@@ -30,6 +30,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Registers:
+// - Registers available to modify without push: R0-R3, R12 (IP)
+// - Registers need to be saved: R4-R11, R13 (SP), R14 (LR)
+
+#include "config.h"
+
 /*
  * Helper macro to enter SVC mode cleanly and mask interrupts. reg is
  * a scratch register for the macro to overwrite.
@@ -37,9 +43,6 @@
  * This macro is intended for forcing the CPU into SVC mode at boot time.
  * you cannot return to the original mode.
  */
-
-#include "config.h"
-
 	.macro safe_svcmode_maskall reg:req
 
 	// check if running in hypervisor mode
@@ -64,12 +67,11 @@
 2:
 	.endm
 
-	.section .init	// init code section
-
 // ---------------------------------------------------------------------------
 //                 Start after reset (boot at address 0x8000)
 // ---------------------------------------------------------------------------
 
+	.section .init	// init code section
 .global _start
 _start:
 
@@ -119,6 +121,8 @@ _start:
 	// jump to system initialize
 	b	SysInit
 
+.ltorg
+
 // ---------------------------------------------------------------------------
 //                        Start secondary core
 // ---------------------------------------------------------------------------
@@ -126,6 +130,8 @@ _start:
 #if USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
 #if RASPPI > 1
 
+	.section .init	// init code section
+	.align	2
 .global StartSecondary
 StartSecondary:
 
@@ -167,6 +173,8 @@ StartSecondary:
 	// jump to core initialize
 	b	SysInitSecondary
 
+.ltorg
+
 #endif // RASPPI > 1
 #endif // USE_MULTICORE
 
@@ -174,11 +182,14 @@ StartSecondary:
 //                          Exception handlers
 // ---------------------------------------------------------------------------
 
+	.section .init	// init code section
+	.align	2
 .global UndefinedHandler
 UndefinedHandler:
 	b	.
 
 // IRQ exception handler (RAM requirements to save all registers - about 288 bytes, minimal interrupt time about 250ns)
+	.align	2
 .global IRQHandler
 IRQHandler:
 
@@ -214,8 +225,11 @@ IRQHandler:
 	// restore registers R0-R3, R12, PC (return)
 	ldmfd	sp!,{r0-r3,r12,pc}^		// restore registers and return (^ = restore CPSR from SPSR_irq)
 
+.ltorg
+
 
 // FIQ exception handler (RAM requirements to save all registers - about 288 bytes, delay about 200ns)
+	.align	2
 .global FIQHandler
 FIQHandler:
 
@@ -265,6 +279,8 @@ FIQHandler:
 	// restore registers R0-R3, R12, PC (return)
 	ldmfd	sp!,{r0-r3,r12,pc}^		// restore registers and return (^ = restore CPSR from SPSR_irq)
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                          L1 flush data cache
 // ----------------------------------------------------------------------------
@@ -302,6 +318,8 @@ FIQHandler:
  * procedures.
  */
 
+	.section .text.InvalidateDataCacheL1Only
+	.align	2
 .global  InvalidateDataCacheL1Only
 InvalidateDataCacheL1Only:
 
@@ -363,6 +381,8 @@ InvalidateDataCacheL1Only:
 	pop	{r4-r6}
 	bx	lr
 
+.ltorg
+
 #endif // RASPPI > 1
 
 // ----------------------------------------------------------------------------
@@ -378,6 +398,8 @@ InvalidateDataCacheL1Only:
 
 #if RASPPI > 1
 
+	.section .text.InvalidateDataCache
+	.align	2
 .global	InvalidateDataCache
 InvalidateDataCache:
 
@@ -448,6 +470,8 @@ InvalidateDataCache:
 	pop	{r4-r5,r7,r9-r11}
 	bx	lr
 
+.ltorg
+
 #endif // RASPPI > 1
 
 // ----------------------------------------------------------------------------
@@ -461,6 +485,8 @@ InvalidateDataCache:
 
 #if RASPPI > 1
 
+	.section .text.CleanDataCache
+	.align	2
 .global	CleanDataCache
 CleanDataCache:
 
@@ -531,6 +557,8 @@ CleanDataCache:
 	pop	{r4-r5, r7, r9-r11}
 	bx	lr
 
+.ltorg
+
 #endif // RASPPI > 1
 
 // ----------------------------------------------------------------------------
@@ -562,6 +590,8 @@ CleanDataCache:
 	mov	\reg,\reg,lsl \tmp		// actual cache line size
 	.endm
 
+	.section .text.CleanAndInvalidateDataCacheRange
+	.align	2
 .global	CleanAndInvalidateDataCacheRange
 CleanAndInvalidateDataCacheRange:
 	dcache_line_size r2,r3
@@ -576,6 +606,8 @@ CleanAndInvalidateDataCacheRange:
 	dsb	st
 	bx	lr
 
+.ltorg
+
 #endif // RASPPI > 1
 
 // ----------------------------------------------------------------------------
@@ -585,6 +617,8 @@ CleanAndInvalidateDataCacheRange:
 // Safe for ARMv7 (Pi 2/3/Zero2) and ARMv8 in AArch32 mode (Pi 4/5)
 // ----------------------------------------------------------------------------
 
+	.section .text.VfpInit
+	.align	2
 .global VfpInit
 VfpInit:
 	// enable single and double precision (CPACR = Coprocessor Access Control Register)
@@ -609,10 +643,14 @@ VfpInit:
 	fmxr	fpscr,r0		// vmsr fpscr,r0
 	bx	lr
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                       Terminate VFP coprocessor
 // ----------------------------------------------------------------------------
 
+	.section .text.VfpTerm
+	.align	2
 .global VfpTerm
 VfpTerm:
 
@@ -649,10 +687,14 @@ VfpTerm:
 
 2:	bx	lr
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                              Enable MMU
 // ----------------------------------------------------------------------------
 
+	.section .text.EnableMMU
+	.align	2
 .global EnableMMU
 EnableMMU:
 
@@ -771,10 +813,14 @@ EnableMMU:
 
 	pop	{pc}
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                              Disable MMU
 // ----------------------------------------------------------------------------
 
+	.section .text.DisableMMU
+	.align	2
 .global DisableMMU
 DisableMMU:
 
@@ -827,6 +873,8 @@ DisableMMU:
 
 	bx	lr
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                    Trampoline, to start loaded program
 // ----------------------------------------------------------------------------
@@ -834,6 +882,8 @@ DisableMMU:
 //  R1 = data length in bytes (> 0)
 //  R2 = destination address
 
+	.section .text.Trampoline
+	.align	2
 .global Trampoline
 Trampoline:
 
@@ -869,5 +919,211 @@ Trampoline:
 	// jump to new code
 	bx	r3
 
+.ltorg
+
 .global Trampoline_End
 Trampoline_End:
+
+// ----------------------------------------------------------------------------
+//                         Wrap memset function
+// ----------------------------------------------------------------------------
+// The memset() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  R0 = destination address
+//  R1 = value
+//  R2 = length in bytes
+// OUTPUT:
+//  R0 = original destination address
+
+	.section .text.__wrap_memset
+	.align	2
+.global __wrap_memset
+__wrap_memset:
+
+	// destination address -> R3 (we must return original destination address in R0)
+	mov	r3,r0		// R3 <- destination address
+
+	// check small memory block
+	cmp	r2,#16		// check if size is at least 16 bytes
+	blt	5f		// small block - skip large transfers
+
+	// store start of data by bytes
+2:	tst	r3,#3		// check if address is aligned to 4 bytes
+	beq	3f		// skip, address is already aligned
+	strb	r1,[r3],#1	// store byte and increase address
+	subs	r2,r2,#1	// loop counter
+	bne	2b		// store next byte
+	bx	lr		// all done
+	
+	// prepare data to store
+3:	and	r1,r1,#0xff	// R1 <- mask byte to store
+	orr	r1,r1,r1,lsl #8	// R1 <- duplicate to 2 bytes
+	orr	r1,r1,r1,lsl #16 // R1 <- duplicate to 4 bytes
+
+	// store aligned data by 2 words
+4:	cmp	r2,#8		// check if size is at least 8 bytes
+	blt	5f		// insufficient data
+	str	r1,[r3],#4	// store word and increase address
+	str	r1,[r3],#4	// store word and increase address
+	subs	r2,r2,#8	// loop counter
+	bgt	4b		// next data
+
+	// store rest of data by bytes
+5:	cmp	r2,#0		// check if size is 0
+	beq	9f		// exit if size is 0
+6:	strb	r1,[r3],#1	// store byte and increase address
+	subs	r2,r2,#1	// loop counter
+	bne	6b		// next byte
+
+9:	bx	lr
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Wrap memcpy function
+// ----------------------------------------------------------------------------
+// The memcpy() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  R0 = destination address
+//  R1 = source address
+//  R2 = length in bytes
+// OUTPUT:
+//  R0 = original destination address
+
+	.section .text.__wrap_memcpy
+	.align	2
+.global __wrap_memcpy
+__wrap_memcpy:
+
+	// destination address -> R3 (we must return original destination address in R0)
+	mov	r3,r0		// R3 <- destination address
+
+	// check small memory block
+	cmp	r2,#16		// check if size is at least 16 bytes
+	blt	5f		// small block - skip large transfers
+
+	// check identical alignment to 4 bytes
+	eor	ip,r3,r1	// IP <- dst ^ src
+	tst	ip,#3		// compare alignment
+	bne	5f		// different alignment - whole block must be transfered by bytes
+
+	// copy start of data by bytes
+2:	tst	r3,#3		// check if address is aligned to 4 bytes
+	beq	4f		// skip, address is already aligned
+	ldrb	ip,[r1],#1	// IP <- load byte and increase address
+	subs	r2,r2,#1	// loop counter (delay after ldrb)
+	strb	ip,[r3],#1	// store byte and increase address
+	bne	2b		// copy next byte
+	bx	lr		// all done
+
+	// copy aligned data by word
+4:	cmp	r2,#4		// check if size is at least 4 bytes
+	blt	5f		// insufficient data
+	ldr	ip,[r1],#4	// load word and increase address
+	subs	r2,r2,#4	// loop counter (delay after ldr)
+	str	ip,[r3],#4	// store word and increase address
+	bgt	4b		// next data
+
+	// copy rest of data by bytes
+5:	cmp	r2,#0		// check if size is 0
+	beq	9f		// exit if size is 0
+6:	ldrb	ip,[r1],#1	// IP <- load byte and increase address
+	subs	r2,r2,#1	// loop counter (delay after ldrb)
+	strb	ip,[r3],#1	// store byte and increase address
+	bne	6b		// next byte
+
+9:	bx	lr
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Wrap memcmp function
+// ----------------------------------------------------------------------------
+// The memcmp() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  R0 = address 1
+//  R1 = address 2
+//  R2 = length in bytes
+// OUTPUT:
+//  R0 = difference
+
+	.section .text.__wrap_memcmp
+	.align	2
+.global __wrap_memcmp
+__wrap_memcmp:
+
+	// no data, memory equal
+	cmp	r2,#0
+	beq	6f		// skip if no data
+
+	// compare loop
+2:	ldrb	r3,[r0],#1	// R3 <- load byte 1 and increment
+	ldrb	r12,[r1],#1	// R12 <- load byte 2 and increment
+	cmp	r3,r12		// compare bytes
+	bne	8f		// difference
+	subs	r2,r2,#1	// byte counter
+	bne	2b		// next byte
+
+	// memory equal
+6:	mov	r0,#0		// result is 0
+	bx	lr
+
+	// memory difference
+8:	sub	r0,r3,r12	// R0 <- byte difference
+	bx	lr
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Wrap memmove function
+// ----------------------------------------------------------------------------
+// The memmove() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  R0 = destination address
+//  R1 = source address
+//  R2 = length in bytes
+// OUTPUT:
+//  R0 = original destination address
+
+	.section .text.__wrap_memmove
+	.align	2
+.global __wrap_memmove
+__wrap_memmove:
+
+	// check if size is 0
+	cmp	r2,#0		// check if size is 0
+	beq	9f		// exit if size is 0
+
+	// destination address -> R3 (we must return original destination address in R0)
+	mov	r3,r0		// R3 <- destination address
+
+	// compare adresses
+	cmp	r3,r1		// compare dst ? src
+	blo	6f		// if dst < src, copy forward (up)
+	beq	9f		// if dst == src, exit
+
+	// copy backward
+	add	r1,r1,r2	// R1 <- shift source address to the end
+	add	r3,r3,r2	// R3 <- shift destination address to the end
+4:	ldrb	ip,[r1,#-1]!	// IP <- pre-decrement address and get byte
+	subs	r2,r2,#1	// loop counter (delay after ldrb)
+	strb	ip,[r3,#-1]!	// pre-decrement address and store byte
+	bne	4b
+	bx	lr
+
+	// copy forward
+6:	ldrb	ip,[r1],#1	// IP <- load byte and increase address
+	subs	r2,r2,#1	// loop counter (delay after ldrb)
+	strb	ip,[r3],#1	// store byte and increase address
+	bne	6b		// next byte
+9:	bx	lr
+
+.ltorg

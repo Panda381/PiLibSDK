@@ -159,6 +159,11 @@ LDFLAGS += -Wl,--wrap=free
 LDFLAGS += -Wl,--wrap=realloc
 endif
 
+LDFLAGS += -Wl,--wrap=memset
+LDFLAGS += -Wl,--wrap=memcpy
+LDFLAGS += -Wl,--wrap=memcmp
+LDFLAGS += -Wl,--wrap=memmove
+
 ifeq ($(USE_PRINT),1)
 LDFLAGS += -Wl,--wrap=vsprintf
 LDFLAGS += -Wl,--wrap=vsnprintf
@@ -237,6 +242,12 @@ CFLAGS += -Werror
 
 # do not assume usual definitions
 CFLAGS += -ffreestanding
+
+# do not use builtin memset (it crashes on unaligned uncached memory)
+CFLAGS += -fno-builtin-memset
+
+# do not use builtin memcpy (it crashes on unaligned uncached memory)
+CFLAGS += -fno-builtin-memcpy
 
 # using coherent memory region
 # Prohibiting non-aligned access to peripherals and shared memory with the GPU, as they do not allow it.

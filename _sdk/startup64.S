@@ -31,6 +31,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Registers:
+// - Registers available to modify without push: X0-X18
+// - Registers need to be saved: X19-X29, X30 (LR)
+
 #include "config.h"
 
 	// macro to swich CPU from EL2 mode to EL1t mode
@@ -79,12 +83,11 @@
 1:
 	.endm
 
-	.section .init	// init code section
-
 // ---------------------------------------------------------------------------
 //               Start after reset (boot at address 0x80000)
 // ---------------------------------------------------------------------------
 
+	.section .init	// init code section
 .global _start
 _start:
 
@@ -106,7 +109,7 @@ _start:
 
 	// setup stack for exception handler
 	ldr	x0,=__stack_end - SYS_STACK_SIZE // IRQ, FIQ and exception handler run in EL1h
-	msr	sp_el1,x0		// init their stack
+	msr	sp_el1,x0		// init IRQ stack
 
 	// setup vector table for EL2 mode
 	ldr	x0,=VectorTable		// init exception vector table for EL2
@@ -117,9 +120,18 @@ _start:
 
 // ---- Setup stack pointers
 
+	// setup stack for exception handler
+	// - This is needed even in EL1t mode (start from boot loader in EL1t mode)
+4:	msr	spsel,#1		// select SP1
+	isb
+	ldr	x0,=__stack_end - SYS_STACK_SIZE // IRQ, FIQ and exception handler run in EL1h
+	mov	sp,x0			// init IRQ stack
+
 	// initialize main stack
-4:	ldr	x0,=__stack_end		// prepare stack end of last core
-	mov	sp,x0			// init its stack
+	msr	spsel,#0		// select back SP0
+	isb
+	ldr	x0,=__stack_end		// prepare stack end of last core
+	mov	sp,x0			// init main stack
 
 // ---- Setup vector table
 
@@ -130,12 +142,16 @@ _start:
 	// jump to system initialize
 	b	SysInit
 
+.ltorg
+
 // ---------------------------------------------------------------------------
 //                        Start secondary core
 // ---------------------------------------------------------------------------
 
 #if USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
 
+	.section .init	// init code section
+	.align	3
 .global StartSecondary
 StartSecondary:
 
@@ -146,17 +162,21 @@ StartSecondary:
 #endif
 	and	x2,x2,#CORES-1		// get CPU ID
 
-	// check if CPU is already in EL1t mode
-	mrs	x0,CurrentEL		// check if already in EL1t mode?
-	cmp	x0,#4			// 0x4 = EL1, 0x8 = EL2
-	beq	4f			// skip if already EL1 mode
-
 	// setup stack for exception handler
+	msr	spsel,#1		// select SP1
+	isb
 	ldr	x1,=CORE_STACK_SIZE	// calculate kernel stack offset for core
 	mul	x1,x1,x2
 	ldr	x0,=__stack_end - SYS_STACK_SIZE // IRQ, FIQ and exception handler run in EL1h
 	sub	x0,x0,x1		// X0 <- stack of this core
-	msr	sp_el1,x0		// init their stack
+	mov	sp,x0			// init IRQ stack
+	msr	spsel,#0		// select back SP0
+	isb
+
+	// check if CPU is already in EL1t mode
+	mrs	x0,CurrentEL		// check if already in EL1t mode?
+	cmp	x0,#4			// 0x4 = EL1, 0x8 = EL2
+	beq	4f			// skip if already EL1 mode
 
 	// switch to EL1
 	armv8_switch_to_el1_m x0,x1
@@ -174,6 +194,8 @@ StartSecondary:
 
 	// jump to core initialize
 	b	SysInitSecondary
+
+.ltorg
 
 #endif // USE_MULTICORE
 
@@ -216,6 +238,7 @@ VectorTable:
 	vector	UnexpectedStub
 	vector	UnexpectedStub
 
+	.align	3
 UnexpectedStub:
 SynchronousStub:
 SErrorStub:
@@ -225,6 +248,7 @@ HVCStub:
 	// IRQ stub
 	// ... Every interrupt takes 824 bytes of the RAM, minimal interrupt time about 250ns 
 
+	.align	3
 .global	IRQStub
 IRQStub:
 
@@ -318,8 +342,10 @@ IRQStub:
 	ldp	x29,x30,[sp],#16		// restore x29, x30 from stack
 	eret
 
+.ltorg
 
 	// FIQ stub
+	.align	3
 .global	FIQStub
 FIQStub:
 
@@ -406,10 +432,14 @@ FIQStub:
 
 	eret
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                              Enable MMU
 // ----------------------------------------------------------------------------
 
+	.section .text.EnableMMU
+	.align	3
 .global EnableMMU
 EnableMMU:
 
@@ -460,10 +490,14 @@ EnableMMU:
 	isb				// instruction synchronization barrier
 	ret
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                              Disable MMU
 // ----------------------------------------------------------------------------
 
+	.section .text.DisableMMU
+	.align	3
 .global DisableMMU
 DisableMMU:
 
@@ -485,6 +519,8 @@ DisableMMU:
 	isb				// instruction synchronization barrier
 	ret
 
+.ltorg
+
 // ----------------------------------------------------------------------------
 //                    Trampoline, to start loaded program
 // ----------------------------------------------------------------------------
@@ -492,6 +528,8 @@ DisableMMU:
 //  X1 = data length in bytes (> 0)
 //  X2 = destination address
 
+	.section .text.Trampoline
+	.align	3
 .global Trampoline
 Trampoline:
 
@@ -513,8 +551,226 @@ Trampoline:
 	dsb	ish
 	isb				// instruction synchronization barrier
 
+	// emergency setup stack for exception handler - for case if app do not setup its own IRQ stack
+	msr	spsel,#1		// select SP1
+	isb
+	mov	sp,x3			// init IRQ stack
+	msr	spsel,#0		// select back SP0
+	isb
+
 	// jump to new code
 	br	x3
 
+.ltorg
+
 .global Trampoline_End
 Trampoline_End:
+
+// ----------------------------------------------------------------------------
+//                         Wrap memset function
+// ----------------------------------------------------------------------------
+// The memset() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  X0 = destination address
+//  X1 = value
+//  X2 = length in bytes
+// OUTPUT:
+//  X0 = original destination address
+
+	.section .text.__wrap_memset
+	.align	3
+.global __wrap_memset
+__wrap_memset:
+
+	// destination address -> X3 (we must return original destination address in X0)
+	mov	x3,x0		// X3 <- destination address
+
+	// check small memory block
+	cmp	x2,#32		// check if size is at least 32 bytes
+	blt	5f		// small block - skip large transfers
+
+	// store start of data by bytes
+2:	tst	x3,#7		// check if address is aligned to 8 bytes
+	beq	3f		// skip, address is already aligned
+	strb	w1,[x3],#1	// store byte and increase address
+	subs	x2,x2,#1	// loop counter
+	bne	2b		// store next byte
+	ret			// all done
+
+	// prepare data to store
+3:	and	w1,w1,#0xff	// X1 <- mask byte to store
+	orr	w1,w1,w1,lsl #8	// X1 <- duplicate to 2 bytes
+	orr	w1,w1,w1,lsl #16 // X1 <- duplicate to 4 bytes
+	orr	x1,x1,x1,lsl #32 // X1 <- duplicate to 8 bytes
+
+	// store aligned data by 2 double-words
+4:	cmp	x2,#16		// check if size is at least 16 bytes
+	blt	5f		// insufficient data
+	stp	x1,x1,[x3],#16	// store 2 words and increase address
+	subs	x2,x2,#16	// loop counter
+	bgt	4b		// next data
+
+	// store rest of data by bytes
+5:	cbz	x2,9f		// exit if size is 0
+6:	strb	w1,[x3],#1	// store byte and increase address
+	subs	x2,x2,#1	// loop counter
+	bne	6b		// next byte
+9:	ret
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Wrap memcpy function
+// ----------------------------------------------------------------------------
+// The memcpy() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  X0 = destination address
+//  X1 = source address
+//  X2 = length in bytes
+// OUTPUT:
+//  X0 = original destination address
+
+	.section .text.__wrap_memcpy
+	.align	3
+.global __wrap_memcpy
+__wrap_memcpy:
+
+	// destination address -> X3 (we must return original destination address in X0)
+	mov	x3,x0		// X3 <- destination address
+
+	// check small memory block
+	cmp	x2,#32		// check if size is at least 32 bytes
+	blt	6f		// small block - skip large transfers
+
+	// check identical alignment to 8 bytes
+	eor	x4,x3,x1	// X4 <- dst ^ src
+	tst	x4,#7		// compare alignment
+	bne	6f		// different alignment - whole block must be transfered by bytes
+
+	// copy start of data by bytes
+2:	tst	x3,#7		// check if address is aligned to 8 bytes
+	beq	4f		// skip, address is already aligned
+	ldrb	w4,[x1],#1	// X4 <- load byte and increase address
+	subs	x2,x2,#1	// loop counter (delay after ldrb)
+	strb	w4,[x3],#1	// store byte and increase address
+	bne	2b		// copy next byte
+	ret			// all done
+
+	// copy aligned data by 4 double-words
+4:	cmp	x2,#32		// check if size is at least 32 bytes
+	blt	5f		// insufficient data
+	ldp	x4,x5,[x1],#16	// load 2 double-words and increase address
+	ldp	x6,x7,[x1],#16	// load 2 double-words and increase address
+	subs	x2,x2,#32	// loop counter
+	stp	x4,x5,[x3],#16	// store 2 double-words and increase address
+	stp	x6,x7,[x3],#16	// store 2 double-words and increase address
+	bgt	4b		// next data
+
+	// copy aligned data by words
+5:	cmp	x2,#8		// check if size is at least 8 bytes
+	blt	6f		// insufficient data
+	ldr	x4,[x1],#8	// load word and increase address
+	subs	x2,x2,#8	// loop counter (delay after ldr)
+	str	x4,[x3],#8	// store word and increase address
+	bgt	5b		// next data
+
+	// copy rest of data by bytes
+6:	cbz	x2,9f		// exit if size is 0
+7:	ldrb	w4,[x1],#1	// X4 <- load byte and increase address
+	subs	x2,x2,#1	// loop counter (delay after ldrb)
+	strb	w4,[x3],#1	// store byte and increase address
+	bne	7b		// next byte
+
+9:	ret
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Wrap memcmp function
+// ----------------------------------------------------------------------------
+// The memcmp() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  X0 = address 1
+//  X1 = address 2
+//  X2 = length in bytes
+// OUTPUT:
+//  X0 = difference
+
+	.section .text.__wrap_memcmp
+	.align	3
+.global __wrap_memcmp
+__wrap_memcmp:
+
+	// no data, memory equal
+	cbz	x2,6f		// skip if no data
+
+	// compare loop
+2:	ldrb	w3,[x0],#1	// X3 <- load byte 1 and increment
+	ldrb	w4,[x1],#1	// X4 <- load byte 2 and increment
+	cmp	w3,w4		// compare bytes
+	bne	8f		// difference
+	subs	x2,x2,#1	// byte counter
+	bne	2b		// next byte
+
+	// memory equal
+6:	mov	w0,#0		// result is 0
+	ret
+
+	// memory difference
+8:	sub	x0,x3,x4	// X0 <- byte difference
+	ret
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Wrap memmove function
+// ----------------------------------------------------------------------------
+// The memmove() library function uses unaligned memory access. This is a problem
+// when accessing uncached memory - in which case the library function crashes.
+// The following function provides aligned access.
+// INPUT:
+//  X0 = destination address
+//  X1 = source address
+//  X2 = length in bytes
+// OUTPUT:
+//  X0 = original destination address
+
+	.section .text.__wrap_memmove
+	.align	3
+.global __wrap_memmove
+__wrap_memmove:
+
+	// check if size is 0
+	cbz	x2,9f		// exit if size is 0
+
+	// destination address -> R3 (we must return original destination address in R0)
+	mov	x3,x0		// R3 <- destination address
+
+	// compare adresses
+	cmp	x3,x1		// compare dst ? src
+	blo	6f		// if dst < src, copy forward (up)
+	beq	9f		// if dst == src, exit
+
+	// copy backward
+	add	x1,x1,x2	// X1 <- shift source address to the end
+	add	x3,x3,x2	// X3 <- shift destination address to the end
+4:	ldrb	w4,[x1,#-1]!	// X4 <- pre-decrement address and get byte
+	subs	x2,x2,#1	// loop counter (delay after ldrb)
+	strb	w4,[x3,#-1]!	// pre-decrement address and store byte
+	bne	4b
+	ret
+
+	// copy forward
+6:	ldrb	w4,[x1],#1	// X4 <- load byte and increase address
+	subs	x2,x2,#1	// loop counter (delay after ldrb)
+	strb	w4,[x3],#1	// store byte and increase address
+	bne	6b		// next byte
+9:	ret
+
+.ltorg

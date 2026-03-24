@@ -63,6 +63,7 @@
 // remember that uncached memory does not allow unaligned access. This mainly
 // applies to the memcpy() function, which internally uses unaligned access -
 // using it on unaligned memory can therefore cause the system to crash.
+// If you use uncached memory, you must adhere to strict aligned memory access.
 #ifndef MMU_CACHE_MODE
 #define MMU_CACHE_MODE		0		// MMU cache mode: 0=all cached (default), 1=video not cached, 2=no cache
 #endif

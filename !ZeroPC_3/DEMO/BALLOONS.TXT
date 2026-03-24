@@ -1,0 +1,6 @@
+^YBalloons^0
+
+Demo - flying balloons
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

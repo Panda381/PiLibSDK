@@ -608,6 +608,21 @@ INLINE u32 Popcount64(u64 val)
 //                             Atomic operations
 // ----------------------------------------------------------------------------
 
+#if MMU_CACHE_MODE == 2		// MMU cache mode: 0=all cached (default), 1=video not cached, 2=no cache
+
+// Atomic operations are not supported on non-cached memory - use only simple simulation
+INLINE u8 GetLock8(volatile u8* addr) { return *addr; }
+INLINE u16 GetLock16(volatile u16* addr) { return *addr; }
+INLINE u32 GetLock32(volatile u32* addr) { return *addr; }
+INLINE u64 GetLock64(volatile u64* addr) { return *addr; }
+INLINE Bool SetLock8(volatile u8* addr, u8 val) { *addr = val; return False; }
+INLINE Bool SetLock16(volatile u16* addr, u16 val) { *addr = val; return False; }
+INLINE Bool SetLock32(volatile u32* addr, u32 val) { *addr = val; return False; }
+INLINE Bool SetLock64(volatile u64* addr, u64 val) { *addr = val; return False; }
+INLINE void ClrLock() {}
+
+#else // MMU_CACHE_MODE
+
 #if AARCH==32
 
 // load byte exclusive (must precede before save byte exclusive; volatile variable should be used)
@@ -634,6 +649,10 @@ INLINE u32 GetLock32(volatile u32* addr)
 	return res;
 }
 
+// load qword exclusive (must precede before save dword exclusive; volatile variable should be used)
+// ... not supported on 32-bit mode (only simulation)
+INLINE u64 GetLock64(volatile u64* addr) { return *addr; }
+
 // save byte exclusive (returns True if failed, must follow after load byte exclusive; volatile variable should be used)
 INLINE Bool SetLock8(volatile u8* addr, u8 val)
 {
@@ -657,6 +676,10 @@ INLINE Bool SetLock32(volatile u32* addr, u32 val)
 	__asm volatile (" strex %0,%2,[%1]\n" : "=&r" (res) : "r" (addr), "r" (val) : "memory");
 	return (Bool)res;
 }
+
+// save qword exclusive (returns True if failed, must follow after load word exclusive; volatile variable should be used)
+// ... not supported on 32-bit mode (only simulation)
+INLINE Bool SetLock64(volatile u64* addr, u64 val) { *addr = val; return False; }
 
 #else // AARCH==32
 
@@ -732,6 +755,8 @@ INLINE void ClrLock()
 	__asm volatile (" clrex\n" ::: "memory");
 }
 
+#endif // MMU_CACHE_MODE
+
 // exchange byte exclusive (returns old value)
 INLINE u8 ExcLock8(volatile u8* addr, u8 val)
 {
@@ -762,8 +787,9 @@ INLINE u32 ExcLock32(volatile u32* addr, u32 val)
 	return oldval;
 }
 
-#if AARCH==64
+//#if AARCH==64
 // exchange qword exclusive (returns old value)
+// ... not supported on 32-bit mode (only simulation)
 INLINE u64 ExcLock64(volatile u64* addr, u64 val)
 {
 	u64 oldval;
@@ -772,7 +798,7 @@ INLINE u64 ExcLock64(volatile u64* addr, u64 val)
 	} while (SetLock64(addr, val));
 	return oldval;
 }
-#endif // AARCH==64
+//#endif // AARCH==64
 
 // increment byte with exclusive lock (returns resulting value)
 INLINE u8 IncLock8(volatile u8* addr)
@@ -804,8 +830,9 @@ INLINE u32 IncLock32(volatile u32* addr)
 	return val;
 }
 
-#if AARCH==64
+//#if AARCH==64
 // increment qword with exclusive lock (returns resulting value)
+// ... not supported on 32-bit mode (only simulation)
 INLINE u64 IncLock64(volatile u64* addr)
 {
 	u64 val;
@@ -814,7 +841,7 @@ INLINE u64 IncLock64(volatile u64* addr)
 	} while (SetLock64(addr, val));
 	return val;
 }
-#endif // AARCH==64
+//#endif // AARCH==64
 
 // decrement byte with exclusive lock (returns resulting value)
 inline u8 DecLock8(volatile u8* addr)
@@ -846,8 +873,9 @@ inline u32 DecLock32(volatile u32* addr)
 	return val;
 }
 
-#if AARCH==64
+//#if AARCH==64
 // decrement qword with exclusive lock (returns resulting value)
+// ... not supported on 32-bit mode (only simulation)
 inline u64 DecLock64(volatile u64* addr)
 {
 	u64 val;
@@ -856,7 +884,7 @@ inline u64 DecLock64(volatile u64* addr)
 	} while (SetLock64(addr, val));
 	return val;
 }
-#endif // AARCH==64
+//#endif // AARCH==64
 
 #ifdef __cplusplus
 }

@@ -17,10 +17,7 @@ include ${PI_ROOT_PATH}/Makefile1.mk
 ASRC +=
 
 # C source files
-CSRC += img/test1.c
-CSRC += img/test2.c
-CSRC += img/test3.c
-CSRC += snd/fanfare.c
+CSRC +=
 
 # C++ source files
 SRC += src/main.cpp
@@ -29,6 +26,9 @@ SRC += src/main.cpp
 #                         Library configuration
 ##############################################################################
 # For available options see config_def.mk in root directory.
+
+# 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
+USE_PWMSND=0
 
 ##############################################################################
 #                         Font configuration

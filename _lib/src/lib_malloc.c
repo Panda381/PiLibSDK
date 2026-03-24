@@ -13,8 +13,8 @@ sMemAllocDesc MemAllocDesc;	// memory allocator descriptor
 
 extern u8 __heap_start__;	// start of the heap
 
-// lock
-#if CORES > 1
+// lock (SpinLocks are not supported on non-cached memory)
+#if (CORES > 1) && USE_MULTICORE && (MMU_CACHE_MODE != 2)
 #define MEM_LOCK()	SpinLockLock(&m->lock)
 #define MEM_UNLOCK()	SpinLockUnlock(&m->lock);
 #else

@@ -1,6 +1,6 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.11, in progress - under development
+Pre-alpha version 0.12, in progress - under development
 
 Copyright (c) 2026 Miroslav Nemecek
 
@@ -88,6 +88,16 @@ Detailed materials for ZeroPC hardware can be found in the
 "_devices/ZeroPC/diagram" folder.
 
 Source code and sample programs can be found in the "ZeroPC" folder.
+
+
+Sample Applications
+===================
+System
+ SYSINFO ... System Information
+
+Demo
+ BALLOONS ... Flying balloons
+
 
 
 ----------------

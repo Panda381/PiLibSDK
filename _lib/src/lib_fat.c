@@ -1670,8 +1670,20 @@ u32 FileRead(sFile* file, void* buf, u32 num)
 			n = num - read;
 			if (n >= SECT_SIZE)
 			{
-				if (!SD_ReadSect(sect, (u8*)buf)) break;
 				n = SECT_SIZE;
+
+				// destination buffer must be u32 aligned
+				if (((size_t)buf & 3) == 0)
+				{
+					if (!SD_ReadSect(sect, (u8*)buf)) break;
+				}
+				else
+				{
+					// read sector to data buffer
+					// - using 'bufinx' buffer
+					if (!Disk_MoveBuf(sect, DISKBUF_DATA)) break;
+					memcpy(buf, &DiskBuf[SECT_SIZE*DISKBUF_DATA], n);
+				}
 			}
 			else
 			{
@@ -1754,8 +1766,21 @@ u32 FileWrite(sFile* file, const void* buf, u32 num)
 			n = num - write;
 			if (n >= SECT_SIZE)
 			{
-				if (!SD_WriteSect(sect, (const u8*)buf)) break;
 				n = SECT_SIZE;
+
+				// source buffer must be u32 aligned
+				if (((size_t)buf & 3) == 0)
+				{
+					if (!SD_WriteSect(sect, (const u8*)buf)) break;
+				}
+				else
+				{
+					// write sector from data buffer
+					// - using 'bufinx' buffer
+					if (!Disk_MoveBuf(sect, DISKBUF_DATA)) break;
+					memcpy(&DiskBuf[SECT_SIZE*DISKBUF_DATA], buf, n);
+					DiskBufDirty[DISKBUF_DATA] = True;
+				}
 			}
 			else
 			{

@@ -17,6 +17,8 @@
 //   SpinLockUnlock(&lock);
 //   IRQ_UNLOCK;
 
+// SpinLock is not supported on uncached memory - using only simple simulation.
+
 #ifndef _SDK_SPINLOCK_H
 #define _SDK_SPINLOCK_H
 

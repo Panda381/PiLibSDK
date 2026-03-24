@@ -319,6 +319,7 @@ void DrawFill(int x, int y, u32 col);
 // Draw image (image must be in aligned CF_A8B8G8R8 format; alpha 0=transparent, 255=opaque)
 #define IMG_MAXWH	0x10000		// can be used as 'w' and 'h' to display the entire image
 void DrawImg(const u8* img, int x, int y, int xs, int ys, int w, int h, int alpha);
+#define DRAWIMG(img, x, y) DrawImg(img, x, y, 0, 0, IMG_MAXWH, IMG_MAXWH, 255)
 
 // Invert image (image must be in aligned CF_A8B8G8R8 format)
 void DrawImgInv(const u8* img, int x, int y, int xs, int ys, int w, int h);

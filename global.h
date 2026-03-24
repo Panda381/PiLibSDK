@@ -36,7 +36,7 @@ extern unsigned char __coherent_end;
 #define ALIGNED __attribute__((aligned(4)))
 
 // packed structure, to allow access to unaligned entries
-#define PACKED __attribute__ ((packed))
+#define PACKED __attribute__ ((packed, aligned(1)))
 
 // fast function optimization
 #define FASTCODE __attribute__ ((optimize("-Ofast")))
@@ -146,7 +146,7 @@ typedef struct {
 	u32	biClrUsed;		// 0x2E: number of user colors (0 = all)
 	u32	biClrImportant;		// 0x32: number of important colors (0 = all)
 					// 0x36
-} sBmp;
+} PACKED sBmp;
 #pragma pack(pop)
 
 // ----------------------------------------------------------------------------

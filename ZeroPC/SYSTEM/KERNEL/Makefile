@@ -27,6 +27,9 @@ SRC += src/main.cpp
 ##############################################################################
 # For available options see config_def.mk in root directory.
 
+# 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
+USE_PWMSND=0
+
 ##############################################################################
 #                         Font configuration
 ##############################################################################
