@@ -241,6 +241,32 @@ typedef struct {
 #define NOKEY		-1	// no key from keyboard
 
 // ----------------------------------------------------------------------------
+//                           Real numbers control
+// ----------------------------------------------------------------------------
+
+// angle unit
+#define REAL_UNIT_DEG	0	// degrees
+#define REAL_UNIT_RAD	1	// radians
+#define REAL_UNIT_GRAD	2	// grads
+
+// radix numeric base
+#define REAL_BASE_DEC	0	// decimal
+#define REAL_BASE_BIN	1	// binary
+#define REAL_BASE_OCT	2	// octal
+#define REAL_BASE_HEX	3	// hexadecimal
+
+//extern unsigned char Base;		// current numeric radix base BASE_*
+
+// exponent mode
+#define REAL_EXP_AUTO	0	// auto mode
+#define REAL_EXP_FIX	1	// fixed mode (no exponent on small numbers)
+#define REAL_EXP_EE	2	// exponent mode
+#define REAL_EXP_ENG	3	// engineering technical mode (exponent multiply of 3)
+
+// rounding
+#define REAL_FIX_OFF	-1	// fix decimals are off
+
+// ----------------------------------------------------------------------------
 //                           Base Includes
 // ----------------------------------------------------------------------------
 

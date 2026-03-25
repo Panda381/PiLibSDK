@@ -28,7 +28,9 @@ include ${PI_ROOT_PATH}/config_def.mk
 PI_DEVICES_DIR = ${PI_ROOT_PATH}/_devices
 
 # Include device
+ifneq ($(strip $(DEVCLASS)),)
 include ${PI_DEVICES_DIR}/${DEVCLASS}/_makefile.inc
+endif
 
 # RASPPI = 1..5 ... SoC chip
 #   RASPPI=1: SoC BCM2835 (models Zero1/Pi1)
@@ -93,7 +95,13 @@ AARCH=64
 CORES=4
 else
 
-$(error RUNMODE must be set to 1 - 7)
+# Default: Zero2, 64-bit
+RUNMODE=4
+ARCHCFG = -mcpu=cortex-a53 -mlittle-endian
+RASPPI=3
+AARCH=64
+CORES=4
+
 endif
 endif
 endif

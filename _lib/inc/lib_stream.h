@@ -5,7 +5,7 @@
 //
 // ****************************************************************************
 
-#if USE_STREAM		// 1=use Data stream, 0=not used (lin_stream.*)
+#if USE_STREAM		// 1=use Data stream, 0=not used (lib_stream.*)
 
 #ifndef _LIB_STREAM_H
 #define _LIB_STREAM_H

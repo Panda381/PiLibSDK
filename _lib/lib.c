@@ -1,6 +1,13 @@
 
 #include "../includes.h"	// includes
 
+#if USE_BIGINT		// 1=use BIT integers, 0=not used (_lib/bigint/*)
+#include "bigint/bigint.c"	// BIG integers
+#if BIGINT_BERN_NUM > 0
+#include "bigint/bernoulli.c"	// Bernoulli numbers
+#endif // BIGINT_BERN_NUM
+#endif // USE_BIGINT
+
 #if USE_CALENDAR	// 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
 #include "src/lib_calendar.c"	// calendar 32-bit
 #endif
@@ -45,7 +52,11 @@
 #include "src/lib_rand.c"	// random number generator
 #endif
 
-#if USE_STREAM		// 1=use Data stream, 0=not used (lin_stream.*)
+#if USE_REAL		// 1=use REAL numbers, 0=not used (_lib/real/*)
+#include "real/real.c"		// REAL numbers
+#endif
+
+#if USE_STREAM		// 1=use Data stream, 0=not used (lib_stream.*)
 #include "src/lib_stream.c"	// data stream
 #endif
 

@@ -1,0 +1,3 @@
+^YFlag^0
+
+Demo - fluttering flag

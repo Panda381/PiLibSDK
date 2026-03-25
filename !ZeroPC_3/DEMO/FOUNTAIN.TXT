@@ -1,0 +1,6 @@
+^YFountain^0
+
+Fountain - draw 3D graph
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

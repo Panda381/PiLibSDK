@@ -1,0 +1,7 @@
+^YFlag2^0
+
+Demo - fluttering flag
+       with custom image
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

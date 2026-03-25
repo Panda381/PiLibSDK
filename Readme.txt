@@ -1,6 +1,6 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.12, in progress - under development
+Pre-alpha version 0.13, in progress - under development
 
 Copyright (c) 2026 Miroslav Nemecek
 
@@ -66,8 +66,7 @@ _font ... fonts
 _lib ... libraries
 _sdk ... SDK (peripherals drivers)
 _tools ... compilation tools
-PiBase ... source codes of samples for base Pi module
-ZeroPC ... source codes of samples for ZeroPC device
+Apps ... source codes of sample applications
 
 
 ZeroPC
@@ -93,10 +92,17 @@ Source code and sample programs can be found in the "ZeroPC" folder.
 Sample Applications
 ===================
 System
- SYSINFO ... System Information
+ KERNEL ... Loader of applications
+ SYSINFO ... System information
 
 Demo
  BALLOONS ... Flying balloons
+ BIGFACT ... Factorial of 123456789!
+ DRAW ... Drawing graphic elements
+ EARTH ... Rotating globe
+ FLAG ... Fluttering flag
+ FLAG2 ... Fluttering custom flag
+ FOUNTAIN ... Draw 3D graph
 
 
 

@@ -1,0 +1,7 @@
+^YDraw^0
+
+Demo - drawing graphic
+       elements
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

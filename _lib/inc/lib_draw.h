@@ -203,6 +203,10 @@ typedef struct {
 } sPic;
 STATIC_ASSERT(sizeof(sPic) == 0x0C, "Incorrect sPic!");
 
+// Blend two colors
+//  alpha ... 255=full col1, 0=full col2 
+u32 BlendCol(u32 col1, u32 col2, int alpha);
+
 // Draw clear screen with given foreground and background color, set the colors as new printing colors
 void DrawClearCol(u32 colfg, u32 colbg);
 

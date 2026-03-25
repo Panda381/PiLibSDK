@@ -30,6 +30,24 @@
 // divide by 255
 #define DIV255(nn) (((nn)*32897) >> 23)
 
+// Blend two colors
+//  alpha ... 255=full col1, 0=full col2 
+u32 BlendCol(u32 col1, u32 col2, int alpha)
+{
+	if (alpha <= 0) return col2;
+	if (alpha >= 255) return col1;
+	u32 m1 = 0x00ff00ff;
+	u32 rb1 = (col1 & m1)*alpha + m1;
+	u32 m2 = 0x0000ff00;
+	u32 g1 = (col1 & m2)*alpha + m2;
+	u32 inv = 255 - alpha;
+	u32 rb2 = (col2 & m1)*inv;
+	u32 g2 = (col2 & m2)*inv;
+	rb2 = ((rb1 + rb2) >> 8) & m1;
+	g2 = ((g1 + g2) >> 8) & m2;
+	return rb2 | g2 | (m2 << 16);
+}
+
 // ----------------------------------------------------------------------------
 //                            Clear screen
 // ----------------------------------------------------------------------------

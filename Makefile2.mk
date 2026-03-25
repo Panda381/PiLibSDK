@@ -413,7 +413,7 @@ ifeq (${OS},Windows_NT)
 else
 	@mkdir -p $(TEMP)
 endif
-	@echo Target: ${TARGET}
+	@echo Target: ${TARGET}, Device: ${DEVCLASS}, RunMode: ${RUNMODE}
 
 ##############################################################################
 # Dependencies of output files

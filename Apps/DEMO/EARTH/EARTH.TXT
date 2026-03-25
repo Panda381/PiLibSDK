@@ -1,0 +1,6 @@
+^YEarth^0
+
+Demo - rotating globe
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

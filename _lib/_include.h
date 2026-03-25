@@ -2,6 +2,10 @@
 #ifndef _LIB_INCLUDE_H
 #define _LIB_INCLUDE_H
 
+#if USE_BIGINT		// 1=use BIT integers, 0=not used (_lib/bigint/*)
+#include "bigint/bigint.h"	// big integers
+#endif
+
 #if USE_CALENDAR	// 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
 #include "inc/lib_calendar.h"	// calendar 32-bit
 #endif
@@ -34,7 +38,7 @@
 #include "inc/lib_malloc.h"	// Memory allocator
 #endif
 
-#if USE_STREAM		// 1=use Data stream, 0=not used (lin_stream.*)
+#if USE_STREAM		// 1=use Data stream, 0=not used (lib_stream.*)
 #include "inc/lib_stream.h"	// data stream
 #endif
 
@@ -48,6 +52,11 @@
 
 #if USE_RAND		// 1=use Random number generator, 0=not used (lib_rand.*)
 #include "inc/lib_rand.h"	// random number generator
+#endif
+
+#if USE_REAL		// 1=use REAL numbers, 0=not used (_lib/real/*)
+#define REAL_PATH	"real_h.h"
+#include "real/real.h"		// all real numbers
 #endif
 
 #if USE_TREE		// 1=use Tree list, 0=not used (lib_tree.*)

@@ -11,6 +11,9 @@
 # Select library modules (folder _lib)
 # If you add a new flag, add the update flag to _lib\_makefile.inc.
 
+# 1=use BIT integers, 0=not used (_lib/bigint/*)
+USE_BIGINT=0
+
 # 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
 USE_CALENDAR=1
 
@@ -43,6 +46,9 @@ USE_PWMSND=1
 
 # 1=use Random number generator, 0=not used (lib_rand.*)
 USE_RAND=1
+
+# 1=use REAL numbers, 0=not used (_lib/real/*)
+USE_REAL=0
 
 # 1=use Data stream, 0=not used (lib_stream.*)
 USE_STREAM=1

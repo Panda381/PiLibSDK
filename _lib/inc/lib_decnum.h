@@ -5,14 +5,14 @@
 //
 // ****************************************************************************
 
-#if USE_DECNUM		// 1=use Decode integer number, 0=not use (lib_decnum.*)
-
 #ifndef _LIB_DECNUM_H
 #define _LIB_DECNUM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if USE_DECNUM		// 1=use Decode integer number, 0=not use (lib_decnum.*)
 
 // temporary decode text buffer
 #define DECNUMBUF_SIZE	16		// max. size of decode text buffer (9 digits + 1 sign + 3 separators + 1 zero = 14)
@@ -41,10 +41,10 @@ void Dec2DigSpc(char* buf, u8 num);
 // get length of ASCIIZ text string
 int StrLen(const char* text);
 
+#endif // USE_DECNUM
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif // _LIB_DECNUM_H
-
-#endif // USE_DECNUM

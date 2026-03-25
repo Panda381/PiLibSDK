@@ -98,4 +98,152 @@
 #define PWMSND_SWAP	0	// 1=swap channels (PWM1 left, PWM0 right), 0=no swap (PWM0 left, PWM1 right)
 #endif
 
+// Big integer numbers
+#if USE_BIGINT	// 1=use BIT integers, 0=not used (_lib/bigint/*)
+#ifndef BIGINT_BERN_NUM
+#define BIGINT_BERN_NUM	1024	// number of table Bernoulli numbers - use number 0, 256, 512, 768 or 1024
+#endif
+#endif // USE_BIGINT
+
+// REAL number
+#if USE_REAL	// 1=use REAL numbers, 0=not used (_lib/real/*)
+
+#ifndef USE_REAL16
+#define USE_REAL16	0		// 1 = use real16 numbers (3 digits, exp +-4)
+#endif
+
+#ifndef USE_REAL32
+#define USE_REAL32	0		// 1 = use real32 numbers (float, 7 digits, exp +-38)
+#endif
+
+#ifndef USE_REAL48
+#define USE_REAL48	0		// 1 = use real48 numbers (11 digits, exp +-153)
+#endif
+
+#ifndef USE_REAL64
+#define USE_REAL64	0		// 1 = use real64 numbers (double, 16 digits, exp +-308)
+#endif
+
+#ifndef USE_REAL80
+#define USE_REAL80	0		// 1 = use real80 numbers (19 digits, exp +-4932)
+#endif
+
+#ifndef USE_REAL96
+#define USE_REAL96	0		// 1 = use real96 numbers (25 digits, exp +-1233)
+#endif
+
+#ifndef USE_REAL128
+#define USE_REAL128	0		// 1 = use real128 numbers (34 digits, exp +-4932)
+#endif
+
+#ifndef USE_REAL160
+#define USE_REAL160	0		// 1 = use real160 numbers (43 digits, exp +-9864)
+#endif
+
+#ifndef USE_REAL192
+#define USE_REAL192	0		// 1 = use real192 numbers (52 digits, exp +-19728)
+#endif
+
+#ifndef USE_REAL256
+#define USE_REAL256	0		// 1 = use real256 numbers (71 digits, exp +-78913)
+#endif
+
+#ifndef USE_REAL384
+#define USE_REAL384	0		// 1 = use real384 numbers (109 digits, exp +-315652)
+#endif
+
+#ifndef USE_REAL512
+#define USE_REAL512	0		// 1 = use real512 numbers (147 digits, exp +-1262611)
+#endif
+
+#ifndef USE_REAL768
+#define USE_REAL768	0		// 1 = use real768 numbers (224 digits, exp +-5050445)
+#endif
+
+#ifndef USE_REAL1024
+#define USE_REAL1024	0		// 1 = use real1024 numbers (300 digits, exp +-20201781)
+#endif
+
+#ifndef USE_REAL1536
+#define USE_REAL1536	0		// 1 = use real1536 numbers (453 digits, exp +-161614248)
+#endif
+
+#ifndef USE_REAL2048
+#define USE_REAL2048	0		// 1 = use real2048 numbers (607 digits, exp +-161614248)
+#endif
+
+#ifndef USE_REAL3072
+#define USE_REAL3072	0		// 1 = use real3072 numbers (915 digits, exp +-161614248)
+#endif
+
+#ifndef USE_REAL4096
+#define USE_REAL4096	0		// 1 = use real4096 numbers (1224 digits, exp +-161614248)
+#endif
+
+#ifndef USE_REAL6144
+#define USE_REAL6144	0		// 1 = use real6144 numbers (1841 digits, exp +-161614248)
+#endif
+
+#ifndef USE_REAL8192
+#define USE_REAL8192	0		// 1 = use real8192 numbers (2457 digits, exp +-161614248)
+#endif
+
+#ifndef USE_REAL12288
+#define USE_REAL12288	0		// 1 = use real12288 numbers (3690 digits, exp +-161614248)
+#endif
+
+// Limiting the usage of large Chebyshev tables
+//  Chebyshev approximations can speed up calculations of mathematical functions.
+//  However, the use of Chebyshev approximations for long numbers takes a lot of
+//  memory and can be slow due to slow Flash memory access. If needed, set
+//  a limit here on the bit length of the numbers for which Chebyshev approximations
+//  will be used.
+#ifndef MAXCHEB_LN
+#define MAXCHEB_LN	1536		// max. REAL number supporting Chebyshev approximations of Ln()
+#endif
+
+#ifndef MAXCHEB_EXP
+#define MAXCHEB_EXP	1536		// max. REAL number supporting Chebyshev approximations of Exp()
+#endif
+
+#ifndef MAXCHEB_SIN
+#define MAXCHEB_SIN	1536		// max. REAL number supporting Chebyshev approximations of Sin()
+#endif
+
+#ifndef MAXCHEB_ASIN
+#define MAXCHEB_ASIN	1536		// max. REAL number supporting Chebyshev approximations of ASin()
+#endif
+
+#ifndef MAXCHEB_ATAN
+#define MAXCHEB_ATAN	1536		// max. REAL number supporting Chebyshev approximations of ATan()
+#endif
+
+#ifndef MAXCHEB_SQRT
+#define MAXCHEB_SQRT	1536		// max. REAL number supporting Chebyshev approximations of Sqrt()
+#endif
+
+// Limiting the usage of large Cordic tables (see note of Chebyshev tables)
+//   Note: Calculations using Cordic are not complete in this library because
+//   they have lower precision and they are not recommended for use in this library.
+#ifndef MAXCORD_ATAN
+#define MAXCORD_ATAN	8192	// max. REAL number supporting Cordic atan table (to calculate sin, cos, tan, asin, acos, atan)
+#endif
+
+// Limiting the usage of linear factorials
+//  Calculating the linear factorial requires tables that take up much Flash memory.
+//  If you need to limit the size of the tables, set a limit here of the bit length of
+//  the numbers that will support the linear factorial. The integer factorial
+//  can still be used, but it is slow for large numbers.
+#ifndef MAXFACT_COEFF
+#define MAXFACT_COEFF	8192	// max. REAL number supporting linear factorial
+#endif
+
+#ifndef REAL_EDITBUF_MAX
+#define REAL_EDITBUF_MAX 3000	// size of edit buffer (without terminating 0)
+				// - should be big enough to decode BIN format, use MAX_DIG*4
+#endif
+
+#endif // USE_REAL
+
+
 #endif // _CONFIG_DEF_H
