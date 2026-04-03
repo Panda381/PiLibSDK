@@ -8,10 +8,6 @@
 #ifndef _PIBASE_DEVINIT_H
 #define _PIBASE_DEVINIT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // key codes - not used, only not report errors
 #define KEY_MASK		0x3f	// mask key scan code
 #define KEYFLAG_SHIFT		B8	// Shift (= 0x100)
@@ -43,9 +39,5 @@ void DevTerm();
 
 // get scan code from keyboard buffer - without CapsLock flags (returns NOKEY if no scan code)
 INLINE int KeyGet() { return NOKEY; }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _PIBASE_DEVINIT_H

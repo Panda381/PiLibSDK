@@ -8,10 +8,6 @@
 #ifndef _ZEROPC_KEYS_H
 #define _ZEROPC_KEYS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef KEY_REP_TIME1
 #define KEY_REP_TIME1		12	// delta time of first press in multiple of 7*SYSTICK_MS (=35 ms, *12 = 420 ms)
 #endif
@@ -177,9 +173,5 @@ Bool KeyNoPressed();
 
 // wait for no key pressed
 void KeyWaitNoPressed();
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _ZEROPC_KEYS_H

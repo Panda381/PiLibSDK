@@ -148,7 +148,7 @@ _start:
 //                        Start secondary core
 // ---------------------------------------------------------------------------
 
-#if USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
+#if (CORES > 1) && USE_MULTICORE	// 1=use multicore (for applications), 0=do not use other cores (for loader)
 
 	.section .init	// init code section
 	.align	3
@@ -197,7 +197,7 @@ StartSecondary:
 
 .ltorg
 
-#endif // USE_MULTICORE
+#endif // (CORES > 1) && USE_MULTICORE
 
 // ---------------------------------------------------------------------------
 //                             Vector table
@@ -772,5 +772,78 @@ __wrap_memmove:
 	strb	w4,[x3],#1	// store byte and increase address
 	bne	6b		// next byte
 9:	ret
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Set long jump (setjmp)
+// ----------------------------------------------------------------------------
+// INPUT: X0 = pointer to jmp_buf buffer with save registers
+// OUTPUT: X0 = 0 if first calling, <>0 if returns from longjmp()
+
+	.section .text.setjmp
+	.align	3
+.global setjmp
+setjmp:
+
+	// Save callee-saved CPU registers (13 registers + 1 empty slot)
+	// - not saved registers (caller-saved): X0-X18
+	// - saved registers (callee-saved): X19-X30, SP
+	bti	c			// Branch Target Identification (mark this location as valid destination address)
+	mov	x16,sp			// X16 <- SP
+	stp	x19,x20,[x0,#0*16]	// save X19,X20
+	stp	x21,x22,[x0,#1*16]	// save X21,X22
+	stp	x23,x24,[x0,#2*16]	// save X23,X24
+	stp	x25,x26,[x0,#3*16]	// save X25,X26
+	stp	x27,x28,[x0,#4*16]	// save X27,X28
+	stp	x29,x30,[x0,#5*16]	// save X29,X30
+	str	x16,[x0,#6*16]		// save SP (in X16), skip 1 slot (to align to 16 bytes)
+
+	// Save callee-saved FPU registers (8 registers)
+	stp	d8,d9,[x0,#7*16]	// save D8,D9
+	stp	d10,d11,[x0,#8*16]	// save D10,D11
+	stp	d12,d13,[x0,#9*16]	// save D12,D13
+	stp	d14,d15,[x0,#10*16]	// save D14,D15
+
+	// return code = 0 (first calling)
+	mov	w0,#0
+	ret
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                       Execute long jump (longjmp)
+// ----------------------------------------------------------------------------
+// INPUT: X0 = pointer to jmp_buf buffer with save registers
+//	  X1 = return value (must not be 0)
+
+	.section .text.longjmp
+	.align	3
+.global longjmp
+longjmp:
+
+	// Restore callee-saved CPU registers (13 registers + 1 empty slot)
+	// - not saved registers (caller-saved): X0-X18
+	// - saved registers (callee-saved): X19-X30, SP
+	bti	c			// Branch Target Identification (mark this location as valid destination address)
+	ldp	x19,x20,[x0,#0*16]	// load X19,X20
+	ldp	x21,x22,[x0,#1*16]	// load X21,X22
+	ldp	x23,x24,[x0,#2*16]	// load X23,X24
+	ldp	x25,x26,[x0,#3*16]	// load X25,X26
+	ldp	x27,x28,[x0,#4*16]	// load X27,X28
+	ldp	x29,x30,[x0,#5*16]	// load X29,X30
+	ldr	x16,[x0,#6*16]		// load SP (in X16), skip 1 slot (to align to 16 bytes)
+
+	// load callee-saved FPU registers (8 registers)
+	ldp	d8,d9,[x0,#7*16]	// load D8,D9
+	ldp	d10,d11,[x0,#8*16]	// load D10,D11
+	ldp	d12,d13,[x0,#9*16]	// load D12,D13
+	ldp	d14,d15,[x0,#10*16]	// load D14,D15
+
+	// return code = 0 (first calling)
+	mov	sp,x16			// load SP
+	cmp	w1,#0			// check invalid return value 0 ?
+	cinc	w0,w1,eq		// X0 <- X1+1 if X1=0, or X0 <- X1 if X1 != 0
+	br	x30			// - this is the same as "ret", but with explicit register X30=LR
 
 .ltorg

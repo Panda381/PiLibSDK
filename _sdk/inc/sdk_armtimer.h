@@ -15,10 +15,6 @@
 #ifndef _SDK_ARMTIMER_H
 #define _SDK_ARMTIMER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // ARM timer pre-scaler
 #define ARMTIMER_PRESC_1	0	// f/1
 #define ARMTIMER_PRESC_16	1	// f/16
@@ -128,9 +124,5 @@ void FreeTimer_WaitUs(u32 us);
 
 // wait miliseconds using free running counter (max. 4 seconds)
 void FreeTimer_WaitMs(u32 ms);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_ARMTIMER_H

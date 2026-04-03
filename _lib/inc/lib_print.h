@@ -103,10 +103,6 @@ va_list ... variadic functions (variable number of arguments)
 #ifndef _LIB_PRINT_H
 #define _LIB_PRINT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
 // check special float numbers
 INLINE Bool CheckInfF(float num)  { return (*(u32*)&num>>22) == (0x7f800000>>22); } // +1#INF
@@ -219,7 +215,7 @@ INLINE void FilePrintStop() { StdioMask &= ~STDIO_MASK_FILE; }
 // print character to print channels
 void PrintChar(char ch);
 INLINE void printchar(char ch) { PrintChar(ch); }
-int putchar(int ch);
+extern "C" int putchar(int ch);
 INLINE int putchar_raw(char ch) { return putchar(ch); }
 
 // print unformatted text to print channels
@@ -227,16 +223,16 @@ int PrintText(const char* txt);
 INLINE int printtext(const char* txt) { return PrintText(txt); }
 
 // print unformatted text with added new-line
-int puts(const char* txt);
+extern "C" int puts(const char* txt);
 INLINE int puts_raw(const char* txt) { return puts(txt); }
 
 // formatted print to print channels
 // - Do not print simultaneously from the program and from the interrupt handler!
 //   If you really need it, use SpinLock lock to access it.
 int PrintArg(const char* fmt, va_list args);
-int vprintf(const char* fmt, va_list args);
+extern "C" int vprintf(const char* fmt, va_list args);
 int Print(const char* fmt, ...);
-int printf(const char* fmt, ...);
+extern "C" int printf(const char* fmt, ...);
 int print(const char* fmt, ...);
 
 #define NOCHAR 0
@@ -246,7 +242,7 @@ char GetChar();
 
 // get character from stdio, with wait
 char GetCharWait();
-char getchar();
+extern "C" char getchar();
 
 // get character from stdio with time-out in [us] (returns NOCHAR=0 if no character)
 char GetCharUs(u32 us);
@@ -267,10 +263,6 @@ INLINE int getchar_timeout_ms(u32 ms) { return getchar_timeout_us(ms*1000); }
 // flush input characters
 void FlushChar(void);
 //INLINE void stdio_flush(void) { FlushChar(); }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_PRINT_H
 

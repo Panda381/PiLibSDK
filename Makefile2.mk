@@ -345,8 +345,26 @@ CPPFLAGS += $(CFLAGS)
 # Do not use exceptions and unwind frames
 CPPFLAGS += -fno-exceptions -fno-unwind-tables
 
-# CPPFLAGS += -fno-rtti -fno-use-cxa-atexit -std=gnu++17
-CPPFLAGS += -std=c++14 -Wno-aligned-new -fno-rtti -nostdinc++
+# No run-time, no typeinfo, no dynamic_cast
+CPPFLAGS += -std=c++14 -fno-rtti
+
+# No warning on "new alignas(xx)"
+CPPFLAGS += -Wno-aligned-new
+
+# No default C++ headers
+CPPFLAGS += -nostdinc++
+
+# No destructors
+CPPFLAGS += -fno-use-cxa-atexit
+
+# Do not lock local static variable
+CPPFLAGS += -fno-threadsafe-statics
+
+CPPFLAGS += -fno-asynchronous-unwind-tables
+CPPFLAGS += -fno-non-call-exceptions
+
+# Switch off schrink-wrapping (not recommended to use)
+#CPPFLAGS += -fno-shrink-wrap -fno-shrink-wrap-separate
 
 ##############################################################################
 # Compiler tools

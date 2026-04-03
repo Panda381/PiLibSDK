@@ -70,7 +70,11 @@
 
 // 1=use multicore (for applications), 0=do not use other cores (for loader)
 #ifndef USE_MULTICORE
+#if CORES > 1
 #define USE_MULTICORE		1
+#else
+#define USE_MULTICORE		0
+#endif
 #endif
 
 // system initialize date and time
@@ -199,34 +203,34 @@
 //  a limit here on the bit length of the numbers for which Chebyshev approximations
 //  will be used.
 #ifndef MAXCHEB_LN
-#define MAXCHEB_LN	1536		// max. REAL number supporting Chebyshev approximations of Ln()
+#define MAXCHEB_LN	0 //1536		// max. REAL number supporting Chebyshev approximations of Ln()
 #endif
 
 #ifndef MAXCHEB_EXP
-#define MAXCHEB_EXP	1536		// max. REAL number supporting Chebyshev approximations of Exp()
+#define MAXCHEB_EXP	0 //1536		// max. REAL number supporting Chebyshev approximations of Exp()
 #endif
 
 #ifndef MAXCHEB_SIN
-#define MAXCHEB_SIN	1536		// max. REAL number supporting Chebyshev approximations of Sin()
+#define MAXCHEB_SIN	0 //1536		// max. REAL number supporting Chebyshev approximations of Sin()
 #endif
 
 #ifndef MAXCHEB_ASIN
-#define MAXCHEB_ASIN	1536		// max. REAL number supporting Chebyshev approximations of ASin()
+#define MAXCHEB_ASIN	0 //1536		// max. REAL number supporting Chebyshev approximations of ASin()
 #endif
 
 #ifndef MAXCHEB_ATAN
-#define MAXCHEB_ATAN	1536		// max. REAL number supporting Chebyshev approximations of ATan()
+#define MAXCHEB_ATAN	0 //1536		// max. REAL number supporting Chebyshev approximations of ATan()
 #endif
 
 #ifndef MAXCHEB_SQRT
-#define MAXCHEB_SQRT	1536		// max. REAL number supporting Chebyshev approximations of Sqrt()
+#define MAXCHEB_SQRT	0 //1536		// max. REAL number supporting Chebyshev approximations of Sqrt()
 #endif
 
 // Limiting the usage of large Cordic tables (see note of Chebyshev tables)
 //   Note: Calculations using Cordic are not complete in this library because
 //   they have lower precision and they are not recommended for use in this library.
 #ifndef MAXCORD_ATAN
-#define MAXCORD_ATAN	8192	// max. REAL number supporting Cordic atan table (to calculate sin, cos, tan, asin, acos, atan)
+#define MAXCORD_ATAN	0 //8192	// max. REAL number supporting Cordic atan table (to calculate sin, cos, tan, asin, acos, atan)
 #endif
 
 // Limiting the usage of linear factorials
@@ -239,7 +243,7 @@
 #endif
 
 #ifndef REAL_EDITBUF_MAX
-#define REAL_EDITBUF_MAX 3000	// size of edit buffer (without terminating 0)
+#define REAL_EDITBUF_MAX 1000 //3000	// size of edit buffer (without terminating 0)
 				// - should be big enough to decode BIN format, use MAX_DIG*4
 #endif
 

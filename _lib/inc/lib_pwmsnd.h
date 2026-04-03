@@ -26,10 +26,6 @@
 #ifndef _LIB_PWMSND_H
 #define _LIB_PWMSND_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef PWMSND_CHANNUM
 #define PWMSND_CHANNUM	4	// number of sound channels of sound mixer
 #endif
@@ -378,6 +374,14 @@ void SetNextSoundChan(int chan, const void* snddata, int size);
 //  size = length of sound in number of bytes
 void SetNextSound(const void* snddata, int size);
 
+// check if streaming buffer is empty
+Bool SoundStreamIsEmpty(int chan);
+
+// set next streaming buffer
+//  snddata = pointer to sound data
+//  size = length of sound in number of bytes
+void SoundStreamSetNext(int chan, const void* snddata, int size);
+
 // global sound set OFF
 void GlobalSoundSetOff();
 
@@ -386,10 +390,6 @@ void GlobalSoundSetOn();
 
 // set new global volume 0..VOLMAX (= 0..15)
 void GlobalVolumeSet(int vol);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_PWMSND_H
 

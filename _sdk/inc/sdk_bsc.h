@@ -12,10 +12,6 @@
 #ifndef _SDK_BSC_H
 #define _SDK_BSC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // BSC Broadcom Serial Controller Slave controller (I2C / SPI Slave)
 typedef struct {
 
@@ -211,9 +207,5 @@ int I2CSlave_Read(void* buf, int num, u32 tout);
 // Returns number of sent bytes ('result < num' means error)
 // Initialize with I2CSlave_Init() before using.
 int I2CSlave_Write(const void* buf, int num, u32 tout);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_BSC_H

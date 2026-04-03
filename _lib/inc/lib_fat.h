@@ -10,10 +10,6 @@
 #ifndef _LIB_FAT_H
 #define _LIB_FAT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define PATHCHAR	'/'	// default path separator (can be '\\' too)
 
 // path or filename
@@ -419,6 +415,12 @@ u32 FilePrintArg(sFile* file, const char* fmt, va_list args);
 
 // formatted print string to file, with variadic arguments (returns number of characters)
 NOINLINE u32 FilePrint(sFile* file, const char* fmt, ...);
+
+// initialize stream to read from open file
+void StreamReadFileInit(sStream* str, sFile* file);
+
+// initialize stream to write to open file
+void StreamWriteFileInit(sStream* str, sFile* file);
 #endif // USE_STREAM
 
 // flush file writes and flush disk buffers (returns False on error)
@@ -550,10 +552,6 @@ int GetHomePath(char* path, int pathmax, char* filename);
 //  This may take a few seconds to write.
 Bool ScreenShot(void);
                                              
-#ifdef __cplusplus
-}
-#endif
-
 #endif // _LIB_FAT_H
 
 #endif // USE_FAT

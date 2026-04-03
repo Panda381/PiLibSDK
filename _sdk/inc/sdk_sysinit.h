@@ -8,10 +8,6 @@
 #ifndef _SDK_SYSINIT_H
 #define _SDK_SYSINIT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // SoC chip type
 #define SOC_BCM2835	0	// Broadcom BCM2835
 #define SOC_BCM2836	1	// Broadcom BCM2836
@@ -118,10 +114,10 @@ extern const char* BoardSocManuNameList[SOC_MANU_NUM];
 #if AARCH == 32
 
 // Initialize VFP coprocessor
-void VfpInit(void);
+extern "C" void VfpInit(void);
 
 // Terminate VFP coprocessor
-void VfpTerm(void);
+extern "C" void VfpTerm(void);
 
 #endif // AARCH == 32
 
@@ -129,14 +125,14 @@ void VfpTerm(void);
 u32 GetCoreTemp(void);
 
 // System initialize (called from startup.S and startup64.S)
-void SysInit(void);
+extern "C" void SysInit(void);
 
-#if USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
+#if (CORES > 1) && USE_MULTICORE	// 1=use multicore (for applications), 0=do not use other cores (for loader)
 #if RASPPI > 1
 // Core system initialize
-void SysInitSecondary(void);
+extern "C" void SysInitSecondary(void);
 #endif // RASPPI > 1
-#endif // USE_MULTICORE
+#endif // (CORES > 1) && USE_MULTICORE
 
 #if !USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
 // system terminate (cannot be run with multicore, used only by boot loader)
@@ -160,9 +156,5 @@ INLINE u32 SysTicksToUs(u32 clk) { return (u32)(((u64)clk*UsSysTick) >> 32); }
 
 // convert system core ticks to milliseconds
 INLINE u32 SysTicksToMs(u32 clk) { return (u32)(((u64)clk*MsSysTick) >> 32); }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_SYSINIT_H

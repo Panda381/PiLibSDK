@@ -13,10 +13,6 @@
 
 #include "real_def.h"		// define
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // real number structure
 typedef struct {
 	BASE	n[BASE_NUM];	// real number segments
@@ -1975,9 +1971,5 @@ void REALNAME(FromText)(REAL* num, const char* txt);
 //  RealRightAlign ... right align text in buffer
 //  RealMaxDig ... max. number of valid digits (0 = default, negative = cut digits from end)
 int REALNAME(ToText)(const REAL* num, char* buf, int size);
-
-#ifdef __cplusplus
-}
-#endif
 
 #include "real_undef.h"		// undefine

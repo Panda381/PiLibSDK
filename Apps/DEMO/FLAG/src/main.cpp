@@ -16,14 +16,23 @@
 #define MASTH	420	// mast height
 #define MASTX	110	// mast X coordinate
 
+u8* CloudsImg;
+u8* FlagImg;
+
 int main()
 {
 	int x, x2, y, key;
 	float phase;
 
+	// decompress images from JPG format
+	CloudsImg = (u8*)JPGLOAD(CloudsImgJpg);
+	if (CloudsImg == NULL) Reboot(); // emergency exit
+	FlagImg = (u8*)JPGLOAD(FlagImgJpg);
+	if (FlagImg == NULL) Reboot(); // emergency exit
+
 	// draw sky and mast
-	DRAWIMG(CloudsImg, 0, 0);
-	DRAWIMG(MastImg, MASTX, HEIGHT - MASTH);
+	DrawImg(CloudsImg, 0, 0);
+	DrawImg(MastImg, MASTX, HEIGHT - MASTH);
 	DispUpdate();
 
 #define WAVELEN	0.03f	// wave length
@@ -47,13 +56,13 @@ int main()
 			x2 = x + FLAGX + MASTX;
 
 			// draw flag
-			DrawImg(FlagImg, x2, y, x, 0, 1, FLAGH, 255);
+			DrawImg(FlagImg, x2, y, x, 0, 1, FLAGH);
 
 			// redraw sky
 			if (x2 >= MASTX + MASTW) // to avoid overwrite top part of the mast
 			{
-				DrawImg(CloudsImg, x2, 0, x2, 0, 1, y, 255);
-				DrawImg(CloudsImg, x2, y + FLAGH, x2, y + FLAGH, 1, HEIGHT - y - FLAGH, 255);
+				DrawImg(CloudsImg, x2, 0, x2, 0, 1, y);
+				DrawImg(CloudsImg, x2, y + FLAGH, x2, y + FLAGH, 1, HEIGHT - y - FLAGH);
 			}
 		}
 

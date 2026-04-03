@@ -8,10 +8,6 @@
 #ifndef _SDK_RNG_H
 #define _SDK_RNG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Hardware Random Number Generator interface
 typedef struct {
 
@@ -41,9 +37,5 @@ void RNG_Term(void);
 // get random number (it can take up to 32 us to generate)
 // - This function is not interrupt and core safe.
 u32 RNG_Get(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_RNG_H

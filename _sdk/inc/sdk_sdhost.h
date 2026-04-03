@@ -8,10 +8,6 @@
 #ifndef _SDK_SDHOST_H
 #define _SDK_SDHOST_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define SECTOR_SIZE		512		// sector size
 #define SDDATA_FIFO_WORDS	16		// size of data FIFO in number of words
 #define SDCDIV_MAX_CDIV		0x7ff		// SDCDIV max. clock divider
@@ -200,9 +196,5 @@ void SD_Disconnect(void);
 
 // connect SD card (returns False on error)
 Bool SD_Connect(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_SDHOST_H

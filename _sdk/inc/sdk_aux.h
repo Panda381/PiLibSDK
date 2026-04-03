@@ -97,10 +97,6 @@ SPI2 is present in Pi 4 and higher chips, but it is not mapped to any GPIO pins 
 #ifndef _SDK_AUX_H
 #define _SDK_AUX_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // UART1 RTS level control 1..4 empty spaces left to de-assert RTS output signal
 #define UART1_RTSLEVEL_1	2	// 1 empty space left
 #define UART1_RTSLEVEL_2	1	// 2 empty spaces left
@@ -737,9 +733,5 @@ void SPI2_Term(void);
 //  num ... number of bytes
 void SPI1_WriteRead(int cs, const u8* wbuf, u8* rbuf, int num);
 void SPI2_WriteRead(int cs, const u8* wbuf, u8* rbuf, int num);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_AUX_H

@@ -17,15 +17,16 @@ include ${PI_ROOT_PATH}/Makefile1.mk
 ASRC +=
 
 # C source files
-CSRC += img/Clouds.c
-CSRC += img/Hotair.c
-CSRC += img/Blue.c
-CSRC += img/Green.c
-CSRC += img/Orange.c
-CSRC += img/Red.c
+CSRC +=
 
 # C++ source files
 SRC += src/main.cpp
+SRC += img/Clouds.cpp
+SRC += img/Hotair.cpp
+SRC += img/Blue.cpp
+SRC += img/Green.cpp
+SRC += img/Orange.cpp
+SRC += img/Red.cpp
 
 ##############################################################################
 #                         Library configuration
@@ -34,6 +35,9 @@ SRC += src/main.cpp
 
 # 1=use BIT integers, 0=not used (_lib/bigint/*)
 USE_BIGINT=0
+
+# 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
+USE_MP3=0
 
 # 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
 USE_PWMSND=0

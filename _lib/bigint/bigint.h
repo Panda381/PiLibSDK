@@ -9,10 +9,6 @@
 #ifndef _BIGINT_H
 #define _BIGINT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //#define BIGINT_BERN_NUM	1024		// number of table Bernoulli numbers - use number 0, 256, 512, 768 or 1024
 #define BIGINT_BASE_BITS	32		// number of bits of base segment
 #define BIGINT_BASE		u32		// type of base segment unsigned
@@ -195,10 +191,6 @@ void Bernoulli(int n, bigint* numer, bigint* denom, bernoulli_cb cb);
 // Test Bernoulli generator with s64
 //s64 GCD64(s64 a, s64 b);
 //void Bernoulli64(int n, s64* numer, s64* denom);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _BIGINT_H
 #endif // USE_BIGINT		// use Big Integers (bigint.c, bigint.h)

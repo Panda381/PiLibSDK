@@ -40,10 +40,6 @@
 #ifndef _SDK_ARMLOCAL_H
 #define _SDK_ARMLOCAL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define IRQ_LOCAL_FIRST		72	// first local IRQ
 
 // ARM core local peripherals
@@ -344,10 +340,6 @@ INLINE Bool LocalIRQPending(int core, int irq) { return ArmLocal->IRQPEND[core] 
 
 // check if local FIQ fast interrupt is pending (use IRQ_LOCAL_* constants; IRQ values are in range 72..83)
 INLINE Bool LocalFIQPending(int core, int irq) { return ArmLocal->FIQPEND[core] & (1 << (irq - IRQ_LOCAL_FIRST)); }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_ARMLOCAL_H
 

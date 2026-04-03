@@ -149,6 +149,21 @@ typedef struct {
 } PACKED sBmp;
 #pragma pack(pop)
 
+// inplace "new" operator
+//	example:	new (&m_List[inx]) CText;
+//			m_List[i].~CText()
+
+//inline void* operator new (long unsigned int size, void* p)
+INLINE void* operator new (size_t size, void* p)
+{
+	return p;
+}
+
+INLINE void operator delete (void* adr, void* p)
+{
+	return;
+}
+
 // ----------------------------------------------------------------------------
 //                               Constants
 // ----------------------------------------------------------------------------
@@ -239,6 +254,8 @@ typedef struct {
 
 #define NOCHAR		0	// no character
 #define NOKEY		-1	// no key from keyboard
+
+#define BIGINT		0x40000000 // big integer number
 
 // ----------------------------------------------------------------------------
 //                           Real numbers control

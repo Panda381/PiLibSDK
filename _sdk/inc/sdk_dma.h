@@ -30,10 +30,6 @@
 #ifndef _SDK_DMA_H
 #define _SDK_DMA_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // DREQ - DMA data request number
 #if RASPPI < 4
 
@@ -379,9 +375,5 @@ INLINE void DMA_IORead(u32* dst, io32* src, int len, int dreq)
 void DMA_IOWriteCh(int ch, io32* dst, const u32* src, int len, int dreq);
 INLINE void DMA_IOWrite(io32* dst, const u32* src, int len, int dreq)
 	{ DMA_IOWriteCh(DMA_CH, dst, src, len, dreq); }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_DMA_H

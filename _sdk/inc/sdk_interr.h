@@ -24,10 +24,6 @@
 #ifndef _SDK_INTERR_H
 #define _SDK_INTERR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // IRQ interrupt indices
 #define IRQ_TIMER0		0	// System timer channel 0
 #define IRQ_TIMER1		1	// System timer channel 1
@@ -264,8 +260,7 @@ INLINE void SignalHandler(int signal, tSignalHandler* handler)
 // disable all interrupts
 void IntDisableAll();
 
-#ifdef __cplusplus
-}
-#endif
+// IRQ interrupt dispatch - this function is called from IRQ exception handler IRQHandler at startup32.S
+extern "C" void IRQ_Dispatch();
 
 #endif // _SDK_INTERR_H

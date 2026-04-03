@@ -18,10 +18,6 @@
 #ifndef _LIB_CRC_H
 #define _LIB_CRC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // check patterns
 #define CRCPAT1LEN 9	// length of CRC pattern 1
 extern const char ALIGNED CrcPat1[];
@@ -706,10 +702,6 @@ u16 CrcXor(const void* buf, int len);
 
 // check Xor checksum calculation (returns False on error)
 Bool CrcXorCheck(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_CRC_H
 

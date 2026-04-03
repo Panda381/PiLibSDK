@@ -3,7 +3,7 @@ Syntax: guipic input_file output_file name format
      output_file = C source file
      name = name of picture structure
      format (or command)
-        without alpha: CF_R8G8B8, CF_R5G6B5, CF_R3G3B2
+        without alpha: CF_R8G8B8, CF_B8G8R8, CF_R5G6B5, CF_R3G3B2
         with alpha: CF_A8B8G8R8, CF_A8R8G8B8, CF_A1R5G5B5, CF_A2R5G5B4
                     CF_A4R4G4B4, CF_A8, CF_A4, CF_A3, CF_A2, CF_A1
         compression: CF_DXT1C, CF_DXT1C2, CF_DXT1A, CF_DXT3, CF_DXT5

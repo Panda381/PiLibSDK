@@ -10,10 +10,6 @@
 #ifndef _LIB_DRAW_H
 #define _LIB_DRAW_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // 32-bit colors, format RGBA (components are 0..255, alpha 0=transparent, 255=opaque)
 #define COLOR(r,g,b,a)	((u32)( (r) | ((g)<<8) | ((b)<<16) | ((a)<<24) ))
 // - base colors
@@ -150,49 +146,51 @@ typedef struct {
 // picture color format
 enum COLFMT {
 	// without alpha
-	CF_R8G8B8,		// (3B) R8G8B8, 24 bits RGB
-	CF_R5G6B5,		// (2B) R5G6B5, 16 bits RGB
-	CF_R3G3B2,		// (1B) R3G3B2, 8 bits RGB
+	CF_B8G8R8,		// (3B) B8G8R8, 24 bits RGB
+//	CF_R8G8B8,		// (3B) R8G8B8, 24 bits RGB
+//	CF_R5G6B5,		// (2B) R5G6B5, 16 bits RGB
+//	CF_R3G3B2,		// (1B) R3G3B2, 8 bits RGB
 
 	// with alpha
 	CF_A8B8G8R8,		// (4B) A8B8G8R8, 24 bits BGR with 8 bits alpha
-	CF_A8R8G8B8,		// (4B) A8R8G8B8, 24 bits RGB with 8 bits alpha
-	CF_A1R5G5B5,		// (2B) A1R5G5B5, 15 bits RGB with 1 bit alpha
-	CF_A2R5G5B4,		// (2B) A2R5G5B4, 14 bits RGB with 2 bits alpha
-	CF_A4R4G4B4,		// (2B) A4R4G4B4, 12 bits RGB with 4 bits alpha
+//	CF_X8B8G8R8,		// (4B) X8B8G8R8, 24 bits BGR with 8 bits not used (=255)
+//	CF_A8R8G8B8,		// (4B) A8R8G8B8, 24 bits RGB with 8 bits alpha
+//	CF_A1R5G5B5,		// (2B) A1R5G5B5, 15 bits RGB with 1 bit alpha
+//	CF_A2R5G5B4,		// (2B) A2R5G5B4, 14 bits RGB with 2 bits alpha
+//	CF_A4R4G4B4,		// (2B) A4R4G4B4, 12 bits RGB with 4 bits alpha
 	CF_A8,			// (1B) A8, 8 bits alpha
-	CF_A4,			// (1B) A4, 4 bits alpha
-	CF_A3,			// (1B) A3, 2+3+3 bits alpha
-	CF_A2,			// (1B) A2, 2 bits alpha
-	CF_A1,			// (1B) A1, 1 bit alpha
+//	CF_A4,			// (1B) A4, 4 bits alpha
+//	CF_A3,			// (1B) A3, 2+3+3 bits alpha
+//	CF_A2,			// (1B) A2, 2 bits alpha
+//	CF_A1,			// (1B) A1, 1 bit alpha
 
 	// compression
-	CF_DXT1C,		// (1/2B) DXT1 compression, 8 byte texel 4x4 without alpha
-	CF_DXT1C2,		// (1/2B) DXT1 compression, 8 byte texel 4x4 without alpha, double sized CF_DXT1C
-	CF_DXT1A,		// (1/2B) DXT1 compression, 8 byte texel 4x4 with 1-bit alpha
-	CF_DXT3,		// (1B) DXT3 compression, 16 byte texel 4x4 with 4-bit alpha
-	CF_DXT5,		// (1B) DXT5 compression, 16 byte texel 4x4 with interpolated alpha
+//	CF_DXT1C,		// (1/2B) DXT1 compression, 8 byte texel 4x4 without alpha
+//	CF_DXT1C2,		// (1/2B) DXT1 compression, 8 byte texel 4x4 without alpha, double sized CF_DXT1C
+//	CF_DXT1A,		// (1/2B) DXT1 compression, 8 byte texel 4x4 with 1-bit alpha
+//	CF_DXT3,		// (1B) DXT3 compression, 16 byte texel 4x4 with 4-bit alpha
+//	CF_DXT5,		// (1B) DXT5 compression, 16 byte texel 4x4 with interpolated alpha
 
 	// palettes
-	CF_PAL,			// (1B) 8 bits color with internal palettes (in front of data)
-	CF_PALUNI,		// (1B) 8 bits color with uniform palettes (6*6*6)
-	CF_PALUNIT,		// (1B) 8 bits color with uniform palettes (6*6*6) with transparency
-	CF_PALUNI2,		// (1B) 8 bits color with uniform palettes 2 (6*7*6)
-	CF_PALUNI2T,		// (1B) 8 bits color with uniform palettes 2 (6*7*6) with transparency
-	CF_PALGEM,		// (1B) 8 bits color with Gemtree palettes
-	CF_PALGEMT,		// (1B) 8 bits color with Gemtree palettes with transparency
-	CF_PAL332,		// (1B) 8 bits color with uniform palettes CF_R3G3B2 (8*8*4)
-	CF_PALCOMP,		// (1B) 8 bits color with Compass palettes (2*2*2+Y)
-	CF_PAL1,		// (1B) 8 bits color with palette set 1
-	CF_PAL2,		// (1B) 8 bits color with palette set 2
-	CF_PAL3,		// (1B) 8 bits color with palette set 3
-	CF_PAL4,		// (1B) 8 bits color with palette set 4
-	CF_PAL5,		// (1B) 8 bits color with palette set 5
+//	CF_PAL,			// (1B) 8 bits color with internal palettes (in front of data)
+//	CF_PALUNI,		// (1B) 8 bits color with uniform palettes (6*6*6)
+//	CF_PALUNIT,		// (1B) 8 bits color with uniform palettes (6*6*6) with transparency
+//	CF_PALUNI2,		// (1B) 8 bits color with uniform palettes 2 (6*7*6)
+//	CF_PALUNI2T,		// (1B) 8 bits color with uniform palettes 2 (6*7*6) with transparency
+//	CF_PALGEM,		// (1B) 8 bits color with Gemtree palettes
+//	CF_PALGEMT,		// (1B) 8 bits color with Gemtree palettes with transparency
+//	CF_PAL332,		// (1B) 8 bits color with uniform palettes CF_R3G3B2 (8*8*4)
+//	CF_PALCOMP,		// (1B) 8 bits color with Compass palettes (2*2*2+Y)
+//	CF_PAL1,		// (1B) 8 bits color with palette set 1
+//	CF_PAL2,		// (1B) 8 bits color with palette set 2
+//	CF_PAL3,		// (1B) 8 bits color with palette set 3
+//	CF_PAL4,		// (1B) 8 bits color with palette set 4
+//	CF_PAL5,		// (1B) 8 bits color with palette set 5
 };
 
 // picture (size 8 bytes + picture data)
 //  Fonts: Only CF_A8 format is supported in this library for the fonts.
-//  Images: Only CF_A8B8G8R8 format is supported in the library for the images.
+//  Images: Only CF_A8B8G8R8, CF_R8G8B8 or CF_A8 format is supported in the library for the images.
 typedef struct {
 	u16	w;		// 0x00: width
 	u16	h;		// 0x02: height
@@ -202,6 +200,7 @@ typedef struct {
 	u8	data[4];	// 0x08: start of data (aligned - can be accessed as u16 or u32)
 } sPic;
 STATIC_ASSERT(sizeof(sPic) == 0x0C, "Incorrect sPic!");
+#define SPIC_HEADER_SIZE  8	// sPic header size
 
 // Blend two colors
 //  alpha ... 255=full col1, 0=full col2 
@@ -320,12 +319,12 @@ void DrawTriangleInv(int x1, int y1, int x2, int y2, int x3, int y3);
 // Draw fill area (no blending)
 void DrawFill(int x, int y, u32 col);
 
-// Draw image (image must be in aligned CF_A8B8G8R8 format; alpha 0=transparent, 255=opaque)
-#define IMG_MAXWH	0x10000		// can be used as 'w' and 'h' to display the entire image
-void DrawImg(const u8* img, int x, int y, int xs, int ys, int w, int h, int alpha);
-#define DRAWIMG(img, x, y) DrawImg(img, x, y, 0, 0, IMG_MAXWH, IMG_MAXWH, 255)
+// Draw image (image must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format; alpha 0=transparent, 255=opaque)
+#define IMG_MAXWH	0x20000		// can be used as 'w' and 'h' to display the entire image
+void DrawImg(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH, int alpha=255);
+//#define DRAWIMG(img, x, y) DrawImg(img, x, y, 0, 0, IMG_MAXWH, IMG_MAXWH, 255)
 
-// Invert image (image must be in aligned CF_A8B8G8R8 format)
+// Invert image (image must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format)
 void DrawImgInv(const u8* img, int x, int y, int xs, int ys, int w, int h);
 
 // Draw image mask (image must be in CF_A8 format; alpha 0=transparent, 255=opaque)
@@ -512,10 +511,6 @@ u32 DrawPrintArg(const char* fmt, va_list args);
 NOINLINE u32 DrawPrint(const char* fmt, ...);
 
 #endif // USE_STREAM
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_DRAW_H
 

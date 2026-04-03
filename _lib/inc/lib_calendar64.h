@@ -15,10 +15,6 @@
 #ifndef _LIB_CALENDAR64_H
 #define _LIB_CALENDAR64_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // total 58454 years, 0xE456
 #define MINYEAR2 -29226		// min. year (= 29227 BCE)
 #define MAXYEAR2 +29227		// max. year (= 29227 CE)
@@ -52,7 +48,9 @@ extern "C" {
 #define MINTIME2 (s64)-9223339968000000000ll // minimal absolute time, 0x8000:1D2A:9CB2:8000 (Friday 1/1/29227 BCE 0:0:0.0)
 #define MAXTIME2 (s64)9223151615999999999ll // maximal absolute time, 0x7FFF:3787:453F:FFFF (Friday 12/31/29227 CE 23:59:59.9999999)
 
-/* // Already defined in calendar.h
+#if !USE_CALENDAR	// 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
+
+// Already defined in calendar.h
 // days in month
 extern const s8 DaysInMonth[12]; // normal year
 extern const s8 DaysInMonthLeap[12]; // leap year
@@ -60,12 +58,7 @@ extern const s8 DaysInMonthLeap[12]; // leap year
 // days in months from start of year (in normal year)
 extern const s16 DaysInYear[13];
 
-// day of week name - short
-extern const LPCTSTR day_of_week_name[7];
-
-// day of week name - long
-extern const LPCTSTR day_of_week_name2[7];
-*/
+#endif // USE_CALENDAR
 
 // date and time structure
 typedef struct {
@@ -235,10 +228,6 @@ void DebTestCalendar64();
 
 // datetime64 fast check (returns year on error or 0 if OK)
 //s16 DateTime64FastCheck(int loops);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_CALENDAR64_H
 

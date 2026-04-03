@@ -10,10 +10,6 @@
 #ifndef _LIB_CALENDAR_H
 #define _LIB_CALENDAR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define MINYEAR 1970		// min. year
 #define MAXYEAR	2099		// max. year
 #define MAXDAY 47481		// max. day (12/31/2099)
@@ -28,12 +24,6 @@ extern const s8 DaysInMonthLeap[12]; // leap year
 
 // days in months from start of year (in normal year)
 extern const s16 DaysInYear[13];
-
-// day of week name - short
-extern const char* DayOfWeekName[7];
-
-// day of week name - long
-extern const char* DayOfWeekName2[7];
 
 // date and time structure
 typedef struct {
@@ -108,15 +98,14 @@ Bool DateTimeDec(sDateTime* dt);
 // pack date and time into Unix time, optionally with ms and us if not NULL (day of week is ignored)
 u32 DateTimePack(const sDateTime* dt, s16* ms, s16* us);
 
+// get day of week from Unix time
+int DateTimeGetDow(u32 ut);
+
 // unpack date and time from Unix time (updates day of week too)
 void DateTimeUnpack(sDateTime* dt, u32 ut, s16 ms, s16 us);
 
 // datetime debug check (returns year of error or 0 if OK)
 //s16 DateTimeDebugCheck();
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_CALENDAR_H
 

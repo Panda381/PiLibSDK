@@ -30,6 +30,9 @@ SRC += src/main.cpp
 # 1=use BIT integers, 0=not used (_lib/bigint/*)
 USE_BIGINT=1
 
+# 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
+USE_MP3=0
+
 # 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
 USE_PWMSND=0
 

@@ -7,4 +7,6 @@
 
 #include INCLUDES_H		// all includes
 
+#define FLAGIMGJPG 40396
+
 #include "src/main.h"		// main code

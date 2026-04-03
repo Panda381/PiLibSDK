@@ -5,5 +5,5 @@
 //
 // ****************************************************************************
 
-extern const u8 Earth1Img[2097160] __attribute__ ((aligned(4)));
-extern const u8 Earth2Img[2097160] __attribute__ ((aligned(4)));
+extern const u8 Earth1ImgJpg[325856];
+extern const u8 Earth2ImgJpg[129389];

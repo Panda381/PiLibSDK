@@ -12,10 +12,6 @@
 #ifndef _SDK_I2C_H
 #define _SDK_I2C_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // I2C controller
 typedef struct {
 	io32	CTRL;		// 0x00: control
@@ -167,9 +163,5 @@ int I2C_Read(int i2c, int addr, void* buf, int num);
 // Returns number of sent bytes ('result < num' means error)
 // Remap GPIOs before using.
 int I2C_Write(int i2c, int addr, const void* buf, int num);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_I2C_H

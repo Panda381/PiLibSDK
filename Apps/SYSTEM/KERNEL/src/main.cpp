@@ -26,7 +26,7 @@
 //#define ATTR_DIR	B4	// Directory
 //#define ATTR_ARCH	B5	// Archive
 #define ATTR_TXT	B6	// internal: text file TXT present
-#define ATTR_BMP	B7	// internal: bitmap indicator BMP present
+#define ATTR_JPG	B7	// internal: image file JPG present
 #define ATTR_MASK	0x3F	// mask of valid bits
 
 // size of jump trampoline
@@ -89,13 +89,12 @@ u8 LastNameDir; // ATTR_DIR flag of last name
 enum  {
 	PREV_START,	// waiting for start
 	PREV_TXT_LOAD,	// loading text
-	PREV_BMP_START,	// waiting for bitmap start
-	PREV_BMP_LOAD,	// loading bitmap
+	PREV_JPG_START,	// waiting for image start
+	PREV_JPG_LOAD,	// loading image
 	PREV_STOP,	// preview not active
 };	
 
 int PrevState; // current preview state
-int PrevBytes; // number of BMP bytes per pixel: 3 or 4
 sFileDesc* PrevFD; // preview file descriptor
 int PrevLine; // current preview line
 sFile PrevFile; // preview file (name[0] = 0 if not open)
@@ -271,7 +270,7 @@ void InxFileList()
 }
 
 // display file list
-//  "|[12345678] TXT BMP  [12345678] TXT BMP|"
+//  "|[12345678] TXT JPG  [12345678] TXT JPG|"
 void DispFileList()
 {
 	// reset cursor
@@ -328,10 +327,10 @@ void DispFileList()
 			// space
 			DispSpc();
 
-			// BMP mark
-			if ((fd->attr & ATTR_BMP) != 0)
+			// JPG mark
+			if ((fd->attr & ATTR_JPG) != 0)
 			{
-				DispText("BMP");
+				DispText("JPG");
 			}
 			else
 				DispSpcRep(3);
@@ -480,9 +479,9 @@ void LoadFileList()
 				}
 				else
 				{
-					// check extension "BMP"
-					if ((name[len] == '.') && (name[len+1] == 'B') &&
-						 (name[len+2] == 'M') && (name[len+3] == 'P'))
+					// check extension "JPG"
+					if ((name[len] == '.') && (name[len+1] == 'J') &&
+						 (name[len+2] == 'P') && (name[len+3] == 'G'))
 					{
 						// search this file name
 						sFileDesc* fd = FileDesc;
@@ -491,8 +490,8 @@ void LoadFileList()
 							// compare file name length
 							if (fd->len == len)
 							{
-								// compare file names, set BMP flag
-								if (memcmp(fd->name, name, len) == 0) fd->attr |= ATTR_BMP;
+								// compare file names, set JPG flag
+								if (memcmp(fd->name, name, len) == 0) fd->attr |= ATTR_JPG;
 							}
 							fd++;
 						}
@@ -724,9 +723,9 @@ void Preview()
 	int i, j;
 	char ch;
 	u8 inv;
-	sBmp* bmp;
 	u32* dst;
 	u8* src;
+	sPic* pic;
 
 	switch(PrevState)
 	{
@@ -755,7 +754,7 @@ void Preview()
 		if ((PrevFD->attr & ATTR_TXT) == 0)
 		{
 			// waitting for bitmap start
-			PrevState = PREV_BMP_START;
+			PrevState = PREV_JPG_START;
 			return;
 		}
 
@@ -768,7 +767,7 @@ void Preview()
 		if (!FileOpen(&PrevFile, TempBuf))
 		{
 			// cannot open text file, waitting for bitmap start
-			PrevState = PREV_BMP_START;
+			PrevState = PREV_JPG_START;
 			return;
 		}
 		TempBufNum = 0; // no data in temporary buffer
@@ -899,7 +898,7 @@ void Preview()
 		}
 
 		// prepare number of rows
-		i = ((PrevFD->attr & ATTR_BMP) == 0) ? TEXTH : (TEXTH/2);
+		i = ((PrevFD->attr & ATTR_JPG) == 0) ? TEXTH : (TEXTH/2);
 
 		// increase curren row
 		PrevLine++;
@@ -911,134 +910,64 @@ void Preview()
 			FileClose(&PrevFile);
 
 			// start loading bitmap
-			PrevState = PREV_BMP_START;
+			PrevState = PREV_JPG_START;
 		}
 		break;
 
-	// waiting for bitmap start
-	case PREV_BMP_START:
+	// waiting for image start
+	case PREV_JPG_START:
 
-		// no bitmap file
-		if ((PrevFD->attr & ATTR_BMP) == 0)
+		// no image file
+		if ((PrevFD->attr & ATTR_JPG) == 0)
 		{
 			// stop loading
 			PrevState = PREV_STOP;
 			return;
 		}
 
-		// prepare filename of bitmap file
+		// prepare filename of image file
 		memcpy(TempBuf, PrevFD->name, PrevFD->len);
-		memcpy(&TempBuf[PrevFD->len], ".BMP", 5);
+		memcpy(&TempBuf[PrevFD->len], ".JPG", 5);
 
-		// open bitmap file
+		// open image file
 		SetDir(Path);
 		if (!FileOpen(&PrevFile, TempBuf))
 		{
-			// cannot open bitmap file, stop
+			// cannot open image file, stop
 			PrevState = PREV_STOP;
 			return;
 		}
-		TempBufNum = 0; // no data in temporary buffer
-		TempBufInx = 0; // reset current index in temporary buffer
-
-		// load bitmap header
-		i = FileRead(&PrevFile, TempBuf, sizeof(sBmp));
-
-		// get size of preview image
-		bmp = (sBmp*)TempBuf;
-		PrevW = bmp->biWidth; // width aligned to DWORD
-		PrevH = bmp->biHeight;
-		if (PrevH < 0) PrevH = -PrevH; // negative height -> flip row order
-
-		// check bitmap header
-		if ((i != sizeof(sBmp)) ||
-			(PrevW < 8) || (PrevW > 2048) ||
-			(PrevH < 8) || (PrevH > 2048) ||
-			(bmp->bfType != 0x4D42) ||
-			(bmp->bfSize < 100) || (bmp->bfSize > 5000000) ||
-			(bmp->bfOffBits < 54) || (bmp->bfOffBits > 2000) ||
-			(bmp->biPlanes != 1) ||
-			((bmp->biBitCount != 32) && (bmp->biBitCount != 24)))
-		{
-			FileClose(&PrevFile);
-
-			// cannot open bitmap file, stop
-			PrevState = PREV_STOP;
-			return;
-		}
-
-		PrevBytes = bmp->biBitCount/8;
-		PrevWB = (PrevW * PrevBytes + 3) & ~3;
-
-		// set start of first line
-		FileSeek(&PrevFile, bmp->bfOffBits);
 
 		// prepare first video line
 		PrevLine = ((PrevFD->attr & ATTR_TXT) == 0) ? 0 : (HEIGHT/2);
 
-		// loading bitmap file
-		PrevState = PREV_BMP_LOAD;
+		// loading image file
+		PrevState = PREV_JPG_LOAD;
 		break;
 
-	// loading bitmap
-	case PREV_BMP_LOAD:
+	// loading image
+	case PREV_JPG_LOAD:
 
-		// prepare address in video memory
-		dst = &FrameBuffer.drawbuf[PrevLine*WIDTH + WIDTH/2];
+		// load file
+		pic = JPGLoadFile(&PrevFile);
 
-		// prepare size of data to read from one line
-		i = (PrevW > (WIDTH/2)) ? (WIDTH/2) : PrevW;
+		// close preview file
+		FileClose(&PrevFile);
 
-		// read one video line
-		FileRead(&PrevFile, TempBuf, i*PrevBytes); // max. 320*4 = 1280 bytes
-		src = (u8*)TempBuf;
-		j = i;
-		if (PrevBytes == 4)
+		// draw image
+		if (pic != NULL)
 		{
-			
-			for (; j > 0; j--)
-			{
-				u8 b = src[0];
-				u8 g = src[1];
-				u8 r = src[2];
-				src += 4;
-				*dst++ = COLOR(r, g, b, 255);
-			}
-		}
-		else
-		{
-			for (; j > 0; j--)
-			{
-				u8 b = src[0];
-				u8 g = src[1];
-				u8 r = src[2];
-				src += 3;
-				*dst++ = COLOR(r, g, b, 255);
-			}
+			DrawImg((const u8*)pic, WIDTH/2, PrevLine);
+
+			// delete image
+			MemFree(pic);
 		}
 
-		// skip rest of line
-		if (PrevWB > i*PrevBytes) FileSeek(&PrevFile, FilePos(&PrevFile) + PrevWB - i*PrevBytes);
+		// display update
+		DispUpdate();
 
-		// increase line
-		PrevLine++;
-		PrevH--;
-
-		// end of image
-		if ((PrevLine >= HEIGHT) || (PrevH <= 0))
-		{
-			DispUpdate();
-
-			// close preview file
-			FileClose(&PrevFile);
-
-			// stop preview
-			PrevState = PREV_STOP;
-		}
-		else
-		{
-			if ((PrevH & 0x1f) == 0) DispUpdate();
-		}
+		// stop preview
+		PrevState = PREV_STOP;
 		break;
 
 	// preview not active

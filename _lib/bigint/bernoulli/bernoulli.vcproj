@@ -359,11 +359,11 @@
 			Name="bigint"
 			>
 			<File
-				RelativePath="..\bernoulli.c"
+				RelativePath="..\bernoulli.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\bigint.c"
+				RelativePath="..\bigint.cpp"
 				>
 			</File>
 			<File
@@ -376,7 +376,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\main.c"
+			RelativePath=".\main.cpp"
 			>
 		</File>
 		<File

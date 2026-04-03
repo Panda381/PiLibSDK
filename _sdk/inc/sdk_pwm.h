@@ -56,10 +56,6 @@ GPIO45	-	PWM0_1	-
 #ifndef _SDK_PWM_H
 #define _SDK_PWM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // PWM Pulse Width Modulator
 typedef struct {
 	io32	CTL;		// 0x00: control
@@ -134,9 +130,5 @@ void PWM_Start(u32 freq, int period, Bool msmode, Bool invert);
 
 // stop PWM output
 void PWM_Stop(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_PWM_H

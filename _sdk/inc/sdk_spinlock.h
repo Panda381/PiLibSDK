@@ -22,10 +22,6 @@
 #ifndef _SDK_SPINLOCK_H
 #define _SDK_SPINLOCK_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // initialize spinlock (1=locked, 0=unlocked)
 void SpinLockInit(volatile u8* addr);
 
@@ -37,9 +33,5 @@ void SpinLockLock(volatile u8* addr);
 
 // unlock spinlock
 void SpinLockUnlock(volatile u8* addr);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_SPINLOCK_H

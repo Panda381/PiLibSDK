@@ -23,14 +23,23 @@
 #define UNUM2 (UNUM/2)
 int UTab[UNUM];
 
+u8* Earth1Img;
+u8* Earth2Img;
+
 int main()
 {
 	int i, x, y, xr, u, v, off, key;
 	u32* d;
-	const u32 *s1, *s2;
+	const u8 *s1, *s2, *s1b, *s2b;
 	u32 c1, c2;
 	u32 t, t2;
 	u8 night;
+
+	// decompress images from JPG format
+	Earth1Img = (u8*)JPGLOAD(Earth1ImgJpg);
+	if (Earth1Img == NULL) Reboot(); // emergency exit
+	Earth2Img = (u8*)JPGLOAD(Earth2ImgJpg);
+	if (Earth2Img == NULL) Reboot(); // emergency exit
 
 	// clear draw box
 	DrawClear();
@@ -42,8 +51,8 @@ int main()
 	}
 
 	// image data
-	const u32* img1 = (const u32*)(Earth1Img+8);
-	const u32* img2 = (const u32*)(Earth2Img+8);
+	const u8* img1 = (const u8*)(Earth1Img+SPIC_HEADER_SIZE);
+	const u8* img2 = (const u8*)(Earth2Img+SPIC_HEADER_SIZE);
 
 	// main loop
 	off = 0;
@@ -70,8 +79,8 @@ int main()
 			v = (int)((asinf((float)y/GLOBER)/PI+0.5f)*EARTHH);
 
 			// source address
-			s1 = &img1[v*EARTHW];
-			s2 = &img2[v*EARTHW];
+			s1 = &img1[v*EARTHW*3];
+			s2 = &img2[v*EARTHW*3];
 
 			// X loop
 			for (x = -xr; x < xr; x++)
@@ -140,8 +149,11 @@ int main()
 #endif // use random shadow
 
 				// draw pixel
-				c1 = s1[(u + off + EARTHW/2) & (EARTHW-1)]; // day
-				c2 = s2[(u + off + EARTHW/2) & (EARTHW-1)]; // night
+				s1b = &s1[((u + off + EARTHW/2) & (EARTHW-1))*3]; // day
+				s2b = &s2[((u + off + EARTHW/2) & (EARTHW-1))*3]; // night
+
+				c1 = s1b[0] | ((u32)s1b[1] << 8) | ((u32)s1b[2] << 16) | 0xff000000;
+				c2 = s2b[0] | ((u32)s2b[1] << 8) | ((u32)s2b[2] << 16) | 0xff000000;
 
 				if (night > 1)
 					*d++ = BlendCol(c1, c2, 258 - night);

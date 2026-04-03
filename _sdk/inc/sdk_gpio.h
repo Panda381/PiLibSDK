@@ -10,10 +10,6 @@
 #ifndef _SDK_GPIO_H
 #define _SDK_GPIO_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #if RASPPI <= 3
 #define PIN_NUM		54	// number of pins (pin index = 0..PIN_NUM-1)
 #else
@@ -423,9 +419,5 @@ INLINE void GPIO_ClrEvent(int pin)
 // set pin detect mode (mode = combination of GPIO_EVENT_* flags)
 //  - This function is not thread-safe
 void GPIO_Detect(int pin, int mode);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_GPIO_H

@@ -16,10 +16,6 @@
 #ifndef _LIB_MALLOC_H
 #define _LIB_MALLOC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define MEM_PAGE_SHIFT	18			// order of page size (18 = 256 KB)
 #define MEM_PAGE_SIZE	(1<<MEM_PAGE_SHIFT)	// page size
 #define MEM_PAGE_NUM	(0xffffffff/MEM_PAGE_SIZE+1) // number of pages
@@ -56,7 +52,7 @@ typedef struct {
 	u32	memfree;	// free memory in bytes
 	u32	memused;	// used allocated memory in bytes
 
-#if CORES > 1
+#if (CORES > 1) && USE_MULTICORE
 	// memory allocator lock
 	volatile u8 lock;	// memory allocator lock
 #endif
@@ -91,11 +87,11 @@ void MemInit(void);
 
 // allocate memory block (returns NULL on memory error)
 void* MemAlloc(size_t size);
-void* malloc(size_t size);
+extern "C" void* malloc(size_t size);
 
 // free memory block (pointer can be NULL)
 void MemFree(void* addr);
-void free(void* addr);
+extern "C" void free(void* addr);
 
 // get memory block size (performs some checks on the validity of the block and returns 0 if the block
 // is not valid - however, it cannot perform a guaranteed check, it is only an approximate check)
@@ -103,7 +99,7 @@ size_t MemSize(void* addr);
 
 // reallocate memory block
 void* MemResize(void* addr, size_t size);
-void* realloc(void* addr, size_t size);
+extern "C" void* realloc(void* addr, size_t size);
 
 /*
 #ifdef __cplusplus
@@ -120,10 +116,6 @@ INLINE void operator delete(void *p, __unused size_t n) noexcept { free(p); }
 INLINE void operator delete[](void *p, __unused size_t n) noexcept { free(p); }
 #endif // __cplusplus
 */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_MALLOC_H
 

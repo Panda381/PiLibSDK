@@ -127,7 +127,7 @@ _start:
 //                        Start secondary core
 // ---------------------------------------------------------------------------
 
-#if USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
+#if (CORES > 1) && USE_MULTICORE	// 1=use multicore (for applications), 0=do not use other cores (for loader)
 #if RASPPI > 1
 
 	.section .init	// init code section
@@ -176,7 +176,7 @@ StartSecondary:
 .ltorg
 
 #endif // RASPPI > 1
-#endif // USE_MULTICORE
+#endif // (CORES > 1) && USE_MULTICORE
 
 // ---------------------------------------------------------------------------
 //                          Exception handlers
@@ -1125,5 +1125,108 @@ __wrap_memmove:
 	strb	ip,[r3],#1	// store byte and increase address
 	bne	6b		// next byte
 9:	bx	lr
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                         Set long jump (setjmp)
+// ----------------------------------------------------------------------------
+// INPUT: R0 = pointer to jmp_buf buffer with save registers
+// OUTPUT: R0 = 0 if first calling, <>0 if returns from longjmp()
+
+	.section .text.setjmp
+	.align	2
+.global setjmp
+setjmp:
+
+#if RASPPI == 1
+
+	// Save callee-saved CPU registers
+	// - not saved registers (caller-saved): R0-R3, R12=IP
+	// - saved registers (callee-saved): R4-R9, R10=SL, R11=FP, R13=SP, R14=LR
+	stmia	r0!,{r4,r5,r6,r7,r8,r9,r10,r11,sp,lr} // save registers to [R0] and increment R0
+
+	// Save callee-saved FPU registers
+	vstmia	r0,{d8-d15}
+
+	// return code = 0 (first calling)
+	mov	r0,#0
+
+	// return to Thumb or ARM mode
+	tst	lr,#1	// 1=Thumb mode?
+	moveq	pc,lr	// if 0, jump to ARM mode
+	bx	lr
+
+#else // RASPPI == 1
+
+	// Save callee-saved CPU registers
+	// - not saved registers (caller-saved): R0-R3, R12=IP
+	// - saved registers (callee-saved): R4-R9, R10=SL, R11=FP, R13=SP, R14=LR
+	mov	ip,sp
+	stmia	r0!,{r4,r5,r6,r7,r8,r9,r10,r11,ip,lr}
+
+	// Save callee-saved FPU registers
+	vstmia	r0,{d8-d15}
+
+	// return code = 0
+	mov	r0,#0
+	bx	lr
+
+#endif // RASPPI == 1
+
+.ltorg
+
+// ----------------------------------------------------------------------------
+//                       Execute long jump (longjmp)
+// ----------------------------------------------------------------------------
+// INPUT: R0 = pointer to jmp_buf buffer with save registers
+//	  R1 = return value (must not be 0)
+
+	.section .text.longjmp
+	.align	2
+.global longjmp
+longjmp:
+
+#if RASPPI == 1
+
+	// Restore callee-saved CPU registers
+	// - not saved registers (caller-saved): R0-R3, R12=IP
+	// - saved registers (callee-saved): R4-R9, R10=SL, R11=FP, R13=SP, R14=LR
+	ldm	r0!,{r4,r5,r6,r7,r8,r9,r10,r11,sp,lr} // restore registers from [R0] and increment R0
+
+	// Restore callee-saved FPU registers
+	vldmia	r0,{d8-d15}
+
+	// return code -> R0 (exception calling)
+	movs	r0,r1
+
+	// substitute invalid return code 0 with code 1
+	moveq	r0,#1
+
+	// return to Thumb or ARM mode
+	tst	lr,#1	// 1=Thumb mode?
+	moveq	pc,lr	// if 0, jump to ARM mode
+	bx	lr
+
+#else // RASPPI == 1
+
+	// Restore callee-saved CPU registers
+	// - not saved registers (caller-saved): R0-R3, R12=IP
+	// - saved registers (callee-saved): R4-R9, R10=SL, R11=FP, R13=SP, R14=LR
+	ldmia	r0!,{r4,r5,r6,r7,r8,r9,r10,r11,ip,lr}
+	mov	sp,ip
+
+	// Restore callee-saved FPU registers
+	vldmia	r0,{d8-d15}
+
+	// return code -> R0 (exception calling)
+	movs	r0,r1
+
+	// substitute invalid return code 0 with code 1
+	it	eq
+	moveq	r0,#1
+	bx	lr
+
+#endif // RASPPI == 1
 
 .ltorg

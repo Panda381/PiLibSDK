@@ -11,10 +11,6 @@
 #ifndef _LIB_LIST_H
 #define _LIB_LIST_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // === List entry
 
 // list entry (size 8 bytes ... required by memory allocator)
@@ -171,10 +167,6 @@ void NumListRemove(sNumList* list, sListEntry* entry);
 //	numlist = list with count sNumList*
 #define NUMLISTFOREACHSAFE(entry, next, numlist) \
   for(entry = NumListGetFirst(numlist), next = ListEntryNext(entry); entry != NumListGetHead(numlist); entry = next, next = ListEntryNext(entry))
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_LIST_H
 

@@ -28,10 +28,6 @@
 #ifndef _SDK_MAILBOX_H
 #define _SDK_MAILBOX_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Mailbox channels
 #define MB_CHAN_POWER		0	// power management
 #define MB_CHAN_FRAMEBUFFER	1	// frame buffer
@@ -93,9 +89,5 @@ u32 MailboxRead(int ch);
 
 // Mailbox1 write (ch = channel)
 void MailboxWrite(int ch, u32 val);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_MAILBOX_H

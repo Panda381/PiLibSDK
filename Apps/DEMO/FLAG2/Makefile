@@ -17,12 +17,13 @@ include ${PI_ROOT_PATH}/Makefile1.mk
 ASRC +=
 
 # C source files
-CSRC += ../FLAG/img/Clouds.c
-CSRC += img/flag.c
-CSRC += ../FLAG/img/mast.c
+CSRC +=
 
 # C++ source files
 SRC += ../FLAG/src/main.cpp
+SRC += ../FLAG/img/Clouds.cpp
+SRC += img/flag.cpp
+SRC += ../FLAG/img/mast.cpp
 
 ##############################################################################
 #                         Library configuration
@@ -31,6 +32,9 @@ SRC += ../FLAG/src/main.cpp
 
 # 1=use BIT integers, 0=not used (_lib/bigint/*)
 USE_BIGINT=0
+
+# 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
+USE_MP3=0
 
 # 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
 USE_PWMSND=0

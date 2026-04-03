@@ -13,10 +13,6 @@
 #ifndef _SDK_EMMC_H
 #define _SDK_EMMC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //#define SD_BLOCK_SIZE		512		// sector size
 
 // EMMC controller
@@ -300,11 +296,6 @@ STATIC_ASSERT(sizeof(EMMC_t) == 0x100, "Incorrect EMMC_t!");
 #define EMMC	((EMMC_t*)ARM_EMMC2_BASE)
 #else
 #define EMMC	((EMMC_t*)ARM_EMMC_BASE)
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif // _SDK_EMMC_H

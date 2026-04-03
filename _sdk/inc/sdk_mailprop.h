@@ -13,10 +13,6 @@
 #ifndef _SDK_MAILPROP_H
 #define _SDK_MAILPROP_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // ==== Mailbox property: Device ID (used in "Get power state" tag 0x00020001)
 
 #define MP_DEV_SDCARD		0	// SD card
@@ -458,9 +454,5 @@ u32 MailPropProcess(void);
 // Search property response in property buffer (returns NULL on error)
 //  Returns pointer into property buffer: u32 number of bytes, data follows
 u32* MailPropGet(u32 tag);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_MAILPROP_H

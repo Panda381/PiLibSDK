@@ -15,10 +15,6 @@
 #ifndef _SDK_SYSTIMER_H
 #define _SDK_SYSTIMER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // increment of system time in [ms] on SysTick interrupt (0 = do not use SysTick interrupt)
 #ifndef SYSTICK_MS
 #define SYSTICK_MS	5
@@ -133,9 +129,5 @@ s32 FastAlarmRemain(void);
 
 // check if fast alarm time has been elapsed (returns True if elapsed)
 Bool FastAlarmCheck();
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_SYSTIMER_H

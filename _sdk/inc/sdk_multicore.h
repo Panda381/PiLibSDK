@@ -5,16 +5,12 @@
 //
 // ****************************************************************************
 
-#if USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
+#if (CORES > 1) && USE_MULTICORE		// 1=use multicore (for applications), 0=do not use other cores (for loader)
 
 #if RASPPI > 1
 
 #ifndef _SDK_MULTICORE_H
 #define _SDK_MULTICORE_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #if AARCH == 64
 
@@ -58,7 +54,7 @@ typedef struct {
 extern sCoreState CoreState[CORES];	// state of cores
 
 // start secondary core
-void StartSecondary(void);
+extern "C" void StartSecondary(void);
 
 // Multicore initialize - start cores 1..3
 void MultiInit(void);
@@ -97,12 +93,8 @@ void WaitCoreIdle(int core);
 //  signal ... signal index 0..31 (0..SIGNAL_NUM-1)
 INLINE void SignalSend(int core, int signal) { LocalMailboxSet(core, CpuID(), 1 << signal); }
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif // _SDK_MULTICORE_H
 
 #endif // RASPPI > 1
 
-#endif // USE_MULTICORE
+#endif // (CORES > 1) && USE_MULTICORE

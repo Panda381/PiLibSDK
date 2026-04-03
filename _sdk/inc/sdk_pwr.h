@@ -8,10 +8,6 @@
 #ifndef _SDK_PWR_H
 #define _SDK_PWR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Power manager interface
 typedef struct {
 	io32	res[7];		// 0x00: ... reserved
@@ -74,9 +70,5 @@ void RestartFrom(int part);
 
 // Reboot system
 void Reboot(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_PWR_H

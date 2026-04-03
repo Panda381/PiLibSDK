@@ -41,10 +41,6 @@
 #ifndef _SDK_SPI_H
 #define _SDK_SPI_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // SPI
 typedef struct {
 
@@ -191,9 +187,5 @@ void SPI0_Init(u32 speed, int cpha, int cpol);
 //  rbuf ... read buffer (to receive; NULL=not used)
 //  num ... number of bytes
 void SPI0_WriteRead(int cs, const u8* wbuf, u8* rbuf, int num);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_SPI_H

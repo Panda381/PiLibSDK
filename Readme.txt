@@ -1,6 +1,6 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.13, in progress - under development
+Pre-alpha version 0.14, in progress - under development
 
 Copyright (c) 2026 Miroslav Nemecek
 

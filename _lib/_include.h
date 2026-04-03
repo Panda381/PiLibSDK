@@ -26,8 +26,16 @@
 #include "inc/lib_draw.h"	// drawing
 #endif
 
+#if USE_STREAM		// 1=use Data stream, 0=not used (lib_stream.*)
+#include "inc/lib_stream.h"	// data stream
+#endif
+
 #if USE_FAT		// 1=use FAT file system, 0=not used (lib_fat.*)
 #include "inc/lib_fat.h"	// FAT file system
+#endif
+
+#if USE_JPG		// 1=use JPG support, 0=not used (_lib/pic/lib_jpg*)
+#include "pic/lib_jpg.h"	// JPG images
 #endif
 
 #if USE_LIST		// 1=use Doubly Linked List, 0=not used (lib_list.*)
@@ -38,8 +46,12 @@
 #include "inc/lib_malloc.h"	// Memory allocator
 #endif
 
-#if USE_STREAM		// 1=use Data stream, 0=not used (lib_stream.*)
-#include "inc/lib_stream.h"	// data stream
+#if USE_MP3		// 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
+#include "mp3/lib_mp3.h"	// MP3 decoder
+#endif
+
+#if USE_PNG		// 1=use PNG support, 0=not used (_lib/pic/lib_png*)
+#include "pic/lib_png.h"	// PNG images
 #endif
 
 #if USE_PRINT		// 1=use Formatted print, 0=not used (lib_print.*)
@@ -57,6 +69,10 @@
 #if USE_REAL		// 1=use REAL numbers, 0=not used (_lib/real/*)
 #define REAL_PATH	"real_h.h"
 #include "real/real.h"		// all real numbers
+#endif
+
+#if USE_TEXT		// 1=use text strings, 0=not used (lib_text*)
+#include "inc/lib_text.h"	// text strings
 #endif
 
 #if USE_TREE		// 1=use Tree list, 0=not used (lib_tree.*)

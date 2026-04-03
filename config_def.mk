@@ -32,11 +32,20 @@ USE_DRAW=1
 # 1=use FAT file system, 0=not used (lib_fat.*)
 USE_FAT=1
 
+# 1=use JPG support, 0=not used (_lib/pic/lib_jpg*)
+USE_JPG=1
+
 # 1=use Doubly Linked List, 0=not used (lib_list.*)
 USE_LIST=1
 
 # 1=use memory allocator, 0=not used (lib_malloc.*)
 USE_MALLOC=1
+
+# 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
+USE_MP3=0
+
+# 1=use PNG support, 0=not used (_lib/pic/lib_png*)
+USE_PNG=1
 
 # 1=use Formatted print, 0=not used (lib_print.*)
 USE_PRINT=1
@@ -52,6 +61,9 @@ USE_REAL=0
 
 # 1=use Data stream, 0=not used (lib_stream.*)
 USE_STREAM=1
+
+# 1=use text "string", 0=not used (lib_text*)
+USE_TEXT=1
 
 # 1=use Tree list, 0=not used (lib_tree.*)
 USE_TREE=1

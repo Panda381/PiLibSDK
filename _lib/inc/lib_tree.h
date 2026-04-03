@@ -10,10 +10,6 @@
 #ifndef _LIB_TREE_H
 #define _LIB_TREE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // tree entry
 typedef struct sTree_
 {
@@ -86,10 +82,6 @@ sTree* TreeFindNextStop(sTree* tree, sTree* stop);
 //	member = name of member variable of sTree entry in its owner
 #define BASEFROMTREE(entry, type, member) ((type*)((char*)(entry) - \
 		(((char*)&(((type*)NULL)->member)) - (char*)NULL)))
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_TREE_H
 

@@ -23,10 +23,6 @@
 #ifndef _SDK_GPIOCLOCK_H
 #define _SDK_GPIOCLOCK_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // GPIO clock password
 #define GPIOCLOCK_PASSWD	(0x5A << 24)
 
@@ -109,9 +105,5 @@ void GpioClockStop(int inx);
 // Get frequency in [Hz] of GPIO clock (returns 0 if clock is not running or clock source is unknown)
 //  inx ... GPIO clock index GPIOCLOCK_*
 u32 GpioClockGetHz(int inx);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_GPIOCLOCK_H

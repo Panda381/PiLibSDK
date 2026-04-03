@@ -21,6 +21,13 @@
 #define BALLOON_NUM 40	// number of party balloons
 #define BALLOON_SPEED 2	// balloon speed
 
+u8* CloudsImg;
+u8* HotairImg;
+u8* BlueImg;
+u8* GreenImg;
+u8* OrangeImg;
+u8* RedImg;
+
 // hot-air balloons
 int hotx[HOTAIR_NUM];
 int hoty[HOTAIR_NUM];
@@ -28,7 +35,7 @@ s8 hotdx[HOTAIR_NUM];
 s8 hotdy[HOTAIR_NUM];
 
 // party balloons
-const u8* const balimg_src[4] = { BlueImg, GreenImg, RedImg, OrangeImg };
+const u8* balimg_src[4];
 const u8* balimg[BALLOON_NUM];
 int balx[BALLOON_NUM];
 int baly[BALLOON_NUM];
@@ -37,6 +44,30 @@ int baldy[BALLOON_NUM];
 int main()
 {
 	int i, j, x, y, key;
+
+	// decompress Clouds from JPG format
+	CloudsImg = (u8*)JPGLOAD(CloudsImgJpg);
+	if (CloudsImg == NULL) Reboot(); // emergency exit
+
+	// decompress images from PNG format
+	HotairImg = (u8*)PNGLOAD(HotairImgPng);
+	if (HotairImg == NULL) Reboot(); // emergency exit
+
+	BlueImg = (u8*)PNGLOAD(BlueImgPng);
+	if (BlueImg == NULL) Reboot(); // emergency exit
+	balimg_src[0] = BlueImg;
+
+	GreenImg = (u8*)PNGLOAD(GreenImgPng);
+	if (GreenImg == NULL) Reboot(); // emergency exit
+	balimg_src[1] = GreenImg;
+
+	OrangeImg = (u8*)PNGLOAD(OrangeImgPng);
+	if (OrangeImg == NULL) Reboot(); // emergency exit
+	balimg_src[2] = OrangeImg;
+
+	RedImg = (u8*)PNGLOAD(RedImgPng);
+	if (RedImg == NULL) Reboot(); // emergency exit
+	balimg_src[3] = RedImg;
 
 	// current sky animation
 	int skyx = 0;
@@ -74,16 +105,16 @@ int main()
 	// ==== draw graphics
 
 		// animate sky
-		DRAWIMG(CloudsImg,	skyx - CLOUDSW,	skyy - CLOUDSH	);
-		DRAWIMG(CloudsImg,	skyx,		skyy - CLOUDSH	);
-		DRAWIMG(CloudsImg,	skyx - CLOUDSW,	skyy		);
-		DRAWIMG(CloudsImg,	skyx,		skyy		);
+		DrawImg(CloudsImg,	skyx - CLOUDSW,	skyy - CLOUDSH	);
+		DrawImg(CloudsImg,	skyx,		skyy - CLOUDSH	);
+		DrawImg(CloudsImg,	skyx - CLOUDSW,	skyy		);
+		DrawImg(CloudsImg,	skyx,		skyy		);
 
 		// animate hot-air balloons
-		for (i = 0; i < HOTAIR_NUM; i++) DRAWIMG(HotairImg, hotx[i], hoty[i]);
+		for (i = 0; i < HOTAIR_NUM; i++) DrawImg(HotairImg, hotx[i], hoty[i]);
 
 		// animate party balloons
-		for (i = 0; i < BALLOON_NUM; i++) DRAWIMG(balimg[i], balx[i], baly[i]);
+		for (i = 0; i < BALLOON_NUM; i++) DrawImg(balimg[i], balx[i], baly[i]);
 
 		// update screen
 		DispUpdate();

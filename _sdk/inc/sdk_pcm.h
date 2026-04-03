@@ -8,10 +8,6 @@
 #ifndef _SDK_PCM_H
 #define _SDK_PCM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // PCM I2S structure
 typedef struct
 {
@@ -294,9 +290,5 @@ typedef struct
 STATIC_ASSERT(sizeof(PCM_t) == 0x24, "Incorrect PCM_t!");
 
 #define PCM	((PCM_t*)ARM_PCM_BASE)
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_PCM_H

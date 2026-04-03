@@ -17,10 +17,6 @@
 #ifndef _SDK_UART_H
 #define _SDK_UART_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // UART0 structure
 typedef struct
 {
@@ -440,11 +436,5 @@ INLINE Bool UART0_CanWrite(void) { return (UART0->FR & B5) == 0; } // flag TXFF,
 
 // check if can read next character
 INLINE Bool UART0_CanRead(void) { return (UART0->FR & B4) == 0; } // flag RXFE, receive FIFO is empty
-
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_UART_H

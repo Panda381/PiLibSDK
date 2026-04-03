@@ -10,10 +10,6 @@
 #ifndef _LIB_RAND_H
 #define _LIB_RAND_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Seed of random number generator (for all CPU cores)
 extern u64 RandSeed[CORES];
 
@@ -155,10 +151,6 @@ double RandDoubleGauss(double mean, double sigma);
 
 // generate random test integer number (with random number of bits)
 u32 RandTestU32(u32 max);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _LIB_RAND_H
 

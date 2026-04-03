@@ -29,10 +29,6 @@ UART receive data via DMA:
 #ifndef _SDK_MMU_H
 #define _SDK_MMU_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // ----------------------------------------------------------------------------
 //            Zero1, Pi1, Pi2, Pi3 and Zero2 in 32-bit mode
 // ----------------------------------------------------------------------------
@@ -63,17 +59,13 @@ extern u64 __attribute__((section(".page_table_big"))) PageTableLevel2[LEVEL1_TA
 void PageTableInit(void);
 
 // Enable MMU (this function is located in startup32.S and startup64.S)
-void EnableMMU(void);
+extern "C" void EnableMMU(void);
 
 // Disable MMU (this function is located in startup32.S and startup64.S)
-void DisableMMU(void);
+extern "C" void DisableMMU(void);
 
 // Check whether the memory block is (partially) cached
 // - Uses default setup - checks flag MMU_CACHE_MODE and .coherent region.
 Bool MemIsCached(const void* addr, size_t len);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_MMU_H

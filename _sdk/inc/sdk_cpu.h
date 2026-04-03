@@ -8,10 +8,6 @@
 #ifndef _SDK_CPU_H
 #define _SDK_CPU_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // ----------------------------------------------------------------------------
 //                            CPU control
 // ----------------------------------------------------------------------------
@@ -52,6 +48,33 @@ INLINE int CpuID(void)
 	return mpidr & (CORES-1);
 #endif
 }
+
+// read MIDR register (Zero1, Pi1: 0x410FB767, Pi2v1: 0x410FC075, Zero2, Pi2v2, Pi3: 0x410FD034)
+//   bit 0-3: Revision
+//   bit 4-15: Part Number
+//		0xB76 = BCM2835, ARM1176JZF-S, Armv6 (Pi Zero, Pi 1)
+//		0xC07 = BCM2836, Cortex-A7, Armv7 (Pi 2 v1)
+//		0xD03 = BCM2837, Cortex-A53, Armv8 (Pi 2 v2, Pi 3, Zero 2)
+//		0xD08 = BCM2711, Cortex-A72, Armv8 (Pi 4)
+//		0xD0B = BCM2712, Cortex-A76, Armv8 (Pi 5)
+//   bit 16-19: Architecture ... not supported on new chips (old chips: 6=Armv6, 7=Armv7, 15=Armv8)
+//   bit 20-23: Variant
+//   bit 24-31: Implementer (0x41 = ARM)
+#if AARCH==32
+INLINE u32 ReadMIDR(void)
+{
+    u32 r;
+    __asm volatile(" mrc p15,0,%0,c0,c0,0\n" : "=r"(r));
+    return r;
+}
+#else // AARCH==32
+INLINE u64 ReadMIDR(void)
+{
+    u64 r;
+    __asm volatile(" mrs %0,midr_el1\n" : "=r"(r));
+    return r;
+}
+#endif // AARCH==32
 
 // compiler barrier
 INLINE void cb(void) { __asm volatile ("" ::: "memory"); }
@@ -129,7 +152,7 @@ INLINE void FlushBranchTargetCache(void)
 }
 
 // clean and invalidate data cache in range
-void CleanAndInvalidateDataCacheRange (u32 addr, u32 len);
+extern "C" void CleanAndInvalidateDataCacheRange (u32 addr, u32 len);
 
 #if RASPPI == 1
 
@@ -198,13 +221,13 @@ INLINE void wfe(void) { __asm volatile (" wfe\n" ::: "memory"); }
 INLINE void sev(void) { __asm volatile (" sev\n" ::: "memory"); }
 
 // Invalidate data cache L1
-void InvalidateDataCacheL1Only(void);
+extern "C" void InvalidateDataCacheL1Only(void);
 
 // invalidate data cache (with data sync barrier)
-void InvalidateDataCache(void);
+extern "C" void InvalidateDataCache(void);
 
 // clean data cache (with data sync barrier)
-void CleanDataCache(void);
+extern "C" void CleanDataCache(void);
 
 #endif // RASPPI == 1
 
@@ -284,13 +307,13 @@ INLINE void sev(void) { __asm volatile (" sev\n" ::: "memory"); }
 INLINE void InvalidateInstructionCache(void) { __asm volatile (" ic iallu\n" ::: "memory"); }
 
 // Invalidate data cache L1
-void InvalidateDataCacheL1Only(void);
+extern "C" void InvalidateDataCacheL1Only(void);
 
 // invalidate data cache (with data sync barrier)
-void InvalidateDataCache(void);
+extern "C" void InvalidateDataCache(void);
 
 // clean data cache (with data sync barrier)
-void CleanDataCache(void);
+extern "C" void CleanDataCache(void);
 
 // invalidate data cache in range
 void InvalidateDataCacheRange(u64 addr, u64 len);
@@ -299,7 +322,7 @@ void InvalidateDataCacheRange(u64 addr, u64 len);
 void CleanDataCacheRange(u64 addr, u64 len);
 
 // clean and invalidate data cache in range
-void CleanAndInvalidateDataCacheRange(u64 addr, u64 len);
+extern "C" void CleanAndInvalidateDataCacheRange(u64 addr, u64 len);
 
 #endif // AARCH==32
 
@@ -787,7 +810,6 @@ INLINE u32 ExcLock32(volatile u32* addr, u32 val)
 	return oldval;
 }
 
-//#if AARCH==64
 // exchange qword exclusive (returns old value)
 // ... not supported on 32-bit mode (only simulation)
 INLINE u64 ExcLock64(volatile u64* addr, u64 val)
@@ -798,7 +820,6 @@ INLINE u64 ExcLock64(volatile u64* addr, u64 val)
 	} while (SetLock64(addr, val));
 	return oldval;
 }
-//#endif // AARCH==64
 
 // increment byte with exclusive lock (returns resulting value)
 INLINE u8 IncLock8(volatile u8* addr)
@@ -830,7 +851,6 @@ INLINE u32 IncLock32(volatile u32* addr)
 	return val;
 }
 
-//#if AARCH==64
 // increment qword with exclusive lock (returns resulting value)
 // ... not supported on 32-bit mode (only simulation)
 INLINE u64 IncLock64(volatile u64* addr)
@@ -841,7 +861,6 @@ INLINE u64 IncLock64(volatile u64* addr)
 	} while (SetLock64(addr, val));
 	return val;
 }
-//#endif // AARCH==64
 
 // decrement byte with exclusive lock (returns resulting value)
 inline u8 DecLock8(volatile u8* addr)
@@ -873,7 +892,6 @@ inline u32 DecLock32(volatile u32* addr)
 	return val;
 }
 
-//#if AARCH==64
 // decrement qword with exclusive lock (returns resulting value)
 // ... not supported on 32-bit mode (only simulation)
 inline u64 DecLock64(volatile u64* addr)
@@ -884,10 +902,40 @@ inline u64 DecLock64(volatile u64* addr)
 	} while (SetLock64(addr, val));
 	return val;
 }
-//#endif // AARCH==64
 
-#ifdef __cplusplus
-}
-#endif
+// ----------------------------------------------------------------------------
+//                           Long Jump
+// ----------------------------------------------------------------------------
+
+// jmp_buf buffer
+#if AARCH==32
+
+// Callee-saved CPU registers of 32-bit:
+//  R4-R9, R10=SL, R11=FP, R13=SP, R14=LR ... 10 registers u32
+//  D8-D15 ... 8 registers double
+// ... total 26 values u32 or 13 values u64
+#define LONGJUMP_LEN	13
+typedef u64 jmp_buf[LONGJUMP_LEN];
+
+#else // AARCH==32
+
+// Callee-saved CPU registers of 64-bit:
+//  X19-X30, SP ... 13 registers u64 + 1 empty slot
+//  D8-D15 ... 8 registers double
+// ... total 22 values u64
+#define LONGJUMP_LEN	22
+typedef u64 jmp_buf[LONGJUMP_LEN];
+
+#endif // AARCH==32
+
+// Set long jump
+//  env ... jmp_buf object
+// Returns: 0=first calling of setjmp(), <>0=return from longjmp() function
+extern "C" int setjmp(jmp_buf env);
+
+// Execute long jump
+//  env ... jmp_buf object
+//  val ... return value, should not be 0 (returns 1 if val=0)
+extern "C" void longjmp(jmp_buf env, int val);
 
 #endif // _SDK_CPU_H

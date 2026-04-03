@@ -25,6 +25,7 @@ int forminx;
 
 const char* formname[] = {
 	"CF_R8G8B8",
+	"CF_B8G8R8",
 	"CF_R5G6B5",
 	"CF_R3G3B2",
 	"CF_A8B8G8R8",
@@ -70,6 +71,7 @@ const char* formname[] = {
 enum COLFMT {
 	// without alpha
 	CF_R8G8B8,			// (3B) R8G8B8, 24 bits RGB
+	CF_B8G8R8,			// (3B) B8G8R8, 24 bits RGB
 	CF_R5G6B5,			// (2B) R5G6B5, 16 bits RGB
 	CF_R3G3B2,			// (1B) R3G3B2, 8 bits RGB
 
@@ -186,7 +188,7 @@ int main(int argc, char* argv[])
 				"     output_file = C source file\n"
 				"     name = name of picture structure\n"
 				"     format (or command)\n"
-				"        without alpha: CF_R8G8B8, CF_R5G6B5, CF_R3G3B2\n"
+				"        without alpha: CF_R8G8B8, CF_B8G8R8, CF_R5G6B5, CF_R3G3B2\n"
 				"        with alpha: CF_A8B8G8R8, CF_A8R8G8B8, CF_A1R5G5B5, CF_A2R5G5B4\n"
 				"                    CF_A4R4G4B4, CF_A8, CF_A4, CF_A3, CF_A2, CF_A1\n"
 				"        compression: CF_DXT1C, CF_DXT1C2, CF_DXT1A, CF_DXT3, CF_DXT5\n"
@@ -580,6 +582,7 @@ typedef struct PALETTE_ {
 	switch (forminx)
 	{
 	case CF_R8G8B8:
+	case CF_B8G8R8:
 		b = 24;
 		break;
 
@@ -777,6 +780,52 @@ typedef struct PALETTE_ {
 					writeB(Col4To8(s[0] & 0xf));
 					writeB(Col4To8(s[0] >> 4));
 					writeB(Col4To8(s[1] & 0xf));
+					break;
+
+				case TEXIFMT_PAL8:
+				case TEXIFMT_PAL8A:
+					writeB(pal[*s].b);
+					writeB(pal[*s].g);
+					writeB(pal[*s].r);
+					break;
+
+				case TEXIFMT_A8L8:
+				case TEXIFMT_L8:
+					writeB(*s);
+					writeB(*s);
+					writeB(*s);
+					break;
+				}
+				break;
+
+			case CF_B8G8R8:
+				switch(fmt)
+				{
+				case TEXIFMT_X8R8G8B8:
+				case TEXIFMT_A8R8G8B8:
+				case TEXIFMT_R8G8B8:
+					writeB(s[2]);
+					writeB(s[1]);
+					writeB(s[0]);
+					break;
+
+				case TEXIFMT_B8G8R8:
+					writeB(s[0]);
+					writeB(s[1]);
+					writeB(s[2]);
+					break;
+
+				case TEXIFMT_X1R5G5B5:
+				case TEXIFMT_A1R5G5B5:
+					writeB(Col5To8((s[1] >> 2) & 0x1f));
+					writeB(Col5To8((*(WORD*)s >> 5) & 0x1f));
+					writeB(Col5To8(s[0] & 0x1f));
+					break;
+
+				case TEXIFMT_A4R4G4B4:
+					writeB(Col4To8(s[1] & 0xf));
+					writeB(Col4To8(s[0] >> 4));
+					writeB(Col4To8(s[0] & 0xf));
 					break;
 
 				case TEXIFMT_PAL8:

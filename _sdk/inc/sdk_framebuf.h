@@ -13,10 +13,6 @@
 #ifndef _SDK_FRAMEBUF_H
 #define _SDK_FRAMEBUF_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Frame Buffer (bit depth is always 32 bits per pixel, format RGBA, memory byte order R-G-B-A)
 // - Do not set clipping range out of valid drawing buffer!
 typedef struct {
@@ -130,9 +126,5 @@ void DispUpdateAuto();
 
 // initialize default videomode (called from SysInit)
 void DispInit(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _SDK_FRAMEBUF_H

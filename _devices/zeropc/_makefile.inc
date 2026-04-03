@@ -1,5 +1,5 @@
 
-CSRC += ${PI_DEVICES_DIR}/ZeroPC/zeropc_init.c
-CSRC += ${PI_DEVICES_DIR}/ZeroPC/zeropc_keys.c
+SRC += ${PI_DEVICES_DIR}/ZeroPC/zeropc_init.cpp
+SRC += ${PI_DEVICES_DIR}/ZeroPC/zeropc_keys.cpp
 
 DEFINE += -D USE_ZEROPC=1
