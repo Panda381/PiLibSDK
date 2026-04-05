@@ -63,6 +63,17 @@
 
 #define SOUNDRATE	50000	// reference sound rate [Hz]
 
+// predefined sound speeds
+#define SNDSPEED_8K	((float)8000/SOUNDRATE)		//  8000 Hz (= 0.36281f)
+#define SNDSPEED_11K	((float)11025/SOUNDRATE)	// 11025 Hz (= 0.50000f)
+#define SNDSPEED_12K	((float)12000/SOUNDRATE)	// 12000 Hz (= 0.54422f)
+#define SNDSPEED_16K	((float)16000/SOUNDRATE)	// 16000 Hz (= 0.72562f)
+#define SNDSPEED_22K	((float)22050/SOUNDRATE)	// 22050 Hz (= 1.00000f)
+#define SNDSPEED_24K	((float)24000/SOUNDRATE)	// 24000 Hz (= 1.08844f)
+#define SNDSPEED_32K	((float)32000/SOUNDRATE)	// 32000 Hz (= 1.45125f)
+#define SNDSPEED_44K	((float)44100/SOUNDRATE)	// 44100 Hz (= 2.00000f)
+#define SNDSPEED_48K	((float)48000/SOUNDRATE)	// 48000 Hz (= 2.17687f)
+
 #define SNDFRAC	16		// number of fraction bits
 #define SNDINT (1<<SNDFRAC)	// integer part of sound fraction
 
@@ -322,7 +333,18 @@ int SoundByteToLen(int size, int form);
 //  speed = relative speed, 1=normal, or 0=play music
 //  volume = volume 0..1 (1=normal, or can be > 1 to get higher volume)
 //  panning = panning 0..1 (0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
-void PlaySoundChan(int chan, const void* sound, int rep, float speed, float volume, float panning);
+void PlaySoundChan(int chan, const void* sound, int rep = SNDREPEAT_NO, float speed = 1.0f, float volume = 1.0f, float panning = 0.5f);
+
+// play sound in RAW format (stream)
+//  chan = channel 0..PWMSND_CHANNUM-1
+//  snd = pointer to sound buffer
+//  size = length of sound in number of bytes (use sizeof(array))
+//  form = sound format SNDFORM_* (8-bit, 16-bit, mono or stereo; not melody)
+//  rep = repeat counter (enter number of repeats, or flag SNDREPEAT_*)
+//  speed = speed relative to sample rate SOUNDRATE=50000
+//  volume = volume 0..1 (1=normal, or can be > 1 to get higher volume)
+//  panning = panning 0..1 (0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
+void PlaySoundChanRaw(int chan, const void* snd, int size, int form = SNDFORM_PCM8, int rep = SNDREPEAT_NO, float speed = SNDSPEED_22K, float volume = 1.0f, float panning = 0.5f);
 
 // play sound at channel 0
 //  sound = pointer to sound in sSound format

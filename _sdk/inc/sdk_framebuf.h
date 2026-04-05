@@ -111,6 +111,20 @@ void SelectDrawBuf(u32* buf, int scale);
 // select current system fixed font (1-bit image with width 128 characters, total width 1024 pixels, 1 character width max. 8 pixels)
 void DrawSelFont(const u8* font, int w, int h);
 
+INLINE void SelFont8x8() { DrawSelFont(FontBold8x8, 8, 8); }
+INLINE void SelFont8x12() { DrawSelFont(FontBold8x12, 8, 12); }
+INLINE void SelFont8x14() { DrawSelFont(FontBold8x14, 8, 14); }
+INLINE void SelFont8x14B() { DrawSelFont(FontBold8x14B, 8, 14); }
+INLINE void SelFont8x16() { DrawSelFont(FontBold8x16, 8, 16); }
+INLINE void SelFont8x16B() { DrawSelFont(FontBold8x16B, 8, 16); }
+INLINE void SelFont6x6() { DrawSelFont(FontCond6x6, 6, 6); }
+INLINE void SelFont6x6B() { DrawSelFont(FontCond6x6B, 6, 6); }
+INLINE void SelFont6x8() { DrawSelFont(FontCond6x8, 6, 8); }
+INLINE void SelFont5x8() { DrawSelFont(FontTiny5x8, 5, 8); }
+INLINE void SelFont8x8Game() { DrawSelFont(FontGame8x8, 8, 8); }
+INLINE void SelFont8x8Italic() { DrawSelFont(FontItalic8x8, 8, 8); }
+INLINE void SelFont8x8Thin() { DrawSelFont(FontThin8x8, 8, 8); }
+
 // select current proportional font (with format "sFont")
 INLINE void DrawSelFontProp(const u8* font) { FrameBuffer.fontprop = font; }
 

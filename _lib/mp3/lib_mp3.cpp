@@ -459,7 +459,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 		// error reading data
 		if (mp3->inerror)
 		{
-			MP3PlayerTerm(mp3dec);
+			MP3PlayerTerm(mp3);//dec);
 			return ERR_MP3_INVALID_FILE;
 		}
 	}
@@ -523,7 +523,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 				// error reading data
 				if (mp3->inerror)
 				{
-					MP3PlayerTerm(mp3dec);
+					MP3PlayerTerm(mp3);//dec);
 					return ERR_MP3_INVALID_FILE;
 				}
 			}
@@ -547,7 +547,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 	insize -= n; // decrease data size
 	if ((n < 0) || (insize < 2))
 	{
-		MP3PlayerTerm(mp3dec);
+		MP3PlayerTerm(mp3);//dec);
 		return ERR_MP3_INVALID_FRAMEHEADER; // not synced
 	}
 	n += mp3->id3v2_size; // offset of the sync
@@ -559,7 +559,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 	n = MP3GetNextFrameInfo(mp3dec, &mp3->info, inbuf); // unpack frame info
 	if (n < 0) // error - invalid frame header
 	{
-		MP3PlayerTerm(mp3dec);
+		MP3PlayerTerm(mp3);//dec);
 		return n;
 	}
 
@@ -684,7 +684,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 		// error reading data
 		if (mp3->inerror)
 		{
-			MP3PlayerTerm(mp3dec);
+			MP3PlayerTerm(mp3);//dec);
 			return ERR_MP3_INVALID_FILE;
 		}
 	}
@@ -897,6 +897,9 @@ void MP3Tick(sMP3Player* mp3)
 // - Should be called from the program loop at least every 0.2 second
 void MP3Poll(sMP3Player* mp3)
 {
+	// decode sound to the sound buffer
+	MP3Tick(mp3);
+
 	// refill input buffer
 	MP3Refill(mp3);
 }
@@ -949,7 +952,7 @@ void MP3Play(sMP3Player* mp3, int chan, Bool rep)
 	// start playing the sound
 	mp3->droptime = Time();
 	mp3->playing = True;
-	PlaySoundChan(chan, mp3->outbuf[bufinx], outN, SNDREPEAT_STREAM, mp3->speed, 1.0f, mp3->form, 0);
+	PlaySoundChanRaw(chan, mp3->outbuf[bufinx], outN, mp3->form, SNDREPEAT_STREAM, mp3->speed);
 }
 
 // get current position in seconds

@@ -7796,6 +7796,16 @@
 	)
 	(wire
 		(pts
+			(xy 220.98 76.2) (xy 220.98 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b317312d-6944-460e-aca2-fc2bfadcb90d")
+	)
+	(wire
+		(pts
 			(xy 58.42 154.94) (xy 248.92 154.94)
 		)
 		(stroke
@@ -8493,6 +8503,16 @@
 			(type default)
 		)
 		(uuid "e0c75fe1-7223-412d-b998-92c77479ab3c")
+	)
+	(wire
+		(pts
+			(xy 220.98 63.5) (xy 220.98 68.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e2c32d2e-9d45-462c-99eb-369c3ea3b064")
 	)
 	(wire
 		(pts
@@ -9534,6 +9554,16 @@
 		)
 		(uuid "985b33c0-85ca-48bd-94de-840d1b390977")
 	)
+	(label "3V3"
+		(at 220.98 63.5 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9885f800-b09c-457e-a258-e47f53cc6531")
+	)
 	(label "COL3"
 		(at 154.305 121.92 0)
 		(effects
@@ -9603,6 +9633,16 @@
 			(justify right bottom)
 		)
 		(uuid "a179e067-20a1-4f18-952e-e4b569444f9e")
+	)
+	(label "GND"
+		(at 220.98 81.28 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a440f67e-0fb9-48e3-8bef-c356b503d711")
 	)
 	(label "ROW0"
 		(at 177.8 157.48 0)
@@ -12921,6 +12961,73 @@
 			(project "ZeroPC"
 				(path "/b3c66170-a1e8-49f2-a3c7-446e9ba3066c"
 					(reference "SW28")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C_Polarized")
+		(at 220.98 72.39 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a82b7d12-ee6a-4e81-8f7c-9a7ce8fe7b33")
+		(property "Reference" "C5"
+			(at 216.535 72.39 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100u"
+			(at 214.63 72.39 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm"
+			(at 221.9452 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 220.98 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Polarized capacitor"
+			(at 220.98 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "f74d0495-7520-470b-a872-ece9d0ef897f")
+		)
+		(pin "1"
+			(uuid "bb005aa5-dcc9-49c1-9fd0-f433d6b64d2a")
+		)
+		(instances
+			(project "ZeroPC"
+				(path "/b3c66170-a1e8-49f2-a3c7-446e9ba3066c"
+					(reference "C5")
 					(unit 1)
 				)
 			)

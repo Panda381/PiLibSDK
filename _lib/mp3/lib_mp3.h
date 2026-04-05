@@ -308,7 +308,7 @@ int MP3Decode(HMP3Decoder hMP3Decoder, const u8** inbuf, int* bytesLeft, s16* ou
 //   Input bitrate can be in range 8 to 448 kbps, it means 1 to 56 KB/sec.
 //   Interval of 0.2 second requires input buffer up to 11 KB.
 #ifndef MP3PLAYER_INSIZE
-#define MP3PLAYER_INSIZE	12000		// size of input buffer in bytes
+#define MP3PLAYER_INSIZE	24000		// size of input buffer in bytes
 #endif
 
 // To hold 0.2 second of the sound in output buffer:
@@ -317,11 +317,10 @@ int MP3Decode(HMP3Decoder hMP3Decoder, const u8** inbuf, int* bytesLeft, s16* ou
 //   If we limit it to 44kHz, we need buffer 35 KB. 2 buffers are 70 KB.
 // In IRQ mode we need hold 1 frame = max. 2304 samples = 4608 bytes, we need 2 buffers = 10 KB
 #ifndef MP3PLAYER_OUTSIZE
-#define MP3PLAYER_OUTSIZE	70000		// size of output buffer in bytes ... poll mode
+#define MP3PLAYER_OUTSIZE	140000		// size of output buffer in bytes ... poll mode
 #endif
 
 // Number of entries in seek table (every entry is 4 bytes)
-//   5-minute song - one seek entry is 0.3 second, it means 2 to 40 frames.
 //#ifndef MP3PLAYER_SEEKN
 //#define MP3PLAYER_SEEKN	1000		// number of entries in seek table (1000 entries = 4 KB; must be even number)
 //#endif

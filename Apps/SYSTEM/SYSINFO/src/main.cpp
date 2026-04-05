@@ -84,7 +84,7 @@ void DispFrame(const char* title, int h)
 	DrawRect(x*FONTW, y*FONTH, TEXTW/2*FONTW, h*FONTH, COL_BG);
 
 	// draw frame
-	DrawFrame(x*FONTW+FONTW/2, y*FONTH+FONTH/2, (TEXTW/2-1)*FONTW, (h-1)*FONTH, COL_FRAME, COL_FRAME);
+	DrawFrame(x*FONTW+FONTW/2, y*FONTH+FONTH/2, (TEXTW/2-1)*FONTW, (h-1)*FONTH, COL_FRAME);
 
 	// draw title
 	DispX = x + 2;

@@ -1,0 +1,164 @@
+How to prepare sound loop in the CoolEdit editor:
+
+To ensure continuity of start and end of the loop, the loop length
+must be a multiple of the frame size. You can either use the MP3 player
+from the examples to find the frame size, or compile this program with
+the DISP_FRAMEINFO switch. You need a "FrameTime" entry indicating the
+frame interval in microseconds.
+
+Sample loops in this directory have format Bitrate=80kbps, Samprate=32kHz,
+Stereo, with FrameTime=36000us (36ms). You must adjust the track length to
+a multiple of 36ms.
+
+Example of the procedure in Cooledit:
+- The default track "3xOSC fun.wav" has a length of 8.807 seconds and a 44100 Hz stereo format.
+- Required new length of the track is: 8.807/0.036=244.64. Nearest integer=245 frames.
+  New length will be 245*0.036=8.820 seconds.
+- Use function Effects/Time-Pitch/Stretch, select Stretching mode "Resample".
+  Enter required new length 8.820 seconds.
+- Convert to target frequency 32000 Hz stereo, function Edit/Convert_Sample_Type.
+- Save loop to the file 001.MP3 in MP3 format. Select destination format
+  "80 Kbps, 32000 Hz, Stereo" in Options, CBR constant bitrate, MP3 version.
+- Close file and open saved MP3 file again, to check it. As you can see, length is now
+  8.892 seconds. Cooledit added two silent frames. You can see one FadeIn frame at the
+  beginning of the file, and a second FadeOut frame at the end of the file,
+  both about 0.036 seconds long.
+
+If you are using another editor that does not automatically add FadeIn and FadeOut frames,
+you must do so manually by inserting 0.036 second silence sections at the beginning
+and end of the file. These frames will be omitted during playback.
+
+
+
+List of music loops (format MP3 80kbps 32000Hz stereo):
+
+01 3xOSC fun
+02 C_HC
+03 C_kick
+04 Dance_X_B
+05 dnbautoscratch
+06 Dreamzofluxury
+07 DrumCircle
+08 ElvisInADress
+09 FruityExample-alpharisc
+10 Fuego-BigKilling
+11 Fuego-FenderBender
+12 Fuego-GraySunshine
+13 H441-GOA
+14 Halfwaytonowhere
+15 ISuckAtTitles
+16 JasonC-Ebb_and_Flow
+17 JasonC-Faded@4am
+18 JasonC-Glimmer
+19 JasonC-Highpass
+20 JasonC-Stasis
+21 JasonC-Tranced@4am
+22 Land of rock
+23 Light already (remixed)
+24 MentalFusion
+25 Myopic-DepartureLounge
+26 Native soil
+27 Oscar22
+28 Oscarparty
+29 Oscillations
+30 Pilchard-KickingBeat
+31 Pilchard-NewFruity
+32 Reegz-Loungin
+33 Reegz-Vibe
+34 Roof garden_B
+35 SpaceAce
+36 speecher
+37 spookytriangle
+38 Sympathy
+39 Tears
+40 Techmatik
+41 TheAmericanPropertyNetwork
+42 threeosc
+43 Toby-Falling
+44 Toby-Hydrosphere
+45 Toby-Industro
+46 Toby-RainDrops
+47 Toby-Reaper
+48 Vlad-She'saRican
+49 XOR-Chop my slice please
+50 XOR-Osmosis
+51 XOR-Reggophany
+52 asche
+53 drwho
+54 Fuego96-NashvilleWest
+55 404lament
+56 hERETIC-Tubular
+57 Try Again (remixed)
+58 Try Again (remixed) 2
+59 JasonC-Fubar
+60 JasonC-Greyscale
+61 MakeMeFeelLove
+62 Ori'sBminors
+63 Vlad-FeveriaMagma4-InstrumentalRemix
+64 FruityTechTrance
+65 JasonC-Shear
+66 Arpeggiator
+67 NewStuff
+68 Daft Punk - Revolution 909
+69 CWCrisman-Real Mellow
+70 DanR-Taken
+71 DanR-WhatDoesThatKnobDoAgain
+72 Duda-Drumsynth Trigger
+73 Fuego+Reegz-Aura
+74 Fuego-AHintOfReggae
+75 Fuego-Behaviour 9
+76 Fuego-FL303
+77 Fuego-Skyhigh
+78 gol-Random
+79 Inginer-Housy Shuffle
+80 Inginer-Jungle Fever
+81 JasonC-After Hours
+82 JasonC-Dark Corners
+83 JasonC-Glint
+84 JasonC-Groundswell
+85 JasonC-Kinetic
+86 Pilchard-D-S-L
+87 Pilchard-Goathing
+88 Reegz-Foxy Sista
+89 Reegz-IFI
+90 Reegz-Messin Around
+91 Reegz-The Way (Instrumental)
+92 Toby-Carrier
+93 Toby-Striker
+94 XOR-Eliminator
+95 AmbushInTheBush
+96 BeatMachine
+97 StringLoop
+98 NewStuff Rap
+99 Korben Dallas
+100 Aknot! Wot
+101 Holymen - The Last Universe
+102 Holymen - Area 51 (Shiva Shidapu)
+103 Holymen - Seven'th Heaven
+104 Holymen - Sicko Leako
+105 Holymen - Time for Peace
+106 Holymen - Romeo 4 Juliete
+107 prodigy-out_of_space_(techno_remix)
+108 D.O.N.S feat. Technotronic - Pump Up
+109 punk city - mission-(sample.b6)
+110 Supa-Dupa-Fly (Sezam Remix)
+111 a-reflective-dbu
+112 Aphex Twins - Star Wars Theme (Trance)
+113 beethoven - 9th symphony (techno)
+114 beethoven - 9th symphony (techno) 2
+115 carl cox - TECHNO SETS (Live)
+116 Crystal Techno
+117 Disco Kandi 3 - DJD Hydraulic Dogs
+118 Dj Disco - Let's Dance(Extended Rmx)
+119 Dj Quicksilver - Techno Macht Spass
+120 DJ Tiesto - Forbidden Paradise
+121 DJ Tiesto - Forbidden Paradise 2
+122 robert miles - x files (techno mix)
+123 X-Perience - Land of Tomatoes
+124 Holymen - Monkey Buieness
+125 Astral Projection - Analog Voyager
+126 Astral Projection - Aurora Borealis
+127 Astral Projection - Dancing Galaxy
+128 Astral Projection - Enlightened
+129 Astral Projection - Power Gen
+130 Astral Projection - Still on Mars

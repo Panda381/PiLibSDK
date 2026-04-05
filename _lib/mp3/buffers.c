@@ -197,13 +197,13 @@ sMP3DecInfo *AllocateBuffers(void* mp3stat)
 
 #endif
 
-	mp3DecInfo->FrameHeaderPS =     (void *)fh;
-	mp3DecInfo->SideInfoPS =        (void *)si;
-	mp3DecInfo->ScaleFactorInfoPS = (void *)sfi;
-	mp3DecInfo->HuffmanInfoPS =     (void *)hi;
-	mp3DecInfo->DequantInfoPS =     (void *)di;
-	mp3DecInfo->IMDCTInfoPS =       (void *)mi;
-	mp3DecInfo->SubbandInfoPS =     (void *)sbi;
+	mp3DecInfo->FrameHeaderPS =     /*(void *)*/fh;
+	mp3DecInfo->SideInfoPS =        /*(void *)*/si;
+	mp3DecInfo->ScaleFactorInfoPS = /*(void *)*/sfi;
+	mp3DecInfo->HuffmanInfoPS =     /*(void *)*/hi;
+	mp3DecInfo->DequantInfoPS =     /*(void *)*/di;
+	mp3DecInfo->IMDCTInfoPS =       /*(void *)*/mi;
+	mp3DecInfo->SubbandInfoPS =     /*(void *)*/sbi;
 
 #ifndef _WIN32
 #ifdef DEMO_HELIX_FOOTPRINT

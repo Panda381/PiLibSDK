@@ -311,7 +311,28 @@ void DrawVLineInv(int x, int y, int h)
 // ----------------------------------------------------------------------------
 
 // draw frame (dimensions must be > 0; alpha 0=transparent, 255=opaque)
-void DrawFrame(int x, int y, int w, int h, u32 col_light, u32 col_dark)
+void DrawFrame(int x, int y, int w, int h, u32 col)
+{
+	// check size
+	if ((w <= 0) || (h <= 0)) return;
+
+	// bottom line
+	DrawHLine(x, y+h-1, w, col);
+	if (h > 1)
+	{
+		// right line
+		DrawVLine(x+w-1, y, h-1, col);
+
+		// top line
+		DrawHLine(x, y, w-1, col);
+
+		// left line (light)
+		if (h > 2) DrawVLine(x, y+1, h-2, col);
+	}
+}
+
+// draw frame 3D (dimensions must be > 0; alpha 0=transparent, 255=opaque)
+void DrawFrame2(int x, int y, int w, int h, u32 col_light, u32 col_dark)
 {
 	// check size
 	if ((w <= 0) || (h <= 0)) return;

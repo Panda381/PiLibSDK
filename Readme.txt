@@ -1,6 +1,6 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.14, in progress - under development
+Pre-alpha version 0.15, in progress - under development
 
 Copyright (c) 2026 Miroslav Nemecek
 
@@ -103,7 +103,10 @@ Demo
  FLAG ... Fluttering flag
  FLAG2 ... Fluttering custom flag
  FOUNTAIN ... Draw 3D graph
+ FRUITY .... 130 music loops with MP3 compression
 
+MP3
+ MP3 ... MP3 player
 
 
 ----------------

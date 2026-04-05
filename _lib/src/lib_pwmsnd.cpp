@@ -71,7 +71,7 @@ void PwmHandler(void)
 		if (dma->CB == 0) break;
 
 		// buffer address
-		u32* buf = DMA_ArmAddr(cb->SRC);
+		u32* buf = (u32*)DMA_ArmAddr(cb->SRC);
 		u32* bufend = buf + SND_BUFSIZE/4;
 
 		// loop addresses
@@ -563,7 +563,7 @@ int SoundLenToByte(int len, int form)
 //  speed = relative speed, 1=normal, or 0=play music
 //  volume = volume 0..1 (1=normal, or can be > 1 to get higher volume)
 //  panning = panning 0..1 (0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
-void PlaySoundChan(int chan, const void* sound, int rep, float speed, float volume, float panning)
+void PlaySoundChan(int chan, const void* sound, int rep /*= SNDREPEAT_NO*/, float speed /*= 1.0f*/, float volume /*= 1.0f*/, float panning /*= 0.5f*/)
 {
 	// global sound is OFF
 	if (GlobalSoundMute) return;
@@ -628,6 +628,62 @@ void PlaySoundChan(int chan, const void* sound, int rep, float speed, float volu
 		len = t->len; // tone length counter
 		s->inc = t->inc; // tone phase increment
 	}
+
+	// start current sound
+	s->snd = (const u8*)snd;
+	dmb();
+	s->cnt = len;
+	dmb();
+}
+
+// play sound in RAW format (stream)
+//  chan = channel 0..PWMSND_CHANNUM-1
+//  snd = pointer to sound buffer
+//  size = length of sound in number of bytes (use sizeof(array))
+//  form = sound format SNDFORM_* (8-bit, 16-bit, mono or stereo; not melody)
+//  rep = repeat counter (enter number of repeats, or flag SNDREPEAT_*)
+//  speed = speed relative to sample rate SOUNDRATE=50000
+//  volume = volume 0..1 (1=normal, or can be > 1 to get higher volume)
+//  panning = panning 0..1 (0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
+void PlaySoundChanRaw(int chan, const void* snd, int size, int form /*= SNDFORM_PCM8*/, int rep /*= SNDREPEAT_NO*/, float speed /*= SNDSPEED_22K*/, float volume /*= 1.0f*/, float panning /*= 0.5f*/)
+{
+	// global sound is OFF
+	if (GlobalSoundMute) return;
+
+	// stop playing sound
+	StopSoundChan(chan);
+
+	// pointer to sound channel
+	sPwmSnd* s = &PwmSound[chan];
+
+	// sound format
+	s->form = form;
+	s->sampsize = SoundLenToByte(1, form); // sample size
+	s->rate = 1.0;
+
+	// convert sound size to the length in (double-)samples
+	int len = SoundByteToLen(size, form);
+
+	// prepare volume
+	s->volume = volume;
+	s->panning = panning;
+	s->volL = (int)(PWMSND_PERIOD * volume * cos(panning * PI/2) * GlobalSoundVolMul / VolMulTab[VOLDEF] + 0.5f);
+	s->volR = (int)(PWMSND_PERIOD * volume * sin(panning * PI/2) * GlobalSoundVolMul / VolMulTab[VOLDEF] + 0.5f);
+
+	// repeated sound
+	s->next = NULL;
+	s->nextcnt = 0;
+	s->repeat = rep;
+	if ((rep != SNDREPEAT_NO) && (rep != SNDREPEAT_STREAM))
+	{
+		s->next = (const u8*)snd;
+		s->nextcnt = len;
+	}
+
+	// speed increment
+	s->speed = speed;
+	s->inc = (u32)(SNDINT * speed + 0.5f); // sample increment
+	s->acc = 0;
 
 	// start current sound
 	s->snd = (const u8*)snd;

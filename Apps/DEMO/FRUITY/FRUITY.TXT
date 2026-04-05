@@ -1,0 +1,10 @@
+^YFruity Loops^0
+
+130 music loops
+with MP3 compression
+
+^WLeft^0 ........ previous
+^WRight^0 ........... next
+^WSpace^0 .... mute on/off
+^WAlt+Tab^0 ... Screenshot
+^WEsc^0 ............. quit

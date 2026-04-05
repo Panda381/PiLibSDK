@@ -240,7 +240,8 @@ void DrawVLine(int x, int y, int h, u32 col);
 void DrawVLineInv(int x, int y, int h);
 
 // draw frame (dimensions must be > 0; alpha 0=transparent, 255=opaque)
-void DrawFrame(int x, int y, int w, int h, u32 col_light, u32 col_dark);
+void DrawFrame(int x, int y, int w, int h, u32 col);
+void DrawFrame2(int x, int y, int w, int h, u32 col_light, u32 col_dark);
 
 // invert frame (dimensions must be > 0)
 void DrawFrameInv(int x, int y, int w, int h);
