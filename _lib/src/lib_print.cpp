@@ -9,6 +9,12 @@
 
 #if USE_PRINT		// 1=use Formatted print, 0=not used (lib_print.*)
 
+#if !USE_TEXT		// 1=use text strings, 0=not used (lib_text*)
+// round coefficients, used in SetAddDouble function
+const double SetDoubleCoeff[19] = { 5e0, 5e-1, 5e-2, 5e-3, 5e-4, 5e-5, 5e-6, 5e-7,
+	5e-8, 5e-9, 5e-10, 5e-11, 5e-12, 5e-13, 5e-14, 5e-15, 5e-16 };
+#endif // !USE_TEXT
+
 // bit mask of used stdio streams
 u32 StdioMask = 0
 

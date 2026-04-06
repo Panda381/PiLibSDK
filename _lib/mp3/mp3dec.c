@@ -237,7 +237,7 @@ int MP3GetNextFrameInfo(HMP3Decoder hMP3Decoder, sMP3FrameInfo *mp3FrameInfo, co
 
 	MP3GetLastFrameInfo(mp3DecInfo, mp3FrameInfo);
 
-	return ERR_MP3_NONE;
+	return ERR_MP3_OK;
 }
 
 /**************************************************************************************
@@ -429,5 +429,5 @@ int MP3Decode(HMP3Decoder hMP3Decoder, const u8 **inbuf, int *bytesLeft, s16 *ou
 			return ERR_MP3_INVALID_SUBBAND;			
 		}
 	}
-	return ERR_MP3_NONE;
+	return ERR_MP3_OK;
 }

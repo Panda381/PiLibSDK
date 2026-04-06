@@ -199,6 +199,7 @@ sPic* JPGLoadStream(sStream* str)
 	return pic;
 }
 
+#if USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
 // decode JPG image from file to image in CF_B8G8R8 or CF_A8 format
 //  Returns sPic* image (allocated with MemAlloc()) or NULL on error.
 sPic* JPGLoadFile(sFile* file)
@@ -210,6 +211,7 @@ sPic* JPGLoadFile(sFile* file)
 	// decore JPG image
 	return JPGLoadStream(&str);
 }
+#endif // USE_FAT
 
 // decode JPG image from buffer to image in CF_B8G8R8 or CF_A8 format
 //  Returns sPic* image (allocated with MemAlloc()) or NULL on error.

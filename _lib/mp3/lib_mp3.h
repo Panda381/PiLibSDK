@@ -217,7 +217,7 @@ enum {
 
 // MP3 error codes
 enum {
-	ERR_MP3_NONE =			0,	// no error
+	ERR_MP3_OK =			0,	// no error
 	ERR_MP3_INDATA_UNDERFLOW =	-1,	// out of data - assume last or truncated frame
 	ERR_MP3_MAINDATA_UNDERFLOW =	-2,	// not enough data in bit reservoir from previous frames (perhaps starting in middle of file)
 	ERR_MP3_FREE_BITRATE_SYNC =	-3,	// cannot find sync in free mode
@@ -304,6 +304,10 @@ int MP3Decode(HMP3Decoder hMP3Decoder, const u8** inbuf, int* bytesLeft, s16* ou
 // - output buffers 70 KB (poll mode) or 10 KB (IRQ mode)
 // Total = 110 KB of RAM (poll mode) or 50 KB of RAM (IRQ mode).
 
+#ifndef MP3_CHECK_LOAD
+#define MP3_CHECK_LOAD		0		// check MP3 load
+#endif
+
 // To hold 0.2 second of the sound in input buffer:
 //   Input bitrate can be in range 8 to 448 kbps, it means 1 to 56 KB/sec.
 //   Interval of 0.2 second requires input buffer up to 11 KB.
@@ -360,7 +364,9 @@ typedef struct {
 
 	// input file
 	const char*	filename;			// filename (NULL = buffer mode, play from buffer)
+#if USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
 	sFile		file;				// open file
+#endif // USE_FAT
 	int		filesize;			// file size (without ID3v1 on the end)
 	int		frame0;				// offset of start of frame 0 (start after ID3v2, synced)
 
@@ -442,7 +448,7 @@ extern const char* MP3GenreList[MP3_GENRELIST_NUM];
 //  outbuf ... pointer to output buffer (must be aligned to u16 or better to u32; recommended size MP3PLAYER_OUTSIZE)
 //  outsize ... size of output buffer in bytes
 //  scan ... number of frames to scan file on open, -1=scan all file (count frames and length; recommended value is 100)
-// Returns error code ERR_MP3_* (ERR_MP3_NONE = 0 if OK)
+// Returns error code ERR_MP3_* (ERR_MP3_OK = 0 if OK)
 int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int insize, u8* outbuf, int outsize, int scan);
 
 // Terminate MP3 player

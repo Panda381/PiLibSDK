@@ -28,7 +28,7 @@ u8* Earth2Img;
 
 int main()
 {
-	int i, x, y, xr, u, v, off, key;
+	int i, x, y, xr, u, v, off;
 	u32* d;
 	const u8 *s1, *s2, *s1b, *s2b;
 	u32 c1, c2;
@@ -61,7 +61,7 @@ int main()
 	while (True)
 	{
 		// keyboard
-		key = KeyGet();
+		int key = KeyGet();
 		if (key == KEY_ESC) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
 

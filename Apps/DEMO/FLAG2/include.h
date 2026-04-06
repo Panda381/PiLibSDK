@@ -5,8 +5,12 @@
 //
 // ****************************************************************************
 
+#ifndef _INCLUDE2_H
+#define _INCLUDE2_H
 #include INCLUDES_H		// all includes
 
-#define FLAGIMGJPG 28625
 
 #include "../FLAG/src/main.h"	// main code
+
+
+#endif // _INCLUDE2_H

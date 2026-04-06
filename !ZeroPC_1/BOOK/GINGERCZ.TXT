@@ -1,0 +1,14 @@
+^YGingerbread House^0
+
+The Fairy Tale of
+Gingerbread House
+
+>>> CZECH version <<<
+
+Speaking: Karel Hoger
+
+^WLEFT/RIGHT^0 .... page
+^WUP/DOWN^0 ....... volume
+^WSpace^0 ......... speaking
+^WESC^0 ........... Exit
+^WAlt+Tab^0 ....... Screenshot

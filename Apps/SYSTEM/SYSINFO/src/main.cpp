@@ -434,8 +434,6 @@ void FrameMisc()
 
 int main()
 {
-	int key;
-
 	// Left column
 	DispXNext = 0;
 	DispYNext = 0;
@@ -459,7 +457,7 @@ int main()
 	// wait for Esc key
 	while (True)
 	{
-		key = KeyGet();
+		int key = KeyGet();
 
 		// Program exit
 		if (key == KEY_ESC) break;

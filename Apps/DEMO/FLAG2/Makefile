@@ -33,8 +33,23 @@ SRC += ../FLAG/img/mast.cpp
 # 1=use BIT integers, 0=not used (_lib/bigint/*)
 USE_BIGINT=0
 
+# 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
+USE_CALENDAR=0
+
+# 1=use Calendar 64-bit (year range -29227..+29227), 0=not used (lib_calendar64.*)
+USE_CALENDAR64=0
+
+# 1=use CRC Cyclic Redundancy Check, 0=not used (lib_crc.*)
+USE_CRC=0
+
+# 1=use JPG support, 0=not used (_lib/pic/lib_jpg*)
+USE_JPG=1
+
 # 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
 USE_MP3=0
+
+# 1=use PNG support, 0=not used (_lib/pic/lib_png*)
+USE_PNG=0
 
 # 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
 USE_PWMSND=0
@@ -42,10 +57,16 @@ USE_PWMSND=0
 # 1=use REAL numbers, 0=not used (_lib/real/*)
 USE_REAL=0
 
+# 1=use text "string", 0=not used (lib_text*)
+USE_TEXT=0
+
 ##############################################################################
 #                         Font configuration
 ##############################################################################
 # For available options see config_def.mk in root directory.
+
+# 1=use support of proportional fonts, 0=not used
+USE_FONTPROP=0
 
 ##############################################################################
 #                         SDK configuration

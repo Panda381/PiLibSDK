@@ -13,7 +13,7 @@
 
 int main()
 {
-	int x, y, i, key;
+	int x, y, i;
 	Bool slow = False;
 	u32 t, t2;
 
@@ -22,7 +22,7 @@ int main()
 	while (True)
 	{
 		// keyboard
-		key = KeyGet();
+		int key = KeyGet();
 		if (key == KEY_ESC) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
 

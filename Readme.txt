@@ -1,6 +1,8 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.15, in progress - under development
+Pre-alpha version 0.16, in progress - under development
+Last update: 4/6/2026
+
 
 Copyright (c) 2026 Miroslav Nemecek
 
@@ -95,6 +97,11 @@ System
  KERNEL ... Loader of applications
  SYSINFO ... System information
 
+Book
+ ABC ... Fairy Tales from the Alphabet (Czech)
+ GINGER ... Gingerbread House (English)
+ GINGERCZ ... Gingerbread House (Czech)
+
 Demo
  BALLOONS ... Flying balloons
  BIGFACT ... Factorial of 123456789!
@@ -104,6 +111,7 @@ Demo
  FLAG2 ... Fluttering custom flag
  FOUNTAIN ... Draw 3D graph
  FRUITY .... 130 music loops with MP3 compression
+ HELLO ... Simplest example
 
 MP3
  MP3 ... MP3 player

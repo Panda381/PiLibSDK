@@ -8,6 +8,8 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
+#define FLAGIMGJPG 40396
+
 // Font
 #define FONT		FontBold8x16	// default fixed font
 #define FONTW		8		// width of fixed font

@@ -21,7 +21,7 @@ u8* FlagImg;
 
 int main()
 {
-	int x, x2, y, key;
+	int x, x2, y;
 	float phase;
 
 	// decompress images from JPG format
@@ -44,7 +44,7 @@ int main()
 	while (True)
 	{
 		// keyboard
-		key = KeyGet();
+		int key = KeyGet();
 		if (key == KEY_ESC) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
 

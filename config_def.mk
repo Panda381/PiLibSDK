@@ -15,13 +15,13 @@
 USE_BIGINT=0
 
 # 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
-USE_CALENDAR=1
+USE_CALENDAR=0
 
 # 1=use Calendar 64-bit (year range -29227..+29227), 0=not used (lib_calendar64.*)
-USE_CALENDAR64=1
+USE_CALENDAR64=0
 
 # 1=use CRC Cyclic Redundancy Check, 0=not used (lib_crc.*)
-USE_CRC=1
+USE_CRC=0
 
 # 1=use Decode integer number, 0=not used (lib_decnum.*)
 USE_DECNUM=1
@@ -33,7 +33,7 @@ USE_DRAW=1
 USE_FAT=1
 
 # 1=use JPG support, 0=not used (_lib/pic/lib_jpg*)
-USE_JPG=1
+USE_JPG=0
 
 # 1=use Doubly Linked List, 0=not used (lib_list.*)
 USE_LIST=1
@@ -45,7 +45,7 @@ USE_MALLOC=1
 USE_MP3=0
 
 # 1=use PNG support, 0=not used (_lib/pic/lib_png*)
-USE_PNG=1
+USE_PNG=0
 
 # 1=use Formatted print, 0=not used (lib_print.*)
 USE_PRINT=1
@@ -63,7 +63,7 @@ USE_REAL=0
 USE_STREAM=1
 
 # 1=use text "string", 0=not used (lib_text*)
-USE_TEXT=1
+USE_TEXT=0
 
 # 1=use Tree list, 0=not used (lib_tree.*)
 USE_TREE=1
@@ -78,7 +78,7 @@ USE_TREE=1
 USE_FONTFIX=1
 
 # 1=use support of proportional fonts, 0=not used
-USE_FONTPROP=1
+USE_FONTPROP=0
 
 # 1=include Arial fonts, 0=include only default font FontARB10
 USE_FONTPROP_ARIAL=1

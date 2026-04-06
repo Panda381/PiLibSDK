@@ -300,6 +300,7 @@ void MP3Refill(sMP3Player* mp3)
 	u32 sum = 0;
 #endif
 
+#if USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
 	// check file mode
 	if (mp3->filename != NULL)
 	{
@@ -374,6 +375,7 @@ void MP3Refill(sMP3Player* mp3)
 		mp3->poll_len += sum;
 #endif
 	}
+#endif // USE_FAT
 }
 
 // Initialize MP3 player
@@ -384,10 +386,14 @@ void MP3Refill(sMP3Player* mp3)
 //  outbuf ... pointer to output buffer (must be aligned to u16 or better to u32; recommended size MP3PLAYER_OUTSIZE)
 //  outsize ... size of output buffer in bytes
 //  scan ... number of frames to scan file on open, -1=scan all file (count frames and length; recommended value is 100)
-// Returns error code ERR_MP3_* (ERR_MP3_NONE = 0 if OK)
+// Returns error code ERR_MP3_* (ERR_MP3_OK = 0 if OK)
 int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int insize, u8* outbuf, int outsize, int scan)
 {
 	int i;
+
+#if !USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
+	filename = NULL;
+#endif
 
 	// minimal number of scanned frames
 	if ((scan >= 0) && (scan < 2)) scan = 2;
@@ -417,6 +423,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 
 	// open input file
 	mp3->id3v1_off = 0;
+#if USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
 	if (filename != NULL)
 	{
 		// mount SD card
@@ -464,6 +471,8 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 		}
 	}
 	else
+#endif // USE_FAT
+
 	{
 		// check ID3v1 tag on end of buffer
 		const u8* src = &inbuf[insize - ID3V1_SIZE];
@@ -673,6 +682,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 
 	// reset current position to 1st frame
 	mp3->pos = 0; // index of current frame
+#if USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
 	if (mp3->filename != NULL) // file mode
 	{
 		// reset file mode
@@ -689,6 +699,8 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 		}
 	}
 	else
+#endif // USE_FAT
+
 	{
 		// reset buffer mode
 		mp3->inbufptr = mp3->inbuf + mp3->frame0;
@@ -711,7 +723,7 @@ int MP3PlayerInit(sMP3Player* mp3, const char* filename, const u8* inbuf, int in
 	if (n < 1) n = 1;
 	mp3->batch = n;
 
-	return ERR_MP3_NONE;
+	return ERR_MP3_OK;
 }
 
 // Terminate MP3 player
@@ -721,8 +733,10 @@ void MP3PlayerTerm(sMP3Player* mp3)
 	// stop playing sound
 	MP3Stop(mp3);
 
+#if USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
 	// close input file
 	if (mp3->filename != NULL) FileClose(&mp3->file);
+#endif // USE_FAT
 
 	// terminate MP3 decoder descriptor
 	MP3FreeDecoder(mp3->mp3dec);
@@ -985,6 +999,7 @@ void MP3SeekFrame(sMP3Player* mp3, int pos)
 		mp3->inbufrem = mp3->insize - off;
 	}
 
+#if USE_FAT	// 1=use FAT file system, 0=not used (lib_fat.*)
 	// file mode
 	else
 	{
@@ -993,6 +1008,7 @@ void MP3SeekFrame(sMP3Player* mp3, int pos)
 		FileSeek(&mp3->file, off);
 		MP3Refill(mp3); // refill input buffer
 	}
+#endif // USE_FAT
 
 	// save current frame setup
 	sMP3FrameHeader *fh = &mp3->decinfo.FrameHeaderS;

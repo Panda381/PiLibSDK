@@ -117,6 +117,11 @@ INLINE Bool CheckNanD(double num)  { return (((u32*)&num)[1]>>19) == (0x7ff80000
 INLINE Bool CheckSNanD(double num) { return (((u32*)&num)[1]>>19) == (0xfff80000>>19); } // -1#NAN
 */
 
+#if !USE_TEXT		// 1=use text strings, 0=not used (lib_text*)
+// round coefficients, used in SetAddDouble function
+extern const double SetDoubleCoeff[19];
+#endif // !USE_TEXT
+
 // bit mask of used stdio streams
 extern u32 StdioMask;
 

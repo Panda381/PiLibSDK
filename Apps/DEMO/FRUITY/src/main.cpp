@@ -549,6 +549,7 @@ const char* LoopName[LOOP_NUM] = {
 };
 
 // MP3 player
+Bool MP3PlayerWasInit = False;
 sMP3Player MP3Player;
 u8 ALIGNED MP3PlayerOutBuf[MP3PLAYER_OUTSIZE];
 
@@ -588,13 +589,14 @@ void NewLoop()
 
 	// start/stop playing loop
 	sMP3Player* mp3 = &MP3Player;
-	if (Mute)
-		MP3Stop(mp3);
-	else
+	if (MP3PlayerWasInit) MP3PlayerTerm(mp3);
+
+	if (!Mute)
 	{
 		int r = MP3PlayerInit(mp3, NULL, LoopList[Loop], LoopLen[Loop], MP3PlayerOutBuf, MP3PLAYER_OUTSIZE, -1);
-		if (r == ERR_MP3_NONE)
+		if (r == ERR_MP3_OK)
 		{
+			MP3PlayerWasInit = True;
 			MP3Play(mp3, 0, True);
 
 #if DISP_FRAMEINFO	// display MP3 frame info

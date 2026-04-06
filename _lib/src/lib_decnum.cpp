@@ -108,4 +108,15 @@ void Dec2DigSpc(char* buf, u8 num)
 	*buf = 0;
 }
 
+#if !USE_TEXT		// 1=use text strings, 0=not used (lib_text*)
+// get length of ASCIIZ text string
+int StrLen(const char* text)
+{
+	if (text == NULL) return 0;
+	const char* t = text;
+	while (*t++ != 0) {};
+	return (t - text) - 1;
+}
+#endif // !USE_TEXT
+
 #endif // USE_DECNUM

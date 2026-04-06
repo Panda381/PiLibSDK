@@ -34,6 +34,11 @@ void Dec2Dig(char* buf, u8 num);
 // decode 2 digits of number with space character
 void Dec2DigSpc(char* buf, u8 num);
 
+#if !USE_TEXT		// 1=use text strings, 0=not used (lib_text*)
+// get length of ASCIIZ text string
+int StrLen(const char* text);
+#endif // !USE_TEXT
+
 #endif // USE_DECNUM
 
 #endif // _LIB_DECNUM_H

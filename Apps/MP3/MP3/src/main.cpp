@@ -662,7 +662,7 @@ PlayNextSound:
 	int r = MP3PlayerInit(mp3, buf, MP3PlayerInBuf, MP3PLAYER_INSIZE, MP3PlayerOutBuf, MP3PLAYER_OUTSIZE, 500);
 
 	// error
-	if (r != ERR_MP3_NONE)
+	if (r != ERR_MP3_OK)
 	{
 		DrawClear();
 		SelFont8x16();
@@ -846,7 +846,7 @@ int main()
 	FileListNum = 0;
 	sSoundFile* fd;
 	u32 t;
-	int i, key;
+	int i;
 
 	// get path with sounds
 	SoundPathLen = GetHomePath(SoundPath, SOUNDPATH_MAX, SoundPathFile);
@@ -930,7 +930,7 @@ int main()
 		// sound selection
 		while (True)
 		{
-			key = KeyGet();
+			int key = KeyGet();
 			if (key == NOKEY) break;
 
 			switch (key)

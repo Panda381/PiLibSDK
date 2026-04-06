@@ -43,7 +43,7 @@ int baldy[BALLOON_NUM];
 
 int main()
 {
-	int i, j, x, y, key;
+	int i, j, x, y;
 
 	// decompress Clouds from JPG format
 	CloudsImg = (u8*)JPGLOAD(CloudsImgJpg);
@@ -98,7 +98,7 @@ int main()
 	while (True)
 	{
 		// keyboard
-		key = KeyGet();
+		int key = KeyGet();
 		if (key == KEY_ESC) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
 

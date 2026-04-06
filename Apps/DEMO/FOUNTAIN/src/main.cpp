@@ -32,7 +32,7 @@ Orginal source code (BBC BASIC):
 
 int main()
 {
-	int x, y, m, n, s, key;
+	int x, y, m, n, s;
 	float i, p, q, r;
 	float a = 0;
 	m = 0;
@@ -48,7 +48,7 @@ int main()
 	while (True)
 	{
 		// keyboard
-		key = KeyGet();
+		int key = KeyGet();
 		if (key == KEY_ESC) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
 
