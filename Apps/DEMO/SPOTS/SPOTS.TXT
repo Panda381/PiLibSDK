@@ -1,0 +1,6 @@
+^YSpots^0
+
+Demo - random spots
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

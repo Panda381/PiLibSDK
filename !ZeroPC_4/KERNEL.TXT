@@ -22,4 +22,4 @@ loading text *.TXT
 		^^[ ... start invert
 		^^] ... stop invert
 
-Image BMP: RGB888 24-bit
+Image JPG: RGB 320x240 pixels

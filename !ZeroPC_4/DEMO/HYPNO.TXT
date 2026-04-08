@@ -1,0 +1,7 @@
+^YHypno^0
+
+Demo - hypnotic rotating
+       pattern
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

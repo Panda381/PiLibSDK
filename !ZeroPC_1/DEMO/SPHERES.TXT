@@ -1,0 +1,6 @@
+^YSpheres^0
+
+Demo - random spheres
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

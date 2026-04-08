@@ -7,8 +7,6 @@
 
 #include "../include.h"
 
-INLINE s32 float2int(float num) { return (s32)floorf(num); }
-
 /*
 Orginal source code (BBC BASIC):
 

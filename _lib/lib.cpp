@@ -44,6 +44,10 @@
 #include "src/lib_malloc.cpp"	// Memory allocator
 #endif
 
+#if USE_MAT2D			// 1=use 2D transformation matrix (lib_mat2d.*)
+#include "src/lib_mat2d.cpp"	// 2D Transformation Matrix
+#endif
+
 #if USE_MP3		// 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
 #include "mp3/lib_mp3.cpp"	// MP3 decoder
 #endif

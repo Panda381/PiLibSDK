@@ -1,0 +1,5 @@
+^YChristmas animation^0
+playing song Silent Night.
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

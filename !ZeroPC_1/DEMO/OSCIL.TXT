@@ -1,0 +1,7 @@
+^YOscilloscope^0
+
+Demo - simulation of
+       oscilloscope signal 
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

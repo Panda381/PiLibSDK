@@ -1,0 +1,7 @@
+^YLevel Meter^0
+
+Demo - simulation of music
+       spectrum indicator
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

@@ -1,6 +1,3 @@
 ^YHello World^0
 
 Demo - simplest example
-
-^WESC^0 ....... Exit
-^WAlt+Tab^0 ... Screenshot

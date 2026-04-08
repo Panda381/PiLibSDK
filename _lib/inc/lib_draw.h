@@ -11,38 +11,39 @@
 #define _LIB_DRAW_H
 
 // 32-bit colors, format RGBA (components are 0..255, alpha 0=transparent, 255=opaque)
-#define COLOR(r,g,b,a)	((u32)( (r) | ((g)<<8) | ((b)<<16) | ((a)<<24) ))
+#define COLOR(r,g,b)	((u32)( (r) | ((g)<<8) | ((b)<<16) | (255<<24) ))
+#define COLORA(r,g,b,a)	((u32)( (r) | ((g)<<8) | ((b)<<16) | ((a)<<24) ))
 // - base colors
-#define COL_BLACK	COLOR(  0,  0,  0,255)
-#define COL_BLUE	COLOR(  0,  0,255,255)
-#define COL_GREEN	COLOR(  0,255,  0,255)
-#define COL_CYAN	COLOR(  0,255,255,255)
-#define COL_RED		COLOR(255,  0,  0,255)
-#define COL_MAGENTA	COLOR(255,  0,255,255)
-#define COL_YELLOW	COLOR(255,255,  0,255)
-#define COL_WHITE	COLOR(255,255,255,255)
-#define COL_GRAY	COLOR(128,128,128,255)
+#define COL_BLACK	COLOR(  0,  0,  0)
+#define COL_BLUE	COLOR(  0,  0,255)
+#define COL_GREEN	COLOR(  0,255,  0)
+#define COL_CYAN	COLOR(  0,255,255)
+#define COL_RED		COLOR(255,  0,  0)
+#define COL_MAGENTA	COLOR(255,  0,255)
+#define COL_YELLOW	COLOR(255,255,  0)
+#define COL_WHITE	COLOR(255,255,255)
+#define COL_GRAY	COLOR(128,128,128)
 // - dark colors
-#define COL_DKBLUE	COLOR(  0,  0,127,255)
-#define COL_DKGREEN	COLOR(  0,127,  0,255)
-#define COL_DKCYAN	COLOR(  0,127,127,255)
-#define COL_DKRED	COLOR(127,  0,  0,255)
-#define COL_DKMAGENTA	COLOR(127,  0,127,255)
-#define COL_DKYELLOW	COLOR(127,127,  0,255)
-#define COL_DKWHITE	COLOR(127,127,127,255)
-#define COL_DKGRAY	COLOR( 64, 64, 64,255)
+#define COL_DKBLUE	COLOR(  0,  0,127)
+#define COL_DKGREEN	COLOR(  0,127,  0)
+#define COL_DKCYAN	COLOR(  0,127,127)
+#define COL_DKRED	COLOR(127,  0,  0)
+#define COL_DKMAGENTA	COLOR(127,  0,127)
+#define COL_DKYELLOW	COLOR(127,127,  0)
+#define COL_DKWHITE	COLOR(127,127,127)
+#define COL_DKGRAY	COLOR( 64, 64, 64)
 // - light colors
-#define COL_LTBLUE	COLOR(127,127,255,255)
-#define COL_LTGREEN	COLOR(127,255,127,255)
-#define COL_LTCYAN	COLOR(127,255,255,255)
-#define COL_LTRED	COLOR(255,127,127,255)
-#define COL_LTMAGENTA	COLOR(255,127,255,255)
-#define COL_LTYELLOW	COLOR(255,255,127,255)
-#define COL_LTGRAY	COLOR(192,192,192,255)
+#define COL_LTBLUE	COLOR(127,127,255)
+#define COL_LTGREEN	COLOR(127,255,127)
+#define COL_LTCYAN	COLOR(127,255,255)
+#define COL_LTRED	COLOR(255,127,127)
+#define COL_LTMAGENTA	COLOR(255,127,255)
+#define COL_LTYELLOW	COLOR(255,255,127)
+#define COL_LTGRAY	COLOR(192,192,192)
 // - special colors
-#define COL_AZURE	COLOR(  0,127,255,255)
-#define COL_ORANGE	COLOR(255,127,  0,255)
-#define COL_BROWN	COLOR(192, 96,  0,255)
+#define COL_AZURE	COLOR(  0,127,255)
+#define COL_ORANGE	COLOR(255,127,  0)
+#define COL_BROWN	COLOR(192, 96,  0)
 
 // Random opaque color
 #define COL_RAND	(RandU32()|0xff000000)
@@ -320,19 +321,56 @@ void DrawTriangleInv(int x1, int y1, int x2, int y2, int x3, int y3);
 // Draw fill area (no blending)
 void DrawFill(int x, int y, u32 col);
 
-// Draw image (image must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format; alpha 0=transparent, 255=opaque)
+// Draw image
+//  img ... image in format sPic, must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format
+//  x ... destination X coordiate
+//  y ... destination Y coordiate
+//  xs ... source X coordinate
+//  ys ... source Y coordinate
+//  w ... width
+//  h ... height
+//  alpha ... transparency 0..255: 0=transparent, 255=opaque
 #define IMG_MAXWH	0x20000		// can be used as 'w' and 'h' to display the entire image
 void DrawImg(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH, int alpha=255);
-//#define DRAWIMG(img, x, y) DrawImg(img, x, y, 0, 0, IMG_MAXWH, IMG_MAXWH, 255)
 
 // Invert image (image must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format)
-void DrawImgInv(const u8* img, int x, int y, int xs, int ys, int w, int h);
+void DrawImgInv(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH);
 
 // Draw image mask (image must be in CF_A8 format; alpha 0=transparent, 255=opaque)
-void DrawImgMask(const u8* img, int x, int y, int xs, int ys, int w, int h, u32 col);
+void DrawImgMask(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH, u32 col=COL_WHITE);
 
 // Invert image mask (image must be in CF_A8 format)
-void DrawImgMaskInv(const u8* img, int x, int y, int xs, int ys, int w, int h);
+void DrawImgMaskInv(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH);
+
+// draw image line resized (does not check X clipping)
+//  img ... image in format sPic, must be in aligned CF_B8G8R8 format
+//  xd ... destination X coordiate
+//  yd ... destination Y coordiate
+//  wd ... destination width
+//  xs ... source X coordinate
+//  ys ... source Y coordinate
+//  ws ... source width
+void DrawImgLine(const u8* img, int xd, int yd, int wd, int xs, int ys, int ws);
+
+#if USE_MAT2D			// 1=use 2D transformation matrix (lib_mat2d.*)
+// DrawImgMat mode
+#define DRAWIMGMAT_WRAP		1	// wrap image
+#define DRAWIMGMAT_NOBORDER	2	// no border (transparent border)
+#define DRAWIMGMAT_CLAMP	3	// clamp image (use last pixel as border)
+#define DRAWIMGMAT_COLOR	4	// color border
+#define DRAWIMGMAT_PERSP	5	// perspective floor
+
+// Draw image with 2D transformation matrix
+//  img ... image in format sPic, must be in aligned CF_A8B8G8R8 format
+//  xd ... destination X coordiate
+//  yd ... destination Y coordiate
+//  wd ... destination width
+//  hd ... destination height
+//  m ... transformation matrix (should be prepared using PrepDrawImg function)
+//  mode ... draw mode DRAWIMGMAT_*
+//  color ... border color RGBA (DRAWIMGMAT_PERSP mode: horizon offset)
+void DrawImgMat(const u8* img, int xd, int yd, int wd, int hd, const sMat2D* m, int mode, u32 color);
+#endif // USE_MAT2D
 
 // draw character using system fixed font (alpha 0=transparent, 255=opaque; use DrawSelFont() to select font)
 // - To invert text, use bit 7 of the characters, or FrameBuffer.inv flag (flags are XORed).
@@ -346,13 +384,13 @@ void DrawChar4(u8 ch, int x, int y, u32 col);
 
 // draw character with background, using system fixed font (no alpha transparency; use DrawSelFont() to select font)
 // - To invert text, use bit 7 of the characters, or FrameBuffer.inv flag (flags are XORed).
-void DrawCharBgScale(u8 ch, int x, int y, int scalex, int scaley, u32 colfg, u32 colbg);
-void DrawCharBg(u8 ch, int x, int y, u32 colfg, u32 colbg);
-void DrawCharBgW(u8 ch, int x, int y, u32 colfg, u32 colbg);
-void DrawCharBgH(u8 ch, int x, int y, u32 colfg, u32 colbg);
-void DrawCharBg2(u8 ch, int x, int y, u32 colfg, u32 colbg);
-void DrawCharBg3(u8 ch, int x, int y, u32 colfg, u32 colbg);
-void DrawCharBg4(u8 ch, int x, int y, u32 colfg, u32 colbg);
+void DrawCharBgScale(u8 ch, int x, int y, int scalex, int scaley, u32 colfg, u32 colbg = COL_BLACK);
+void DrawCharBg(u8 ch, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+void DrawCharBgW(u8 ch, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+void DrawCharBgH(u8 ch, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+void DrawCharBg2(u8 ch, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+void DrawCharBg3(u8 ch, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+void DrawCharBg4(u8 ch, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
 
 // invert character using system fixed font (use DrawSelFont() to select font)
 // - To invert text, use bit 7 of the characters, or FrameBuffer.inv flag (flags are XORed).
@@ -411,24 +449,24 @@ int DrawText4Inv(const char* text, int x, int y);
 // draw text with length and background, using system fixed font (no alpha transparency; use DrawSelFont() to select font)
 // - To invert text, use bit 7 of the characters, or FrameBuffer.inv flag (flags are XORed).
 // - Returns shift of X in pixels.
-int DrawTextBgLenScale(const char* text, int len, int x, int y, int scalex, int scaley, u32 colfg, u32 colbg);
-int DrawTextBgLen(const char* text, int len, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBgLenW(const char* text, int len, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBgLenH(const char* text, int len, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBgLen2(const char* text, int len, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBgLen3(const char* text, int len, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBgLen4(const char* text, int len, int x, int y, u32 colfg, u32 colbg);
+int DrawTextBgLenScale(const char* text, int len, int x, int y, int scalex, int scaley, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgLen(const char* text, int len, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgLenW(const char* text, int len, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgLenH(const char* text, int len, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgLen2(const char* text, int len, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgLen3(const char* text, int len, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgLen4(const char* text, int len, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
 
 // draw ASCIIZ text with background (terminated with zero), using system fixed font (no alpha transparency; use DrawSelFont() to select font)
 // - To invert text, use bit 7 of the characters, or FrameBuffer.inv flag (flags are XORed).
 // - Returns shift of X in pixels.
-int DrawTextBgScale(const char* text, int x, int y, int scalex, int scaley, u32 colfg, u32 colbg);
-int DrawTextBg(const char* text, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBgW(const char* text, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBgH(const char* text, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBg2(const char* text, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBg3(const char* text, int x, int y, u32 colfg, u32 colbg);
-int DrawTextBg4(const char* text, int x, int y, u32 colfg, u32 colbg);
+int DrawTextBgScale(const char* text, int x, int y, int scalex, int scaley, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBg(const char* text, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgW(const char* text, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBgH(const char* text, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBg2(const char* text, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBg3(const char* text, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
+int DrawTextBg4(const char* text, int x, int y, u32 colfg, u32 colbg = COL_BLACK);
 
 // draw character using proportional font, returns shift of X coordinate (alpha 0=transparent, 255=opaque; to select font, use DrawSelFontProp())
 //  first ... flag of first character (= do not apply left spacing)

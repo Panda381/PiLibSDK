@@ -22,6 +22,10 @@
 #include "inc/lib_decnum.h"	// decode number
 #endif
 
+#if USE_MAT2D			// 1=use 2D transformation matrix (lib_mat2d.*)
+#include "inc/lib_mat2d.h"	// 2D Transformation Matrix
+#endif
+
 #if USE_DRAW		// 1=use Drawing library, 0=not used (lib_draw.*)
 #include "inc/lib_draw.h"	// drawing
 #endif

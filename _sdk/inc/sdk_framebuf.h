@@ -85,7 +85,7 @@ extern sFrameBuffer FrameBuffer;
 #endif
 
 #ifndef AUTOUPDATE_MS
-#define AUTOUPDATE_MS	100		// interval of display auto-update in [ms]
+#define AUTOUPDATE_MS	50		// interval of display auto-update in [ms]
 #endif
 
 #if WIDTH	// draw width (0=do not initialize default videomode)

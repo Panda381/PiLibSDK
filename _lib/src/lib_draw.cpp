@@ -2758,7 +2758,15 @@ void DrawFill(int x, int y, u32 col)
 	if (h <= 0) return; }
 
 
-// Draw image (image must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format; alpha 0=transparent, 255=opaque)
+// Draw image
+//  img ... image in format sPic, must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format
+//  x ... destination X coordiate
+//  y ... destination Y coordiate
+//  xs ... source X coordinate
+//  ys ... source Y coordinate
+//  w ... width
+//  h ... height
+//  alpha ... transparency 0..255: 0=transparent, 255=opaque
 void DrawImg(const u8* img, int x, int y, int xs, int ys, int w, int h, int alpha)
 {
 	int ws, hs, i;
@@ -2820,7 +2828,6 @@ void DrawImg(const u8* img, int x, int y, int xs, int ys, int w, int h, int alph
 					u8 green = s[1];
 					u8 blue = s[2];
 					s += 3;
-			
 					u32 srb = (red | ((u32)blue << 16))*alpha + 0x00ff00ff;
 					u32 sg = ((u32)green << 8)*alpha + 0x0000ff00;
 					u32 dst = *d;
@@ -2865,15 +2872,8 @@ void DrawImg(const u8* img, int x, int y, int xs, int ys, int w, int h, int alph
 				}
 				else if (a != 0)
 				{
-					u32 inv = 255 - a;
-					u32 srb = (col & 0x00ff00ff)*a + 0x00ff00ff;
-					u32 sg = (col & 0x0000ff00)*a + 0x0000ff00;
-					u32 dst = *d;
-					u32 rb = (dst & 0x00ff00ff);
-					u32 g = (dst & 0x0000ff00);
-					rb = (srb + rb*inv) & 0xff00ff00;
-					g = (sg + g*inv) & 0x00ff0000;
-					*d = ((rb | g) >> 8) | 0xff000000;
+					DRAW_BLEND_PREP();
+					DRAW_BLEND_PIXEL();
 				}
 				d++;
 			}
@@ -3059,6 +3059,500 @@ void DrawImgMaskInv(const u8* img, int x, int y, int xs, int ys, int w, int h)
 		s += wbs;
 	}
 }
+
+// draw image line resized (does not check X clipping)
+//  img ... image in format sPic, must be in aligned CF_B8G8R8 format
+//  xd ... destination X coordiate
+//  yd ... destination Y coordiate
+//  wd ... destination width
+//  xs ... source X coordinate
+//  ys ... source Y coordinate
+//  ws ... source width
+void DrawImgLine(const u8* img, int xd, int yd, int wd, int xs, int ys, int ws)
+{
+	// source image
+	const sPic* pic = (const sPic*)img;
+	if (pic->colfmt != CF_B8G8R8) return;
+
+	// some base checks
+	sFrameBuffer* f = &FrameBuffer;
+	if ((wd <= 0) || (ws <= 0) || (yd < f->miny) || (yd >= f->maxy) || (ys < 0) || (ys >= pic->h)) return;
+
+	// pixel increment
+	int dinc = (1<<12)*ws/wd;
+
+	// draw
+	u32* d = &f->drawbuf[xd + yd*f->drawpitchpix];
+	const u8* src = img + SPIC_HEADER_SIZE + xs*3 + ys*pic->wb;
+	int dadd = 0;
+	for (; wd > 0; wd--)
+	{
+		u8 r = src[0];
+		u8 g = src[1];
+		u8 b = src[2];
+		*d = 0xff000000 | ((u32)b << 16) | ((u32)g << 8) | r;
+		d++;
+		dadd += dinc;
+		src += (dadd >> 12)*3;
+		dadd &= (1<<12)-1;
+	}
+}
+
+#if USE_MAT2D			// 1=use 2D transformation matrix (lib_mat2d.*)
+// Draw image with 2D transformation matrix
+//  img ... image in format sPic, must be in aligned CF_A8B8G8R8 format
+//  xd ... destination X coordiate
+//  yd ... destination Y coordiate
+//  wd ... destination width
+//  hd ... destination height
+//  m ... transformation matrix (should be prepared using PrepDrawImg function)
+//  mode ... draw mode DRAWIMGMAT_*
+//  color ... border color, with alpha 0=transparent..255=opaque (DRAWIMGMAT_PERSP mode: horizon offset)
+void DrawImgMat(const u8* img, int xd, int yd, int wd, int hd, const sMat2D* m, int mode, u32 color)
+{
+	// source image
+	const sPic* pic = (const sPic*)img;
+	if (pic->colfmt != CF_A8B8G8R8) return;
+
+	// frame buffer
+	sFrameBuffer* f = &FrameBuffer;
+
+	// limit xd
+	int x0 = -wd/2; // start X coordinate
+	int k = f->minx - xd;
+	if (k > 0)
+	{
+		wd -= k;
+		x0 += k;
+		xd += k;
+	}
+	k = f->maxx;
+	if (xd + wd > k) wd = k - xd;
+	if (wd <= 0) return;
+
+	// limit yd
+	k = f->miny - yd;
+	int h0 = hd;
+	int y0 = (mode == DRAWIMGMAT_PERSP) ? (-hd) : (-hd/2); // start Y coordinate
+	if (k > 0)
+	{
+		hd -= k;
+		y0 += k;
+		yd += k;
+	}
+	k = f->maxy;
+	if (yd + hd > k) hd = k - yd;
+	if (hd <= 0) return;
+
+	// load transformation matrix and convert to integer fractional number
+	int m11 = MAT2D_TOFRACT(m->m11);
+	int m12 = MAT2D_TOFRACT(m->m12);
+	int m13 = MAT2D_TOFRACT(m->m13);
+	int m21 = MAT2D_TOFRACT(m->m21);
+	int m22 = MAT2D_TOFRACT(m->m22);
+	int m23 = MAT2D_TOFRACT(m->m23);
+
+	// check invalid zero matrix
+	Bool zero = (m11 | m12 | m13 | m21 | m22 | m23) == 0;
+
+	// get source alpha
+	int alpha = color >> 24;
+
+	// data of source image
+	const u32* src = (const u32*)pic->data;
+
+	// prepare variables
+	int xy0m, yy0m; // temporary Y members
+	u32* d = &f->drawbuf[xd + f->drawpitchpix*yd]; // destination image
+	int wbd = f->drawpitchpix - wd;
+	int i, x2, y2;
+	int wbs = pic->wb>>2;
+	const u32* s;
+	u32 col;
+	int ws = pic->w;
+	int hs = pic->h;
+
+	// 1: wrap image
+	if (mode == DRAWIMGMAT_WRAP)
+	{
+		// image dimension is power of 2
+		if (IsPow2(ws) && IsPow2(hs))
+		{
+			// coordinate mask
+			int xmask = ws - 1;
+			int ymask = hs - 1;
+
+			for (; hd > 0; hd--)
+			{
+				xy0m = x0*m11 + y0*m12 + m13;
+				yy0m = x0*m21 + y0*m22 + m23;
+		
+				for (i = wd; i > 0; i--)
+				{
+					x2 = (xy0m>>MAT2D_FRACT) & xmask;
+					y2 = (yy0m>>MAT2D_FRACT) & ymask;
+					col = src[x2 + y2*wbs];
+
+					// get source alpha
+					u32 a = col >> 24;
+					a *= alpha;
+					a = DIV255(a);
+
+					// full opaque
+					if (a == 255)
+					{
+						*d = col;
+					}
+					else if (a != 0)
+					{
+						DRAW_BLEND_PREP();
+						DRAW_BLEND_PIXEL();
+					}
+					d++;
+					xy0m += m11; // x0*m11
+					yy0m += m21; // x0*m21
+				}
+
+				y0++;
+				d += wbd;
+			}
+		}
+
+		// image dimension is not power of 2
+		else
+		{
+			for (; hd > 0; hd--)
+			{
+				xy0m = x0*m11 + y0*m12 + m13;
+				yy0m = x0*m21 + y0*m22 + m23;
+		
+				for (i = wd; i > 0; i--)
+				{
+					x2 = (xy0m>>MAT2D_FRACT) % ws;
+					if (x2 < 0) x2 += ws;
+					y2 = (yy0m>>MAT2D_FRACT) % hs;
+					if (y2 < 0) y2 += hs;
+
+					col = src[x2 + y2*wbs];
+
+					// get source alpha
+					u32 a = col >> 24;
+					a *= alpha;
+					a = DIV255(a);
+
+					// full opaque
+					if (a == 255)
+					{
+						*d = col;
+					}
+					else if (a != 0)
+					{
+						DRAW_BLEND_PREP();
+						DRAW_BLEND_PIXEL();
+					}
+					d++;
+
+					xy0m += m11; // x0*m11
+					yy0m += m21; // x0*m21
+				}
+
+				y0++;
+				d += wbd;
+			}
+		}
+	}
+
+	// 2: no border
+	else if (mode == DRAWIMGMAT_NOBORDER)
+	{
+		// if matrix is valid
+		if (!zero)
+		{
+			// source image dimension
+			u32 ww = ws;
+			u32 hh = hs;
+
+			for (; hd > 0; hd--)
+			{
+				xy0m = x0*m11 + y0*m12 + m13;
+				yy0m = x0*m21 + y0*m22 + m23;
+
+				for (i = wd; i > 0; i--)
+				{
+					x2 = xy0m>>MAT2D_FRACT;
+					y2 = yy0m>>MAT2D_FRACT;
+					if (((u32)x2 < ww) && ((u32)y2 < hh))
+					{
+						u32 col = src[x2 + y2*wbs];
+
+						// get source alpha
+						u32 a = col >> 24;
+						a *= alpha;
+						a = DIV255(a);
+
+						// full opaque
+						if (a == 255)
+						{
+							*d = col;
+						}
+						else if (a != 0)
+						{
+							DRAW_BLEND_PREP();
+							DRAW_BLEND_PIXEL();
+						}
+					}
+					d++;
+					xy0m += m11; // x0*m11
+					yy0m += m21; // x0*m21
+				}
+				y0++;
+				d += wbd;
+			}
+		}
+	}
+
+	// 3: clamp image
+	else if (mode == DRAWIMGMAT_CLAMP)
+	{
+		// invalid matrix
+		if (zero)
+		{
+			u32 col = *src;
+
+			// get source alpha
+			u32 a = col >> 24;
+			a *= alpha;
+			a = DIV255(a);
+
+			// full opaque
+			if (a == 255)
+			{
+				for (; hd > 0; hd--)
+				{
+					for (i = wd; i > 0; i--)
+					{
+						*d++ = col;
+					}
+					d += wbd;
+				}
+			}
+			else if (a != 0)
+			{
+				DRAW_BLEND_PREP();
+
+				for (; hd > 0; hd--)
+				{
+					for (i = wd; i > 0; i--)
+					{
+						DRAW_BLEND_PIXEL();
+						d++;
+					}
+					d += wbd;
+				}
+			}
+		}
+		else
+		{
+			// source image dimension
+			u32 ww = ws - 1;
+			u32 hh = hs - 1;
+
+			for (; hd > 0; hd--)
+			{
+				xy0m = x0*m11 + y0*m12 + m13;
+				yy0m = x0*m21 + y0*m22 + m23;
+		
+				for (i = wd; i > 0; i--)
+				{
+					x2 = xy0m>>MAT2D_FRACT;
+					y2 = yy0m>>MAT2D_FRACT;
+					if (x2 < 0) x2 = 0;
+					if (x2 > ww) x2 = ww;
+					if (y2 < 0) y2 = 0;
+					if (y2 > hh) y2 = hh;
+
+					u32 col = src[x2 + y2*wbs];
+
+					// get source alpha
+					u32 a = col >> 24;
+					a *= alpha;
+					a = DIV255(a);
+
+					// full opaque
+					if (a == 255)
+					{
+						*d = col;
+					}
+					else if (a != 0)
+					{
+						DRAW_BLEND_PREP();
+						DRAW_BLEND_PIXEL();
+					}
+					d++;
+
+					xy0m += m11; // x0*m11
+					yy0m += m21; // x0*m21
+				}
+				y0++;
+				d += wbd;
+			}
+		}
+	}
+
+	// 4: color border
+	else if (mode == DRAWIMGMAT_COLOR)
+	{
+		// invalid matrix
+		if (zero)
+		{
+			// get source alpha
+			u32 a = alpha;
+			u32 col = color;
+
+			// full opaque
+			if (a == 255)
+			{
+				for (; hd > 0; hd--)
+				{
+					for (i = wd; i > 0; i--)
+					{
+						*d++ = col;
+					}
+					d += wbd;
+				}
+			}
+			else if (a != 0)
+			{
+				DRAW_BLEND_PREP();
+
+				for (; hd > 0; hd--)
+				{
+					for (i = wd; i > 0; i--)
+					{
+						DRAW_BLEND_PIXEL();
+						d++;
+					}
+					d += wbd;
+				}
+			}
+		}
+		else
+		{
+			// source image dimension
+			u32 ww = ws;
+			u32 hh = hs;
+
+			for (; hd > 0; hd--)
+			{
+				xy0m = x0*m11 + y0*m12 + m13;
+				yy0m = x0*m21 + y0*m22 + m23;
+		
+				for (i = wd; i > 0; i--)
+				{
+					x2 = xy0m>>MAT2D_FRACT;
+					y2 = yy0m>>MAT2D_FRACT;
+					u32 col;
+					if (((u32)x2 < ww) && ((u32)y2 < hh))
+						col = src[x2 + y2*wbs];
+					else
+						col = color;
+
+					// get source alpha
+					u32 a = col >> 24;
+					a *= alpha;
+					a = DIV255(a);
+
+					// full opaque
+					if (a == 255)
+					{
+						*d = col;
+					}
+					else if (a != 0)
+					{
+						DRAW_BLEND_PREP();
+						DRAW_BLEND_PIXEL();
+					}
+					d++;
+
+					xy0m += m11; // x0*m11
+					yy0m += m21; // x0*m21
+				}
+
+				y0++;
+				d += wbd;
+			}
+		}
+	}
+
+	// 5: perspective
+	else if (mode == DRAWIMGMAT_PERSP)
+	{
+		// image dimension is power of 2
+		if (IsPow2(ws) && IsPow2(hs))
+		{
+			// coordinate mask
+			int xmask = ws - 1;
+			int ymask = hs - 1;
+
+			for (; hd > 0; hd--)
+			{
+				int dist = MAT2D_FRACTMUL*h0/(h0 + y0 + color + 1);
+				int m11b = (m11*dist)>>MAT2D_FRACT;
+				int m21b = (m21*dist)>>MAT2D_FRACT;
+				int m12b = (m12*dist)>>MAT2D_FRACT;
+				int m22b = (m22*dist)>>MAT2D_FRACT;
+
+				xy0m = x0*m11b + y0*m12b + m13;
+				yy0m = x0*m21b + y0*m22b + m23;
+		
+				for (i = wd; i > 0; i--)
+				{
+					x2 = (xy0m>>MAT2D_FRACT) & xmask;
+					xy0m += m11b; // x0*m11
+
+					y2 = (yy0m>>MAT2D_FRACT) & ymask;
+					yy0m += m21b; // x0*m21
+
+					*d++ = src[x2 + y2*wbs];
+				}
+				y0++;
+				d += wbd;
+			}
+		}
+
+		// image dimension is not power of 2
+		else
+		{
+			for (; hd > 0; hd--)
+			{
+				int dist = MAT2D_FRACTMUL*h0/(h0 + y0 + color + 1);
+				int m11b = (m11*dist)>>MAT2D_FRACT;
+				int m21b = (m21*dist)>>MAT2D_FRACT;
+				int m12b = (m12*dist)>>MAT2D_FRACT;
+				int m22b = (m22*dist)>>MAT2D_FRACT;
+
+				xy0m = x0*m11b + y0*m12b + m13;
+				yy0m = x0*m21b + y0*m22b + m23;
+		
+				for (i = wd; i > 0; i--)
+				{
+					x2 = (xy0m>>MAT2D_FRACT) % ws;
+					if (x2 < 0) x2 += ws;
+					xy0m += m11b; // x0*m11
+
+					y2 = (yy0m>>MAT2D_FRACT) % hs;
+					if (y2 < 0) y2 += hs;
+					yy0m += m21b; // x0*m21
+
+					*d++ = src[x2 + y2*wbs];
+				}
+				y0++;
+				d += wbd;
+			}
+		}
+	}
+}
+#endif // USE_MAT2D
 
 // ----------------------------------------------------------------------------
 //                              Draw character

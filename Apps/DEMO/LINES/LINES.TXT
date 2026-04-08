@@ -1,0 +1,7 @@
+^YLines^0
+
+Demo - relaxation line
+       pattern generator
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

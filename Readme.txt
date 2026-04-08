@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.16, in progress - under development
-Last update: 4/6/2026
+Pre-alpha version 0.17, in progress - under development
+Last update: 04/08/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -112,6 +112,20 @@ Demo
  FOUNTAIN ... Draw 3D graph
  FRUITY .... 130 music loops with MP3 compression
  HELLO ... Simplest example
+ HYPNO ... hypnotic rotating pattern
+ LEVMETER ... simulation of music spectrum indicator
+ LINEART ... draw line flower
+ LINES ... relaxation line pattern generator
+ MATRIX ... matrix code rain
+ OSCIL ... simulation of oscilloscope signal 
+ PF2027 ... Christmas animation
+ PI ... calculating number Pi to 4780 digits
+ PIXELS ... random generation of colored pixels
+ RAYTRACE ... 3D pattern generation by ray tracing method
+ SPHERES ... random spheres
+ SPOTS ... random spots
+ TWISTER ... twisting textured block
+ WATER ... simulation of rippling water surface
 
 MP3
  MP3 ... MP3 player

@@ -1,0 +1,7 @@
+^YPixels^0
+
+Demo - random generation
+       of colored pixels
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

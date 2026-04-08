@@ -9,6 +9,7 @@ DEFINE += -D USE_FAT=$(USE_FAT)
 DEFINE += -D USE_JPG=$(USE_JPG)
 DEFINE += -D USE_LIST=$(USE_LIST)
 DEFINE += -D USE_MALLOC=$(USE_MALLOC)
+DEFINE += -D USE_MAT2D=$(USE_MAT2D)
 DEFINE += -D USE_MP3=$(USE_MP3)
 DEFINE += -D USE_PNG=$(USE_PNG)
 DEFINE += -D USE_PRINT=$(USE_PRINT)
@@ -53,6 +54,9 @@ SRC += ${PI_LIB_DIR}/src/lib_list.cpp
 endif
 ifeq ($(strip $(USE_MALLOC)),1)
 SRC += ${PI_LIB_DIR}/src/lib_malloc.cpp
+endif
+ifeq ($(strip $(USE_MAT2D)),1)
+SRC += ${PI_LIB_DIR}/mp3/lib_mat2d.cpp
 endif
 ifeq ($(strip $(USE_MP3)),1)
 SRC += ${PI_LIB_DIR}/mp3/lib_mp3.cpp

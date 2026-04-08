@@ -1,0 +1,6 @@
+^YLineArt^0
+
+Demo - draw line flower
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

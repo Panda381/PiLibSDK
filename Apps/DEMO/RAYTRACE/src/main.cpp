@@ -19,6 +19,8 @@
 #define DEPTHMAX 1			// max. depth of trace
 #endif
 
+volatile Bool Paused = False;	// paused during ScreenShot
+
 typedef double real;
 
 INLINE real div(real a, real b) { return a/b; }
@@ -409,7 +411,7 @@ void Render3D(u32* dst)
 			if (tmp > 255) tmp = 255;
 			blue =  tmp; // blue
 
-			*dst++ = COLOR(red, green, blue, 255);
+			*dst++ = COLOR(red, green, blue);
 		}
 
 		dst += WIDTH-WIDTH2;
@@ -447,19 +449,32 @@ void CoreFnc(int core, void* arg)
 		{
 			int key = KeyGet();
 			if (key == KEY_ESC) Reboot();	// Program exit
-			if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+			if (key == KEY_SCREENSHOT)
+			{
+				Paused = True;
+				dmb();
+				WaitMs(100);
+				ScreenShot(); //  Screenshot - This may take a few seconds to write.
+				Paused = False;
+				dmb();
+			}
 		}
 
 		// animation
-		*floorpos -= 0.2; if (*floorpos <= -2.0) *floorpos += 2.0;
-		spheres[0].pos.y = abs(sin(a))*spheres[0].rad + spheres[0].rad + FLOORY;
-		spheres[1].pos.y = abs(sin(b))*spheres[1].rad*1.5f + spheres[1].rad + FLOORY;
-		spheres[2].pos.y = abs(sin(c))*spheres[2].rad + spheres[2].rad + FLOORY;
-		spheres[3].pos.y = abs(sin(d))*spheres[3].rad + spheres[3].rad + FLOORY;
-		a += da; if (a >= (real)PI2) a -= (real)PI2;
-		b += db; if (b >= (real)PI2) b -= (real)PI2;
-		c += dc; if (c >= (real)PI2) c -= (real)PI2;
-		d += dd; if (d >= (real)PI2) d -= (real)PI2;
+		dmb();
+		if (!Paused)
+		{
+			*floorpos -= 0.2; if (*floorpos <= -2.0) *floorpos += 2.0;
+			spheres[0].pos.y = abs(sin(a))*spheres[0].rad + spheres[0].rad + FLOORY;
+			spheres[1].pos.y = abs(sin(b))*spheres[1].rad*1.5f + spheres[1].rad + FLOORY;
+			spheres[2].pos.y = abs(sin(c))*spheres[2].rad + spheres[2].rad + FLOORY;
+			spheres[3].pos.y = abs(sin(d))*spheres[3].rad + spheres[3].rad + FLOORY;
+
+			a += da; if (a >= (real)PI2) a -= (real)PI2;
+			b += db; if (b >= (real)PI2) b -= (real)PI2;
+			c += dc; if (c >= (real)PI2) c -= (real)PI2;
+			d += dd; if (d >= (real)PI2) d -= (real)PI2;
+		}
 
 		// rendering
 		Render3D(dst);

@@ -1,0 +1,4 @@
+^YLevel Meter^0
+
+Demo - simulation of music
+       spectrum indicator

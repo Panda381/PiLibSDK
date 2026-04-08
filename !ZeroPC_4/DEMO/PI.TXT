@@ -1,0 +1,7 @@
+^YPi^0
+
+Demo - calculating number
+       Pi to 4780 digits
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot

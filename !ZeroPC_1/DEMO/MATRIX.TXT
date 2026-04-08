@@ -1,0 +1,6 @@
+^YMatrix Rain^0
+
+Demo - matrix code rain
+
+^WESC^0 ....... Exit
+^WAlt+Tab^0 ... Screenshot
