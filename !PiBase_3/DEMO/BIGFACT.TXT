@@ -1,7 +1,0 @@
-^YBig Factorial^0
-
-Demo - calculating factorial
-       of number 123456789!
-       to 2360 digits
-
-Calculation can take up to 50 seconds.

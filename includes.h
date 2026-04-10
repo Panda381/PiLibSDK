@@ -32,4 +32,9 @@
 #include "_devices/zeropc/_include.h"
 #endif
 
+// ZeroTiny
+#if USE_ZEROTINY
+#include "_devices/zerotiny/_include.h"
+#endif
+
 #endif // _INCLUDE_H

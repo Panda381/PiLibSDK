@@ -1,0 +1,16 @@
+^YMP3 Player^0
+^WY^0 ...,,................... back/quit
+File Select:
+^Warrows^0 ...................... select
+^WB^0 ......................... play_all
+^WA^0 ................... play/directory
+^WX^0 ..................... directory up
+Player:
+^WLeft/Right^0 ................ +-10 sec
+^WUp/Down^0 ................... +-volume
+^WB^0 ............................ pause
+^WX^0 ............................. info
+^WA+Left/Right^0 ............. prev/next
+
+More sample MP3s on web page
+https://www.breatharian.eu/hw/picolibsdk/index_en.html#mp3

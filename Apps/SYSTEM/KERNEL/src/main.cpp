@@ -1402,6 +1402,8 @@ int main()
 
 			// BackSpace - out of directory
 			case KEY_BS:
+//				ScreenShot();	// ZeroTiny alternative screenshot
+
 				// not root directory yet
 				if (PathLen > 1)
 				{

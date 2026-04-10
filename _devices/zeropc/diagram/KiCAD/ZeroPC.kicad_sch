@@ -3333,7 +3333,7 @@
 		)
 		(uuid "0af27a59-5266-48b8-b8a4-ac71d6294f94")
 	)
-	(text "SPI0_MOSI"
+	(text "SPI1_MOSI"
 		(exclude_from_sim no)
 		(at 129.54 63.5 0)
 		(effects
@@ -4327,7 +4327,7 @@
 		)
 		(uuid "c9360e83-7905-4170-90e6-1bf84cda30df")
 	)
-	(text "SPI0_MOSI"
+	(text "SPI1_MOSI"
 		(exclude_from_sim no)
 		(at 30.48 50.8 0)
 		(effects

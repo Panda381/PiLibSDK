@@ -719,17 +719,81 @@ PlayNextSound:
 		// keyboard control
 		switch (KeyGet())
 		{
+#if USE_ZEROPC
 		// left (rewind back)
 		case KEY_LEFT:
 			MP3SeekTime(mp3, MP3GetTimePos(mp3) - 10);
 			KeyFlush();
 			break;
 
+		// previous
+		case KEY_HOME:
+			MP3PlayerTerm(mp3);
+			do {
+				FileListSel--;
+				if (FileListSel < 0) FileListSel = FileListNum-1;
+			} while (FileList[FileListSel].dir);
+			KeyFlush();
+			goto PlayNextSound;
+
 		// right (rewind forward)
 		case KEY_RIGHT:
 			MP3SeekTime(mp3, MP3GetTimePos(mp3) + 10);
 			KeyFlush();
 			break;
+
+		// next
+		case KEY_END:
+			MP3PlayerTerm(mp3);
+			do {
+				FileListSel++;
+				if (FileListSel >= FileListNum) FileListSel = 0;
+			} while (FileList[FileListSel].dir);
+			KeyFlush();
+			goto PlayNextSound;
+#endif // USE_ZEROPC
+
+#if USE_ZEROTINY
+		// left (rewind back)
+		case KEY_LEFT:
+			if (!KeyPressed(KEY_A))
+			{
+				MP3SeekTime(mp3, MP3GetTimePos(mp3) - 10);
+				KeyFlush();
+				break;
+			}
+			else
+			{
+				// previous
+				MP3PlayerTerm(mp3);
+				do {
+					FileListSel--;
+					if (FileListSel < 0) FileListSel = FileListNum-1;
+				} while (FileList[FileListSel].dir);
+				KeyFlush();
+				goto PlayNextSound;
+			}
+
+		// right (rewind forward)
+		case KEY_RIGHT:
+			if (!KeyPressed(KEY_A))
+			{
+				MP3SeekTime(mp3, MP3GetTimePos(mp3) + 10);
+				KeyFlush();
+				break;
+			}
+			else
+			{
+				// next
+				MP3PlayerTerm(mp3);
+				do {
+					FileListSel++;
+					if (FileListSel >= FileListNum) FileListSel = 0;
+				} while (FileList[FileListSel].dir);
+				KeyFlush();
+				goto PlayNextSound;
+			}
+#endif // USE_ZEROTINY
 
 		// up (volume up)
 		case KEY_UP:
@@ -746,26 +810,6 @@ PlayNextSound:
 			DispUpdate();
 			KeyFlush();
 			break;
-
-		// previous
-		case KEY_HOME:
-			MP3PlayerTerm(mp3);
-			do {
-				FileListSel--;
-				if (FileListSel < 0) FileListSel = FileListNum-1;
-			} while (FileList[FileListSel].dir);
-			KeyFlush();
-			goto PlayNextSound;
-
-		// next
-		case KEY_END:
-			MP3PlayerTerm(mp3);
-			do {
-				FileListSel++;
-				if (FileListSel >= FileListNum) FileListSel = 0;
-			} while (FileList[FileListSel].dir);
-			KeyFlush();
-			goto PlayNextSound;
 
 		// screen shot
 		case KEY_SCREENSHOT:

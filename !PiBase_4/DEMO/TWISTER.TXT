@@ -1,4 +1,0 @@
-^YTwister^0
-
-Demo - twisting textured
-       block

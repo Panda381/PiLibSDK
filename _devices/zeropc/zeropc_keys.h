@@ -124,7 +124,7 @@ extern volatile Bool KeyCtrlLock;	// key Ctrl CapsLock
 extern volatile Bool KeyAltLock;	// key Alt CapsLock
 
 // keyboard buffer
-#define KEYBUF_SIZE	20		// size of keyboard buffer (= 32)
+#define KEYBUF_SIZE	20		// size of keyboard buffer
 extern int KeyBuf[KEYBUF_SIZE];		// keyboard buffer
 extern int KeyRetBuf;			// returned key to keyboard buffer (NOKEY = no key)
 extern volatile int KeyWriteOff;	// write offset to keyboard buffer

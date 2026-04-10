@@ -40,7 +40,7 @@ USE_CALENDAR64=0
 USE_CRC=0
 
 # 1=use JPG support, 0=not used (_lib/pic/lib_jpg*)
-USE_JPG=0
+USE_JPG=1
 
 # 1=use 2D transformation matrix (lib_mat2d.*)
 USE_MAT2D=0

@@ -18,6 +18,11 @@
 #include "_devices/zeropc/_config.h"
 #endif
 
+// ZeroTiny
+#if USE_ZEROTINY
+#include "_devices/zerotiny/_config.h"
+#endif
+
 // keyboard
 #ifndef SYSTICK_KEYSCAN
 #define SYSTICK_KEYSCAN		0		// call KeyScan() function from SysTick system timer

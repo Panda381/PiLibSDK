@@ -1,3 +1,0 @@
-^YHello World^0
-
-Demo - simplest example

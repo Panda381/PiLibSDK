@@ -31,7 +31,7 @@ SRC += src/main.cpp
 USE_BIGINT=0
 
 # 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
-USE_CALENDAR=0
+USE_CALENDAR=1
 
 # 1=use Calendar 64-bit (year range -29227..+29227), 0=not used (lib_calendar64.*)
 USE_CALENDAR64=0

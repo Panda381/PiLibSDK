@@ -1,0 +1,23 @@
+^YZeroPC Boot Loader^0
+
+^WUP/DOWN^0 ...... move cursor
+^WLEFT/RIGHT^0 ... move page
+^WA^0 ............ run program
+^WX^0 ............ directory up
+
+loading text *.TXT
+	- text width = 40 characters
+	- text height = 15 or 30 rows
+	- ^^ is prefix of control characters
+		^^^^ ... print ^^ character
+		^^1..^^9 ... print character with code 1..9
+		^^A..^^V ... print character with code 10..31
+		^^0 ... normal gray text
+		^^W ... white text
+		^^X ... green text
+		^^Y ... yellow text
+		^^Z ... red text
+		^^[ ... start invert
+		^^] ... stop invert
+
+Image JPG: RGB 320x240 pixels

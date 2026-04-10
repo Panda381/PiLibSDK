@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.17, in progress - under development
-Last update: 04/08/2026
+Pre-alpha version 0.20, in progress - under development
+Last update: 04/10/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -25,7 +25,17 @@ will likely not be supported in the future either, as their benefits for
 bare-metal use are minimal.
 
 A boot loader is available for ZeroPC device, which allows easy launching of
-programs from an SD card.
+programs from an SD card. The programs are ready for ZeroPC and ZeroTiny, with
+Zero 1, Zero 2 32-bit, or Zero 2 64-bit modules. The Zero 1 and Zero 2 modules
+differ primarily in speed - the Zero 2 is noticeably faster than the Zero 1.
+The higher speed is due not only to a higher processor frequency but also to a
+newer architecture. In addition, the Zero 2 module has 4 cores, while the
+Zero 1 has only one core. Therefore, it is strongly recommended to use the
+Zero 2 module. Use the Zero 1 module only if you own it and have no better use
+for it. The Zero 2 module can be operated in 32-bit or 64-bit mode. The
+compilations are prepared for both modes. From a user’s point of view, there is
+no noticeable difference between the modes. It is recommended to prefer 64-bit
+mode, which may be slightly faster in some cases.
 
 
 License
@@ -57,18 +67,41 @@ If you will use another paths, edit paths in _c1.bat (set GCC_PI_PATH).
 
 Directories
 ===========
-!PiBase_1 ... content of SD card for base Raspberry Zero 1 module
-!PiBase_3 ... content of SD card for base Raspberry Zero 2 W module in 32-bit mode
-!PiBase_4 ... content of SD card for base Raspberry Zero 2 W module in 64-bit mode
 !ZeroPC_1 ... content of SD card for device ZeroPC with module Zero 1
 !ZeroPC_3 ... content of SD card for device ZeroPC with module Zero 2 32-bit
 !ZeroPC_4 ... content of SD card for device ZeroPC with module Zero 2 64-bit
-_devices ... devices: PiBase = base Pi module, ZeroPC = ZeroPC device
+!ZeroTiny_1 ... content of SD card for device ZeroTiny with module Zero 1
+!ZeroTiny_3 ... content of SD card for device ZeroTiny with module Zero 2 in 32-bit mode
+!ZeroTiny_4 ... content of SD card for device ZeroTiny with module Zero 2 in 64-bit mode
+_devices ... devices: PiBase = base Pi module, ZeroPC = ZeroPC device, ZeroTiny = ZeroTiny device
 _font ... fonts
 _lib ... libraries
 _sdk ... SDK (peripherals drivers)
 _tools ... compilation tools
 Apps ... source codes of sample applications
+
+
+ZeroTiny
+========
+ZeroTiny is the simplest game console based on the Raspberry Pi Zero 1 or
+Zero 2 modules. It is recommended to preferably use the Zero 2 module in 64-bit
+mode. The Zero 1 module may be noticeably slower in some applications. ZeroTiny
+features 8 buttons, a stereo PWM audio output, and an HDMI display output.
+A boot loader is available, allowing for easy program launch from an SD card.
+
+The ZeroTiny is designed in a sandwich-style construction. In my prototype,
+I connected the Zero module to the motherboard via an 8mm header - primarily to
+facilitate easy module replacement. If you solder the Zero module to the board
+using only a pin header, the design will be lower. However, this may make
+repairs more difficult, such as replacing a button.
+
+Detailed materials for ZeroPC hardware can be found in the
+"_devices/ZeroTiny/diagram" folder.
+
+Source code and sample programs can be found in the "Apps" folder.
+
+You can find the compiled sample programs in the "!ZeroTiny_*" folders,
+organized by module type and processor mode.
 
 
 ZeroPC
@@ -88,7 +121,10 @@ as swapping the Zero 2 for a Zero 1.
 Detailed materials for ZeroPC hardware can be found in the
 "_devices/ZeroPC/diagram" folder.
 
-Source code and sample programs can be found in the "ZeroPC" folder.
+Source code and sample programs can be found in the "Apps" folder.
+
+You can find the compiled sample programs in the "!ZeroPC_*" folders, organized
+by module type and processor mode.
 
 
 Sample Applications
@@ -135,7 +171,7 @@ MP3
 
 Notes:
 
-Raspberry Zero 2 W:
+Raspberry Zero 2 W contains:
 - PAM2306AYPKE dual PWM step-down DC-DC converter, input 2.5 to 5V, output 3.3V and 1.8V, current 1A
 - RT8088AWSC 2.7MHz 3A Step-Down Converter with I2C Interface
 - RP3A0 SiP (BCM2710A1 + 512 MB SDRAM LPDDR2), quartz 19.2 MHz

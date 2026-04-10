@@ -1,3 +1,0 @@
-^YEarth^0
-
-Demo - rotating globe

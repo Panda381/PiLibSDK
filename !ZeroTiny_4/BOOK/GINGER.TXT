@@ -1,0 +1,11 @@
+^YGingerbread House^0
+
+The Fairy Tale of
+Gingerbread House
+
+>>> ENGLISH version <<<
+
+^WLEFT/RIGHT^0 .... page
+^WUP/DOWN^0 ....... volume
+^WB^0 ............. speaking
+^WY^0 ............. Exit

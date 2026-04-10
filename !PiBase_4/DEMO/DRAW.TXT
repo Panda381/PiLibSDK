@@ -1,4 +1,0 @@
-^YDraw^0
-
-Demo - drawing graphic
-       elements

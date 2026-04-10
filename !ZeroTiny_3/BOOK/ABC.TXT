@@ -1,0 +1,9 @@
+^YFairy Tales from the Alphabet^0
+^YPohadky z abecedy^0
+Autor: Vaclav Deyl
+Kresby: Miroslav Netik
+
+> Book in CZECH language <
+
+^WLEFT/RIGHT^0 .... page
+^WY^0 ........... Exit
