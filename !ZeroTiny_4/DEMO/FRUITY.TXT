@@ -5,5 +5,5 @@ with MP3 compression
 
 ^WLeft^0 ........ previous
 ^WRight^0 ........... next
-^WB^0 ........ mute on/off
+^WA^0 ........ mute on/off
 ^WY^0 ............... quit

@@ -11,7 +11,7 @@
 #define _LIB_MP3_H
 
 // check if sound is playing
-Bool PlayingSoundChan(int chan);
+Bool PlayingSound(int chan);
 
 // ----------------------------------------------------------------------------
 //                     Internal MP3 structures
@@ -466,7 +466,7 @@ void MP3Poll(sMP3Player* mp3);
 void MP3Play(sMP3Player* mp3, int chan, Bool rep);
 
 // check if MP3 Player is plaing (Wait a few milliseconds after termination for the play buffers to empty)
-INLINE Bool MP3Playing(sMP3Player* mp3) { return mp3->playing || PlayingSoundChan(mp3->chan); }
+INLINE Bool MP3Playing(sMP3Player* mp3) { return mp3->playing || PlayingSound(mp3->chan); }
 
 // get total length in seconds
 INLINE int MP3GetTimeLen(sMP3Player* mp3) { return mp3->timelen; }

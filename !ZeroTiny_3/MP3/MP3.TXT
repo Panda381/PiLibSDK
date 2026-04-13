@@ -8,7 +8,7 @@ File Select:
 Player:
 ^WLeft/Right^0 ................ +-10 sec
 ^WUp/Down^0 ................... +-volume
-^WB^0 ............................ pause
+^WA^0 ............................ pause
 ^WX^0 ............................. info
 ^WA+Left/Right^0 ............. prev/next
 

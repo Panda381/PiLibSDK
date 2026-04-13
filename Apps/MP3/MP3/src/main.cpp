@@ -1108,7 +1108,6 @@ int main()
 
 			// BackSpace - up directory
 			case KEY_BS:
-
 				// not root directory yet
 				i = SoundPathLen;
 				if (i > 1)
@@ -1138,7 +1137,7 @@ int main()
 				break;
 
 			// play 1 or change directory
-			case KEY_ENTER:
+			case KEY_SPACE:
 				if (FileListSel < FileListNum)
 				{
 					sSoundFile* fd = &FileList[FileListSel];
@@ -1200,8 +1199,8 @@ int main()
 				}
 				break;
 
-			// Space play all
-			case KEY_SPACE:
+			// Enter play all
+			case KEY_ENTER:
 				if (FileListMP3 >= 0)
 				{
 					FileListSel = FileListMP3;

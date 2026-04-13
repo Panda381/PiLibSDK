@@ -887,7 +887,7 @@ void MP3Tick(sMP3Player* mp3)
 
 #if MP3_CHECK_LOAD	// check MP3 load
 	// remaining ouput buffer
-	if (PlayingSoundChan(mp3->chan))
+	if (PlayingSound(mp3->chan))
 	{
 		rem = PwmSound[mp3->chan].cnt*2 * mp3->info.nChans;
 		if (rem < mp3->decode_outrem) mp3->decode_outrem = rem;
@@ -895,7 +895,7 @@ void MP3Tick(sMP3Player* mp3)
 #endif
 
 	// send buffer to the stream
-	SoundStreamSetNext(chan, outbuf, outN);
+	SoundStreamSetNext(outbuf, outN, chan);
 
 	// switch output buffer
 	mp3->lastoutbuf = bufinx;
@@ -966,7 +966,7 @@ void MP3Play(sMP3Player* mp3, int chan, Bool rep)
 	// start playing the sound
 	mp3->droptime = Time();
 	mp3->playing = True;
-	PlaySoundChanRaw(chan, mp3->outbuf[bufinx], outN, mp3->form, SNDREPEAT_STREAM, mp3->speed);
+	PlaySoundRaw(mp3->outbuf[bufinx], outN, chan, mp3->form, SNDREPEAT_STREAM, mp3->speed);
 }
 
 // get current position in seconds
@@ -1073,7 +1073,7 @@ void MP3Stop(sMP3Player* mp3)
 	mp3->playing = False;
 
 	// stop playing sound
-	StopSoundChan(mp3->chan);
+	StopSound(mp3->chan);
 }
 
 #endif // USE_MP3

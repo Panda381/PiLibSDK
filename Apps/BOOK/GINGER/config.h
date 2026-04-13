@@ -25,6 +25,10 @@
 #define MP3PLAYER_INSIZE	24000		// size of input buffer in bytes
 #define MP3PLAYER_OUTSIZE	140000		// size of output buffer in bytes ... poll mode
 
+// 1=use multicore (for applications), 0=do not use other cores (for loader)
+// Loader must be run without multicore, because cannot park other cores to their original address
+#define USE_MULTICORE	0
+
 // Real numbers (also set USE_REAL=1 and USE_BIGINT=1 in Makefile to enable it)
 //#define USE_REAL16		1		// 1 = use real16 numbers (3 digits, exp +-4)
 //#define USE_REAL32		1		// 1 = use real32 numbers (float, 7 digits, exp +-38)

@@ -9,5 +9,5 @@ Speaking: Karel Hoger
 
 ^WLEFT/RIGHT^0 .... page
 ^WUP/DOWN^0 ....... volume
-^WB^0 ............. speaking
+^WA^0 ............. speaking
 ^WY^0 ............. Exit

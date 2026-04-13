@@ -3,8 +3,8 @@
 ^WEsc^0 ...................... back/quit
 File Select:
 ^Warrows/PgUp/PgDn/Home/End^0 ... select
-^WSpace^0 ..................... play_all
-^WEnter^0 ............... play/directory
+^WEnter^0 ..................... play_all
+^WSpace^0 ............... play/directory
 ^WBackSpace^0 ............. directory up
 Player:
 ^WLeft/Right^0 ................ +-10 sec

@@ -1,6 +1,6 @@
 @echo off
 rem Compilation
 cd ..
-call c.bat
+call c_ZeroPC_4.bat
 cd src
 

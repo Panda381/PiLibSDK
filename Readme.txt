@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.20, in progress - under development
-Last update: 04/10/2026
+Pre-alpha version 0.21, in progress - under development
+Last update: 04/13/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -36,6 +36,14 @@ for it. The Zero 2 module can be operated in 32-bit or 64-bit mode. The
 compilations are prepared for both modes. From a user’s point of view, there is
 no noticeable difference between the modes. It is recommended to prefer 64-bit
 mode, which may be slightly faster in some cases.
+
+Note: A boot loader is not required to run programs. You can run programs
+directly on the Zero1/Zero2 module itself, without additional hardware or a
+boot loader. Copy the system files from the Root directory of the corresponding
+!ZeroTiny_* folder to the SD card. You will need the files "bootcode.bin",
+"config.txt", "fixup.dat", and "start.elf". Copy the program to the Root folder
+as well, and rename it to KERNEL.IMG. The program will start automatically when
+power is turned on.
 
 
 License
@@ -162,6 +170,9 @@ Demo
  SPOTS ... random spots
  TWISTER ... twisting textured block
  WATER ... simulation of rippling water surface
+
+Games
+ ANTS ... Card game
 
 MP3
  MP3 ... MP3 player

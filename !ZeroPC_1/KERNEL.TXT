@@ -3,7 +3,7 @@
 ^WUP/DOWN^0 ...... move cursor
 ^WLEFT/RIGHT^0 ... move page
 ^WHOME/END^0 ..... start/end
-^WEnter^0 ........ run program
+^WEnter/Space^0 .. run program
 ^WBackSpace^0 .... directory up
 ^WAlt+Tab^0 ...... Screenshot
 

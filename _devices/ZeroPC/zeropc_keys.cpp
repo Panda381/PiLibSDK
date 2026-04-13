@@ -518,7 +518,7 @@ int KeyGetCaps()
 #if !SYSTICK_KEYSCAN	// call KeyScan() function from SysTick system timer
 	// scan keyboard
 	KeyScan();
-	WaitMs(4);
+	WaitMs(2);
 #endif
 
 	// get key from temporary 1-key buffer

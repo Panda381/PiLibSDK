@@ -485,7 +485,7 @@ void PWMSndTerm()
 }
 
 // stop playing sound
-void StopSoundChan(int chan)
+void StopSound(int chan)
 {
 	IRQ_LOCK;
 	dmb();
@@ -499,17 +499,11 @@ void StopSoundChan(int chan)
 	IRQ_UNLOCK;
 }
 
-// stop playing sound of channel 0
-void StopSound()
-{
-	StopSoundChan(0);
-}
-
 // stop playing sounds of all channels
 void StopAllSound()
 {
 	int i;
-	for (i = 0; i < PWMSND_CHANNUM; i++) StopSoundChan(i);
+	for (i = 0; i < PWMSND_CHANNUM; i++) StopSound(i);
 }
 
 // Convert length of sound in bytes to number of samples
@@ -557,19 +551,19 @@ int SoundLenToByte(int len, int form)
 }
 
 // play sound or music
-//  chan = channel 0..PWMSND_CHANNUM-1
 //  sound = pointer to sound in sSound format (speed>0), or music data in sMelodyTone format (speed=0)
+//  chan = channel 0..PWMSND_CHANNUM-1
 //  rep = repeat counter (enter number of repeats, or flag SNDREPEAT_*)
 //  speed = relative speed, 1=normal, or 0=play music
 //  volume = volume 0..1 (1=normal, or can be > 1 to get higher volume)
 //  panning = panning 0..1 (0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
-void PlaySoundChan(int chan, const void* sound, int rep /*= SNDREPEAT_NO*/, float speed /*= 1.0f*/, float volume /*= 1.0f*/, float panning /*= 0.5f*/)
+void PlaySound(const void* sound, int chan /*= 0*/, int rep /*= SNDREPEAT_NO*/, float speed /*= 1.0f*/, float volume /*= 1.0f*/, float panning /*= 0.5f*/)
 {
 	// global sound is OFF
 	if (GlobalSoundMute) return;
 
 	// stop playing sound
-	StopSoundChan(chan);
+	StopSound(chan);
 
 	// pointer to sound channel
 	sPwmSnd* s = &PwmSound[chan];
@@ -637,21 +631,21 @@ void PlaySoundChan(int chan, const void* sound, int rep /*= SNDREPEAT_NO*/, floa
 }
 
 // play sound in RAW format (stream)
-//  chan = channel 0..PWMSND_CHANNUM-1
 //  snd = pointer to sound buffer
 //  size = length of sound in number of bytes (use sizeof(array))
+//  chan = channel 0..PWMSND_CHANNUM-1
 //  form = sound format SNDFORM_* (8-bit, 16-bit, mono or stereo; not melody)
 //  rep = repeat counter (enter number of repeats, or flag SNDREPEAT_*)
 //  speed = speed relative to sample rate SOUNDRATE=50000
 //  volume = volume 0..1 (1=normal, or can be > 1 to get higher volume)
 //  panning = panning 0..1 (0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
-void PlaySoundChanRaw(int chan, const void* snd, int size, int form /*= SNDFORM_PCM8*/, int rep /*= SNDREPEAT_NO*/, float speed /*= SNDSPEED_22K*/, float volume /*= 1.0f*/, float panning /*= 0.5f*/)
+void PlaySoundRaw(const void* snd, int size, int chan /*= 0*/, int form /*= SNDFORM_PCM8*/, int rep /*= SNDREPEAT_NO*/, float speed /*= SNDSPEED_22K*/, float volume /*= 1.0f*/, float panning /*= 0.5f*/)
 {
 	// global sound is OFF
 	if (GlobalSoundMute) return;
 
 	// stop playing sound
-	StopSoundChan(chan);
+	StopSound(chan);
 
 	// pointer to sound channel
 	sPwmSnd* s = &PwmSound[chan];
@@ -692,50 +686,32 @@ void PlaySoundChanRaw(int chan, const void* snd, int size, int form /*= SNDFORM_
 	dmb();
 }
 
-// play sound at channel 0
-//  sound = pointer to sound in sSound format
-void PlaySound(const void* sound)
-{
-	PlaySoundChan(0, sound, SNDREPEAT_NO, 1.0f, 1.0f, 0.5f);
-}
-
-// play sound at channel 0 repeated
-//  sound = pointer to sound in sSound format
-void PlaySoundRep(const void* sound)
-{
-	PlaySoundChan(0, sound, SNDREPEAT_REPEAT, 1.0f, 1.0f, 0.5f);
-}
-
 // play music at channel 0
 //  melody = pointer to table of tones sMelodyTone* (terminated with tone of len=0)
-void PlayMelody(const sMelodyTone* melody)
+//  chan = channel 0..PWMSND_CHANNUM-1
+void PlayMelody(const sMelodyTone* melody, int chan /*= 0*/)
 {
-	PlaySoundChan(0, (const void*)melody, SNDREPEAT_NO, 0, 1.0f, 1.0f);
+	PlaySound((const void*)melody, chan, SNDREPEAT_NO, 0);
 }
 
 // play music at channel 0 repeated
 //  melody = pointer to table of tones sMelodyTone* (terminated with tone of len=0)
-void PlayMelodyRep(const sMelodyTone* melody)
+//  chan = channel 0..PWMSND_CHANNUM-1
+void PlayMelodyRep(const sMelodyTone* melody, int chan /*= 0*/)
 {
-	PlaySoundChan(0, (const void*)melody, SNDREPEAT_REPEAT, 0, 1.0f, 1.0f);
+	PlaySound((const void*)melody, chan, SNDREPEAT_REPEAT, 0);
 }
 
 // update sound relative speed
-void SpeedSoundChan(int chan, float speed)
+void SpeedSound(float speed, int chan /*= 0*/)
 {
 	speed *= PwmSound[chan].rate;
 	PwmSound[chan].speed = speed;
 	PwmSound[chan].inc = (u32)(SNDINT * speed + 0.5f);
 }
 
-// update sound relative speed of channel 0
-void SpeedSound(float speed)
-{
-	SpeedSoundChan(0, speed);
-}
-
 // update sound volume (1=normal volume)
-void VolumeSoundChan(int chan, float volume)
+void VolumeSound(float volume, int chan /*= 0*/)
 {
 	sPwmSnd* s = &PwmSound[chan];
 	s->volume = volume;
@@ -743,14 +719,8 @@ void VolumeSoundChan(int chan, float volume)
 	s->volR = (int)(PWMSND_PERIOD * volume * sin(s->panning * PI/2) * GlobalSoundVolMul / VolMulTab[VOLDEF] + 0.5f);
 }
 
-// update sound volume of channel 0 (1=normal volume)
-void VolumeSound(float volume)
-{
-	VolumeSoundChan(0, volume);
-}
-
 // update sound panning (0..1, 0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
-void PanningSoundChan(int chan, float panning)
+void PanningSound(float panning, int chan /*= 0*/)
 {
 	sPwmSnd* s = &PwmSound[chan];
 	s->panning = panning;
@@ -758,14 +728,8 @@ void PanningSoundChan(int chan, float panning)
 	s->volR = (int)(PWMSND_PERIOD * s->volume * sin(panning * PI/2) * GlobalSoundVolMul / VolMulTab[VOLDEF] + 0.5f);
 }
 
-// update sound panning of channel 0 (0..1, 0=left, 0.5=middle, 1=right; panning outside range 0..1 will invert signal)
-void PanningSound(float panning)
-{
-	PanningSoundChan(0, panning);
-}
-
 // check if sound is playing
-Bool PlayingSoundChan(int chan)
+Bool PlayingSound(int chan /*= 0*/)
 {
 	if (GlobalSoundMute) return False;
 	if ((uint)chan >= (uint)PWMSND_CHANNUM) return False;
@@ -773,16 +737,11 @@ Bool PlayingSoundChan(int chan)
 	return s->cnt > 0;
 }
 
-// check if sound of channel 0 is playing
-Bool PlayingSound()
-{
-	return PlayingSoundChan(0);
-}
-
 // set next repeated sound in the same format
 //  snddata = pointer to sound data
 //  size = length of sound in number of bytes
-void SetNextSoundChan(int chan, const void* snddata, int size)
+//  chan = channel 0..PWMSND_CHANNUM-1
+void SetNextSound(const void* snddata, int size, int chan /*= 0*/)
 {
 	sPwmSnd* s = &PwmSound[chan];
 
@@ -790,7 +749,7 @@ void SetNextSoundChan(int chan, const void* snddata, int size)
 	int len = SoundByteToLen(size, s->form);
 
 	// check if this sound is already next sound
-	if (PlayingSoundChan(chan) && ((const void*)s->next == snddata) && (s->nextcnt == len)) return;
+	if (PlayingSound(chan) && ((const void*)s->next == snddata) && (s->nextcnt == len)) return;
 
 	// disable next sound
 	s->nextcnt = 0;
@@ -812,16 +771,8 @@ void SetNextSoundChan(int chan, const void* snddata, int size)
 	s->nextcnt = len;
 }
 
-// set next repeated sound of channel 0 in the same format
-//  snddata = pointer to sound data
-//  size = length of sound in number of bytes
-void SetNextSound(const void* snddata, int size)
-{
-	SetNextSoundChan(0, snddata, size);
-}
-
 // check if streaming buffer is empty
-Bool SoundStreamIsEmpty(int chan)
+Bool SoundStreamIsEmpty(int chan /*= 0*/)
 {
 	sPwmSnd* s = &PwmSound[chan];
 	return s->nextcnt == 0;
@@ -830,7 +781,7 @@ Bool SoundStreamIsEmpty(int chan)
 // set next streaming buffer
 //  snddata = pointer to sound data
 //  size = length of sound in number of bytes
-void SoundStreamSetNext(int chan, const void* snddata, int size)
+void SoundStreamSetNext(const void* snddata, int size, int chan /*= 0*/)
 {
 	sPwmSnd* s = &PwmSound[chan];
 

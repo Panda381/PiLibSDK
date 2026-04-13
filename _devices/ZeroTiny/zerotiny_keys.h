@@ -48,8 +48,8 @@
 // alternative keys
 #define KEY_ESC		KEY_Y
 #define KEY_TAB		KEY_X
-#define KEY_SPACE	KEY_B
-#define KEY_ENTER	KEY_A
+#define KEY_SPACE	KEY_A
+#define KEY_ENTER	KEY_B
 #define KEY_BS		KEY_X
 
 // unused keys (just so the compiler doesn't report an error)
