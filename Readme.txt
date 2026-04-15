@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.21, in progress - under development
-Last update: 04/13/2026
+Pre-alpha version 0.22, in progress - under development
+Last update: 04/15/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -40,7 +40,7 @@ mode, which may be slightly faster in some cases.
 Note: A boot loader is not required to run programs. You can run programs
 directly on the Zero1/Zero2 module itself, without additional hardware or a
 boot loader. Copy the system files from the Root directory of the corresponding
-!ZeroTiny_* folder to the SD card. You will need the files "bootcode.bin",
+!ZeroTiny* folder to the SD card. You will need the files "bootcode.bin",
 "config.txt", "fixup.dat", and "start.elf". Copy the program to the Root folder
 as well, and rename it to KERNEL.IMG. The program will start automatically when
 power is turned on.
@@ -75,18 +75,24 @@ If you will use another paths, edit paths in _c1.bat (set GCC_PI_PATH).
 
 Directories
 ===========
-!ZeroPC_1 ... content of SD card for device ZeroPC with module Zero 1
-!ZeroPC_3 ... content of SD card for device ZeroPC with module Zero 2 32-bit
-!ZeroPC_4 ... content of SD card for device ZeroPC with module Zero 2 64-bit
-!ZeroTiny_1 ... content of SD card for device ZeroTiny with module Zero 1
-!ZeroTiny_3 ... content of SD card for device ZeroTiny with module Zero 2 in 32-bit mode
-!ZeroTiny_4 ... content of SD card for device ZeroTiny with module Zero 2 in 64-bit mode
+!ZeroPC ... content of SD card for device ZeroPC - common files
+!ZeroPC_1 ... content of SD card for device ZeroPC - executables for module Zero 1
+!ZeroPC_3 ... content of SD card for device ZeroPC - executables for module Zero 2 32-bit
+!ZeroPC_4 ... content of SD card for device ZeroPC - executables for module Zero 2 64-bit
+!ZeroTiny ... content of SD card for device ZeroTiny - common files
+!ZeroTiny_1 ... content of SD card for device ZeroTiny - executables for module Zero 1
+!ZeroTiny_3 ... content of SD card for device ZeroTiny - executables for module Zero 2 32-bit
+!ZeroTiny_4 ... content of SD card for device ZeroTiny - executables for module Zero 2 64-bit
 _devices ... devices: PiBase = base Pi module, ZeroPC = ZeroPC device, ZeroTiny = ZeroTiny device
 _font ... fonts
 _lib ... libraries
 _sdk ... SDK (peripherals drivers)
 _tools ... compilation tools
 Apps ... source codes of sample applications
+
+To prepare the SD card, format it to FAT32, copy the contents of the !ZeroPC or
+!ZeroTiny folders (depending on the device type) to it, as well as one of the
+!ZeroPC_* or !ZeroTiny_* folders (depending on the module type).
 
 
 ZeroTiny
@@ -108,7 +114,7 @@ Detailed materials for ZeroPC hardware can be found in the
 
 Source code and sample programs can be found in the "Apps" folder.
 
-You can find the compiled sample programs in the "!ZeroTiny_*" folders,
+You can find the compiled sample programs in the "!ZeroTiny*" folders,
 organized by module type and processor mode.
 
 
@@ -131,7 +137,7 @@ Detailed materials for ZeroPC hardware can be found in the
 
 Source code and sample programs can be found in the "Apps" folder.
 
-You can find the compiled sample programs in the "!ZeroPC_*" folders, organized
+You can find the compiled sample programs in the "!ZeroPC*" folders, organized
 by module type and processor mode.
 
 
@@ -173,6 +179,12 @@ Demo
 
 Games
  ANTS ... Card game
+ ATOMS ... Game of exploding atoms
+ EGGS ... Logic game as Reversi
+ FIFTEEN ... Logic puzzle game
+ FLAPPY ... Logic game from Sharp MZ800
+ INVADERS ... Shooting game Space Invaders
+ LIFE ... Cell life simulator
 
 MP3
  MP3 ... MP3 player

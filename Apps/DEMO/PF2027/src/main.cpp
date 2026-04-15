@@ -178,7 +178,7 @@ int main()
 		MP3Poll(mp3);
 
 		// display background
-		DrawImg(BackImg, 0, 0);
+		DrawImg(BackImg);
 
 		// draw sprites
 		s = Sprite;

@@ -1,0 +1,9 @@
+^YSpace Invaders^0
+
+Shooting game
+
+^WLEFT^0 ....... left
+^WRIGHT^0 ...... right
+^WSpace^0 ...... shooting
+^WEsc^0 ........ quit game
+^WAlt+Tab^0 .... screenshot

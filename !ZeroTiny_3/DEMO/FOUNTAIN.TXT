@@ -1,5 +1,0 @@
-^YFountain^0
-
-Fountain - draw 3D graph
-
-^WY^0 ....... Exit

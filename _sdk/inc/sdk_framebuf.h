@@ -54,6 +54,8 @@ typedef struct {
 // current frame buffer
 extern sFrameBuffer FrameBuffer;
 
+#define FrameBuf FrameBuffer.drawbuf
+
 // default font and screen
 #ifndef FONT
 #define FONT		FontBold8x16	// default fixed font

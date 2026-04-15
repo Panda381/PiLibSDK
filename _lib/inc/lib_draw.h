@@ -93,14 +93,6 @@
 
 #define DRAW_ELLIPSE_MAXD	430		// max. diameter (X or Y) of the ellipse
 
-// DrawImgMat mode
-#define DRAW_IMG_WRAP		0		// wrap image
-#define DRAW_IMG_NOBORDER	1		// no border (transparent border)
-#define DRAW_IMG_CLAMP		2		// clamp image (use last pixel as border)
-#define DRAW_IMG_COLOR		3		// color border
-#define DRAW_IMG_TRANSP		4		// transparent image with key color
-#define DRAW_IMG_PERSP		5		// perspective floor
-
 // Proportional font definitions
 #define FONTMINLR	-7	// minimal left/right spacing
 #define FONTMAXLR	8	// maximal left/right spacing
@@ -331,16 +323,16 @@ void DrawFill(int x, int y, u32 col);
 //  h ... height
 //  alpha ... transparency 0..255: 0=transparent, 255=opaque
 #define IMG_MAXWH	0x20000		// can be used as 'w' and 'h' to display the entire image
-void DrawImg(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH, int alpha=255);
+void DrawImg(const u8* img, int x=0, int y=0, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH, int alpha=255);
 
 // Invert image (image must be in aligned CF_A8B8G8R8 or CF_B8G8R8 format)
-void DrawImgInv(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH);
+void DrawImgInv(const u8* img, int x=0, int y=0, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH);
 
 // Draw image mask (image must be in CF_A8 format; alpha 0=transparent, 255=opaque)
-void DrawImgMask(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH, u32 col=COL_WHITE);
+void DrawImgMask(const u8* img, int x=0, int y=0, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH, u32 col=COL_WHITE);
 
 // Invert image mask (image must be in CF_A8 format)
-void DrawImgMaskInv(const u8* img, int x, int y, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH);
+void DrawImgMaskInv(const u8* img, int x=0, int y=0, int xs=0, int ys=0, int w=IMG_MAXWH, int h=IMG_MAXWH);
 
 // draw image line resized (does not check X clipping)
 //  img ... image in format sPic, must be in aligned CF_B8G8R8 format
@@ -368,9 +360,12 @@ void DrawImgLine(const u8* img, int xd, int yd, int wd, int xs, int ys, int ws);
 //  hd ... destination height
 //  m ... transformation matrix (should be prepared using PrepDrawImg function)
 //  mode ... draw mode DRAWIMGMAT_*
-//  color ... border color RGBA (DRAWIMGMAT_PERSP mode: horizon offset)
-void DrawImgMat(const u8* img, int xd, int yd, int wd, int hd, const sMat2D* m, int mode, u32 color);
+//  color ... border color, with alpha 0=transparent..255=opaque (DRAWIMGMAT_PERSP mode: horizon offset)
+void DrawImgMat(const u8* img, int xd, int yd, int wd, int hd, const sMat2D* m, int mode = DRAWIMGMAT_NOBORDER, u32 color = COL_WHITE);
 #endif // USE_MAT2D
+
+// convert CF_B8G8R8 image to CF_A8B8G8R8 (creates and returns sPic* buffer, or NULL on memory error)
+sPic* ImgBGR2ABGR(const sPic* img);
 
 // draw character using system fixed font (alpha 0=transparent, 255=opaque; use DrawSelFont() to select font)
 // - To invert text, use bit 7 of the characters, or FrameBuffer.inv flag (flags are XORed).

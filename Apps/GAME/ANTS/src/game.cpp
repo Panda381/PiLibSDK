@@ -542,7 +542,7 @@ void ChangeAnim(Bool comp)
 void DispAll(Bool update = True)
 {
 	// display background
-	DrawImg(BackgroundImg, 0, 0);
+	DrawImg(BackgroundImg);
 
 	// display wins
 	DispWins(0);

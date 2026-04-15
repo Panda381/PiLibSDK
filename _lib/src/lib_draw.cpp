@@ -3554,6 +3554,49 @@ void DrawImgMat(const u8* img, int xd, int yd, int wd, int hd, const sMat2D* m, 
 }
 #endif // USE_MAT2D
 
+// convert CF_B8G8R8 image to CF_A8B8G8R8 (creates and returns sPic* buffer, or NULL on memory error)
+sPic* ImgBGR2ABGR(const sPic* img)
+{
+	// check color format
+	int colfmt = img->colfmt;
+	if (colfmt != CF_B8G8R8) return NULL;
+
+	// get source size
+	int w = img->w;
+	int h = img->h;
+	int wb = img->wb;
+	
+	// create destination buffer
+	int wb2 = w*4;
+	sPic* img2 = (sPic*)MemAlloc(SPIC_HEADER_SIZE + wb2*h);
+	if (img2 == NULL) return NULL;
+
+	// prepare header
+	img2->w = w;
+	img2->h = h;
+	img2->wb = wb2;
+	img2->colfmt = CF_A8B8G8R8;
+	img2->bits = 32;
+
+	// convert image
+	u32* d = (u32*)img2->data;
+	const u8* s = img->data;
+	int i;
+	wb -= 3*w;
+	for (; h > 0; h--)
+	{
+		for (i = w; i > 0; i--)
+		{
+			*d = s[0] | ((u32)s[1] << 8) | ((u32)s[2] << 16) | 0xff000000;
+			d++;
+			s += 3;
+		}
+		s += wb;
+	}
+
+	return img2;
+}
+
 // ----------------------------------------------------------------------------
 //                              Draw character
 // ----------------------------------------------------------------------------

@@ -58,7 +58,7 @@ void DispPage()
 	u8* pic = (u8*)PNGLoadBuf(PageAbc[Page], PageAbcSize[Page]);
 	if (pic != NULL)
 	{
-		DrawImg(pic, 0, 0);
+		DrawImg(pic);
 		MemFree(pic);
 	}
 	DispUpdate();

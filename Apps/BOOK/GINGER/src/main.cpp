@@ -194,7 +194,7 @@ void DispPage()
 	u8* pic = (u8*)JPGLoadBuf(PageImg[Page], PageImgSize[Page]);
 	if (pic != NULL)
 	{
-		DrawImg(pic, 0, 0);
+		DrawImg(pic);
 		MemFree(pic);
 	}
 

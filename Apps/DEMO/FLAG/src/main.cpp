@@ -31,7 +31,7 @@ int main()
 	if (FlagImg == NULL) Reboot(); // emergency exit
 
 	// draw sky and mast
-	DrawImg(CloudsImg, 0, 0);
+	DrawImg(CloudsImg);
 	DrawImg(MastImg, MASTX, HEIGHT - MASTH);
 	DispUpdate();
 

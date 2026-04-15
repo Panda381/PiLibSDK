@@ -21,13 +21,13 @@ typedef struct {
 	float m21, m22, m23;
 } sMat2D;
 
-// trasform X
+// transform X
 INLINE float Mat2D_GetX(sMat2D* m, float x, float y)
 {
 	return x * m->m11 + y * m->m12 + m->m13;
 }	
 
-// trasform Y
+// transform Y
 INLINE float Mat2D_GetY(sMat2D* m, float x, float y)
 {
 	return x * m->m21 + y * m->m22 + m->m23;
@@ -223,7 +223,7 @@ INLINE void Mat2D_FlipX(sMat2D* m)
 //  ty ... shift in Y direction (hs = whole image height)
 // If image size iz zero (wd==0 or hd==0) returns invalid zero matrix.
 void Mat2D_PrepDrawImg(sMat2D* m, int ws, int hs, int x0, int y0, int wd, int hd,
-	float shearx, float sheary, float rot, float tx, float ty);
+	float shearx = 0, float sheary = 0, float rot = 0, float tx = 0, float ty = 0);
 
 // export matrix to int array[6]
 void Mat2D_ExportInt(const sMat2D* m, int* mat);
