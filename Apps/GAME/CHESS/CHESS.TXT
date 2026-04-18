@@ -1,0 +1,19 @@
+^YChess^0
+Chess game
+^WLEFT^0 ...... left
+^WRIGHT^0 ..... right
+^WUP^0 ........ up
+^WDOWN^0 ...... down
+^WSpace^0 ..... pick up
+^WTab^0 ....... help
+^WEsc^0 ....... quit/cancel
+^WAlt+Tab^0 ... screenshot
+Levels:
+  BEGINNER: ELO=600, 2 plies
+  ADVANCES: ELO=750, 3 plies
+  PRO: ELO=820, 4 plies
+  SUPERPRO: ELO=1000, 5 plies
+  HERO: ELO=1200, 6 plies
+
+  Zero2 max. 5 minutes on HERO
+  Zero1 max. 15 minutes on HERO

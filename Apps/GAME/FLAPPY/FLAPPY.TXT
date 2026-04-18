@@ -12,4 +12,4 @@ ball to blue wall.
 ^WEnter^0 ....... solve scene
     (only first 8 scenes)
 ^WEsc^0 ......... quit
-^WAlt+Tab^0 .... screenshot
+^WAlt+Tab^0 ..... screenshot

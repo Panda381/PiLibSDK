@@ -69,7 +69,7 @@ void DrawClearCol(u32 colfg, u32 colbg)
 	DrawRect(minx, miny, maxx-minx, maxy-miny, colbg);
 }
 
-// Draw clear screen with current printing background color (default black)
+// Draw clear screen with current printing background color
 void DrawClear()
 {
 	DrawClearCol(FrameBuffer.printcolfg, FrameBuffer.printcolbg);
@@ -4010,6 +4010,7 @@ int DrawTextScale(const char* text, int x, int y, int scalex, int scaley, u32 co
 
 int DrawText(const char* text, int x, int y, u32 col) { return DrawTextScale(text, x, y, 1, 1, col); }
 int DrawTextW(const char* text, int x, int y, u32 col) { return DrawTextScale(text, x, y, 2, 1, col); }
+int DrawTextW2(const char* text, int x, int y, u32 col) { return DrawTextScale(text, x, y, 4, 2, col); }
 int DrawTextH(const char* text, int x, int y, u32 col) { return DrawTextScale(text, x, y, 1, 2, col); }
 int DrawText2(const char* text, int x, int y, u32 col) { return DrawTextScale(text, x, y, 2, 2, col); }
 int DrawText3(const char* text, int x, int y, u32 col) { return DrawTextScale(text, x, y, 3, 3, col); }

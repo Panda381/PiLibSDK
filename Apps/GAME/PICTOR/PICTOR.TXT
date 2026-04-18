@@ -1,0 +1,9 @@
+^YPictor^0
+
+Picopad Collector
+
+^Warrows^0 ...... move
+^WSpace^0 ....... shooting
+^WEnter/Tab^0 ... transformation
+^WEsc^0 ......... menu/exit
+^WAlt+Tab^0 ..... screenshot

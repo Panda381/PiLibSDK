@@ -340,7 +340,7 @@ int main()
 	u32 t1 = Time();
 	WaitMs(200);
 	KeyFlush();
-	while ((u32)(Time() - t1) < 8000000)
+	while ((u32)(Time() - t1) < 5000000)
 	{
 		int key = KeyGet();
 		if (key == KEY_ESC)

@@ -283,15 +283,17 @@ typedef struct {
 
 // Sound (exported by the PiLibSnd tool)
 typedef struct {
-	u32		datasize;	// data size in bytes (without header)
-	u16		dataoff;	// offset of start of data (= size of this header = 12)
-	u16		rate;		// sample rate (usually 22050, 44100)
-	u16		sampblock;	// ADPCM samples per block
-	u8		bits;		// number of bits per sample (4, 8, or 16)
-	u8		chan;		// number of channels (1 or 2)
+	u32		datasize;	// 0x00: data size in bytes (without header)
+	u16		dataoff;	// 0x04: offset of start of data (= size of this header = 12)
+	u16		rate;		// 0x06: sample rate (usually 22050, 44100)
+	u16		sampblock;	// 0x08: ADPCM samples per block
+	u8		bits;		// 0x0A: number of bits per sample (4, 8, or 16)
+	u8		chan;		// 0x0B: number of channels (1 or 2)
 	// ... additional header data
 	// ... data
 } sSound;
+STATIC_ASSERT(sizeof(sSound) == 0x0C, "Incorrect sSound!");
+#define SSOUND_HEADER_SIZE  12	// sSound header size
 
 // global sound mute
 extern Bool GlobalSoundMute;
@@ -379,6 +381,7 @@ Bool PlayingSound(int chan = 0);
 //  size = length of sound in number of bytes
 //  chan = channel 0..PWMSND_CHANNUM-1
 void SetNextSound(const void* snddata, int size, int chan = 0);
+#define SETNEXTSOUND(snd) SetNextSound((const u8*)(snd) + SSOUND_HEADER_SIZE, sizeof(snd) - SSOUND_HEADER_SIZE)
 
 // check if streaming buffer is empty
 Bool SoundStreamIsEmpty(int chan = 0);

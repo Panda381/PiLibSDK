@@ -8,6 +8,7 @@
 #ifndef _SDK_CPU_H
 #define _SDK_CPU_H
 
+INLINE s32 f2i(float num) { return (s32)floorf(num); }
 INLINE s32 float2int(float num) { return (s32)floorf(num); }
 
 // ----------------------------------------------------------------------------

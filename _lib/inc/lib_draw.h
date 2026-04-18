@@ -425,6 +425,7 @@ int DrawTextLen4Inv(const char* text, int len, int x, int y);
 int DrawTextScale(const char* text, int x, int y, int scalex, int scaley, u32 col);
 int DrawText(const char* text, int x, int y, u32 col);
 int DrawTextW(const char* text, int x, int y, u32 col);
+int DrawTextW2(const char* text, int x, int y, u32 col);
 int DrawTextH(const char* text, int x, int y, u32 col);
 int DrawText2(const char* text, int x, int y, u32 col);
 int DrawText3(const char* text, int x, int y, u32 col);

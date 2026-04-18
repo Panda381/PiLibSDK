@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.22, in progress - under development
-Last update: 04/15/2026
+Pre-alpha version 0.23, in progress - under development
+Last update: 04/18/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -183,8 +183,13 @@ Games
  EGGS ... Logic game as Reversi
  FIFTEEN ... Logic puzzle game
  FLAPPY ... Logic game from Sharp MZ800
+ CHESS ... Chess game
  INVADERS ... Shooting game Space Invaders
  LIFE ... Cell life simulator
+ MAZE ... Find way out of maze
+ PACMAN ... Action game Pac-Man
+ PICTOR ... Picopad Collector
+ RAPTOR ... Shooting game
 
 MP3
  MP3 ... MP3 player
@@ -225,3 +230,21 @@ to USB port. Good choise is USB-serial adaptor PL2303TA.
 
    In Device Manager, USB adaptor can be found under name:
            "Prolific USB-to-Serial Comm Port (COM10)".
+
+
+
+Exporting a TGA image with transparency, using Photoshop:
+
+- Select / Load Selection, Channel = Layer 0 Transparency (do not check Invert)
+- Select / Save Selection, Channel = New (Name can remain blank, Alpha 1 will be used)
+- Save As, switch to TGA, "Alpha Channels" must be checked, resolution 32 bits/pixel
+
+
+Importing a TGA image with transparency, using Photoshop:
+
+- Open and load TGA
+- Layer / New / Layer from Background
+- Select / Load Selection, Channel = Alpha 1 (do not check Invert)
+- Layer / Layer Mask / Reveal Selection
+- Layer / Layer Mask / Apply
+- In Channels, select the Alpha 1 channel and cancel it
