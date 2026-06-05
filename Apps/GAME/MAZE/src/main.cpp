@@ -259,11 +259,11 @@ int main()
 	while ((u32)(Time() - t1) < 5000000)
 	{
 		ch = KeyGet();
-		if (ch == KEY_ESC)
+		if (ch == KEY_Y)
 			Reboot();
 		else if (ch == KEY_SCREENSHOT)
 			ScreenShot();
-		else if ((ch == KEY_ENTER) || (ch == KEY_SPACE) || (ch == KEY_TAB))
+		else if ((ch == KEY_B) || (ch == KEY_A) || (ch == KEY_X))
 			break;
 	}
 
@@ -293,7 +293,7 @@ int main()
 		switch (ch)
 		{
 		// key "Space" = show door
-		case KEY_SPACE:
+		case KEY_A:
 			{
 				u8 t = *BoardAddr(StopX, StopY);
 				int k;
@@ -396,7 +396,7 @@ int main()
 			KeyFlush();
 			break;
 
-		case KEY_ESC:
+		case KEY_Y:
 			Reboot();
 			break;
 

@@ -240,7 +240,7 @@ int main()
 		// keyboard
 		switch (KeyGet())
 		{
-		case KEY_ESC:
+		case KEY_Y:
 			Reboot();	// Program exit
 			break;
 
@@ -270,7 +270,7 @@ int main()
 			if (GlobalSoundVolume > 0) GlobalVolumeSet(GlobalSoundVolume-1);
 			break;
 
-		case KEY_SPACE:
+		case KEY_A:
 			AutoPlay = !AutoPlay;
 			DispPage();
 			break;

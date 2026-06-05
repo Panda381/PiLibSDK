@@ -3218,8 +3218,6 @@ int GetHomePath(char* path, int pathmax, char* filename)
 	int len, n;
 	int pathlen = 0;
 
-#if USE_ZEROPC || USE_ZEROTINY
-
 	// mount disk
 	if (!DiskAutoMount()) goto DefaultPath;
 
@@ -3267,8 +3265,6 @@ int GetHomePath(char* path, int pathmax, char* filename)
 	return pathlen;
 
 DefaultPath:
-
-#endif // USE_ZEROPC || USE_ZEROTINY
 
 	// use default path and filename
 	path[0] = PATHCHAR;

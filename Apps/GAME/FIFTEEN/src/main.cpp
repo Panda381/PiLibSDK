@@ -630,7 +630,7 @@ void Game()
 			break;
 
 		// numbers
-		case KEY_SPACE:
+		case KEY_A:
 			DispTileNum = !DispTileNum;
 			DrawBoard();
 			break;
@@ -641,7 +641,7 @@ void Game()
 			break;
 
 		// solver
-		case KEY_ENTER:
+		case KEY_B:
 			Solver();
 			for (i = 0; i < TILESNUM; i++)
 			{
@@ -652,7 +652,7 @@ void Game()
 			DrawBoard();
 			break;
 
-		case KEY_ESC:
+		case KEY_Y:
 			return;
 		}
 
@@ -704,11 +704,11 @@ Bool Select()
 		int key = KeyGet();
 		switch (key)
 		{
-		case KEY_ESC:
+		case KEY_Y:
 			return False;
 
-		case KEY_SPACE:
-		case KEY_ENTER:
+		case KEY_A:
+		case KEY_B:
 			Img = ImgList[PuzzleInx];
 			return True;
 
@@ -787,11 +787,11 @@ int main()
 	while ((u32)(Time() - t1) < 5000000)
 	{
 		key = KeyGet();
-		if (key == KEY_ESC)
+		if (key == KEY_Y)
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
-		else if ((key == KEY_ENTER) || (key == KEY_SPACE) || (key == KEY_TAB))
+		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
 			break;
 	}
 

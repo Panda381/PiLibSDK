@@ -34,11 +34,7 @@ void DispGameEnd(Bool prompt)
 		if (prompt)
 		{
 			y += 30;
-#if USE_ZEROPC
-			DrawText2("Enter name and press Space to continue", (WIDTH - 38*16)/2, y, COL_YELLOW);
-#else
-			DrawText2("Enter name and press A to continue", (WIDTH - 34*16)/2, y, COL_YELLOW);
-#endif
+			DrawText2("Enter name and press [A] to continue", (WIDTH - 36*16)/2, y, COL_YELLOW);
 			y += 30;
 			DrawText4(PlayerName, (WIDTH - 8*32)/2, y, COL_AZURE);
 			if (((Time() >> 18) & B0) == 0) DrawText4("_", (WIDTH - 8*32)/2 + PlayerNameInx*32, y + 8, COL_AZURE);
@@ -125,7 +121,7 @@ void GameEnd()
 				ScreenShot();
 				break;
 
-			case KEY_SPACE:
+			case KEY_A:
 				// move top table
 				memmove(&Top[1], &Top[0], (TOP_NUM-1)*sizeof(sTop));
 
@@ -140,13 +136,8 @@ void GameEnd()
 					// error
 					DrawClear();
 					DrawText4("Error writing score", 0, 100, COL_RED);
-#if USE_ZEROPC
-					DrawText4("to card. Press Space", 0, 160, COL_RED);
-					DrawText4("to repeat or Esc to", 0, 220, COL_RED);
-#else
-					DrawText4("to SD card. Press A", 0, 160, COL_RED);
-					DrawText4("to repeat or Y to", 0, 220, COL_RED);
-#endif
+					DrawText4("to card. Press [A]", 0, 160, COL_RED);
+					DrawText4("to repeat or [Y] to", 0, 220, COL_RED);
 					DrawText4("ignore the error.", 0, 280, COL_RED);
 					DispUpdate();
 
@@ -154,13 +145,13 @@ void GameEnd()
 					{
 						key = KeyGet();
 						if (key == KEY_SCREENSHOT) ScreenShot();
-						if (key == KEY_ESC) return;
-						if (key == KEY_SPACE) break;
+						if (key == KEY_Y) return;
+						if (key == KEY_A) break;
 					}
 				}
 				return;
 
-			case KEY_ESC:
+			case KEY_Y:
 				return;
 			}		
 		}

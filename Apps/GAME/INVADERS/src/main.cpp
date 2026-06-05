@@ -615,13 +615,13 @@ void NewGame(int level)
 		DispUpdate();
 		WaitMs(250);
 		i = KeyGet();
-		if ((i == KEY_SPACE) || (i == KEY_ENTER)) break;
+		if ((i == KEY_A) || (i == KEY_B)) break;
 
 		DrawRect((WIDTH-7*8)/2, 0, 7*8, 16, COL_BLACK);
 		DispUpdate();
 		WaitMs(250);
 		i = KeyGet();
-		if ((i == KEY_SPACE) || (i == KEY_ENTER)) break;
+		if ((i == KEY_A) || (i == KEY_B)) break;
 	}
 	DrawRect((WIDTH-7*8)/2, 0, 7*8, 16, COL_BLACK);
 	DispUpdate();
@@ -771,7 +771,7 @@ void SpaceCtrl()
 	}
 
 	// shooting
-	if (KeyPressed(KEY_SPACE) && !ShootOn)
+	if (KeyPressed(KEY_A) && !ShootOn)
 	{
 		ShootOn = True;
 		ShootX = ShipX + 4;
@@ -887,7 +887,7 @@ void Game()
 		switch (KeyGet())
 		{
 		// reset to boot loader
-		case KEY_ESC:
+		case KEY_Y:
 			Reboot();
 			break;
 
@@ -936,11 +936,11 @@ int main()
 	while ((u32)(Time() - t1) < 8000000)
 	{
 		int key = KeyGet();
-		if (key == KEY_ESC)
+		if (key == KEY_Y)
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
-		else if ((key == KEY_ENTER) || (key == KEY_SPACE) || (key == KEY_TAB))
+		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
 			break;
 	}
 	StopSound();

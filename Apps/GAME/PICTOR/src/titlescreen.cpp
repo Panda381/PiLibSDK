@@ -36,14 +36,14 @@ Bool TitleScreen()
 		// keyboard
 		switch (KeyGet())
 		{
-		case KEY_SPACE:
+		case KEY_A:
 			return True;
 
 		case KEY_SCREENSHOT:
 			ScreenShot();
 			break;
 
-		case KEY_ESC:
+		case KEY_Y:
 			if (!GameMenu()) return False;
 			break;
 		}

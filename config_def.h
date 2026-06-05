@@ -8,19 +8,9 @@
 #ifndef _CONFIG_DEF_H
 #define _CONFIG_DEF_H
 
-// base device
-#if USE_PIBASE
-#include "_devices/pibase/_config.h"
-#endif
-
-// ZeroPC
-#if USE_ZEROPC
-#include "_devices/zeropc/_config.h"
-#endif
-
-// ZeroTiny
-#if USE_ZEROTINY
-#include "_devices/zerotiny/_config.h"
+// BarePi
+#if USE_BAREPI
+#include "_devices/barepi/_config.h"
 #endif
 
 // keyboard

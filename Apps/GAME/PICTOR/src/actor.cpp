@@ -196,24 +196,24 @@ Bool CtrlActor()
 	switch (KeyGet())
 	{
 	// Space: shooting
-	//case KEY_SPACE:
+	//case KEY_A:
 	//	{
 	//		NewGame(Level+1);
 	//	}
 	//	break;
 
 	// Enter: Next actor
-	case KEY_ENTER:
+	case KEY_B:
 		SetActor(ActInx+1);
 		break;
 
 	// Tab: previous actor
-	case KEY_TAB:
+	case KEY_X:
 		SetActor(ActInx-1);
 		break;
 
 	// Esc: game menu
-	case KEY_ESC:
+	case KEY_Y:
 		if (!GameMenu()) return False;
 
 		// display header
@@ -234,7 +234,7 @@ Bool CtrlActor()
 
 	// Shooting
 #if !DEB_AUTOSHOOT			// 1=autoshoot
-	if (KeyPressed(KEY_SPACE))
+	if (KeyPressed(KEY_A))
 #endif
 	{
 		// generate missile

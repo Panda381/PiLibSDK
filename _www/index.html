@@ -1,0 +1,745 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=utf-8">
+<meta name="language" content="czech">
+<meta name="content-language" content="cs-cz">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>PiLibSDK - Bare-metal SDK knihovna pro moduly Raspberry Pi</title>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<div align="center"><center>
+
+<table border="0" width="100%">
+    <tr>
+        <td width="33%"><p align="left"><a href="../index.html"><font
+        face="Arial">&lt;&lt; Zpět</font></a></p>
+        </td>
+        <td width="33%">&nbsp;</td>
+        <td width="34%"><p align="right"><font face="Arial">  <u>Česky:</u>
+        <img src="../../cz2.gif" width="50" height="30" />, </font><a
+        href="index_en.html"><font face="Arial">English: <img
+        src="../../en.gif" border="0" width="50" height="30" /></font></a></p>
+        </td>
+    </tr>
+</table>
+</center></div>
+
+<p align="center"><font color="#FF8000" size="6" face="Arial"><strong>PiLibSDK</strong></font></p>
+
+<p align="center"><font color="#FF8000" size="4" face="Arial"><strong>Bare-metal
+SDK knihovna pro moduly Raspberry Pi</strong></font></p>
+
+<p align="center"><font face="Arial">Před-alfa verze 0.30, <strong>rozpracováno
+- ve vývoji</strong></font></p>
+
+<p align="center"><font face="Arial">Poslední aktualizace: 05.06.2026</font></p>
+
+<p align="center"><font face="Arial">(c) 2026 Miroslav Němeček</font></p>
+
+<p align="center"><a href="https://github.com/Panda381/PiLibSDK"><font
+face="Arial">https://github.com/Panda381/PiLibSDK</font></a></p>
+
+<p align="center"><a href="dwn/PiLibSDK.zip"><font face="Arial">Download
+knihovny spolu s ukázkovými aplikacemi a všemi podklady</font></a><font
+face="Arial"> (360 MB)</font></p>
+
+<p align="center"><a href="img/ZeroTiny.jpg"><font face="Arial"><img
+src="img/ZeroTiny_m.jpg" border="0" width="300" height="192"></font></a></p>
+
+<p align="left"><font face="Arial"><em>Poznámka: Schémata a plošné
+spoje jsou ve formátu programu KiCAD verze 9.</em></font></p>
+
+<h3 align="left"><font face="Arial">Obsah</font></h3>
+
+<ul>
+    <li><p align="left"><a href="#intro"><font face="Arial">Úvod</font></a></p>
+    </li>
+    <li><p align="left"><a href="#license"><font face="Arial">Licence</font></a></p>
+    </li>
+    <li><p align="left"><a href="#compilation"><font face="Arial">Kompilace</font></a></p>
+    </li>
+    <li><p align="left"><a href="#directories"><font face="Arial">Adresáře</font></a></p>
+    </li>
+    <li><p align="left"><a href="#zerotiny"><font face="Arial">ZeroTiny</font></a></p>
+    </li>
+    <li><p align="left"><a href="#apps"><font face="Arial">Ukázkové
+        aplikace</font></a><font face="Arial"> ... </font><a
+        href="#games"><font face="Arial">Games</font></a><font
+        face="Arial"> ... </font><a href="#mp3"><font
+        face="Arial">MP3</font></a></p>
+    </li>
+</ul>
+
+<p align="left">&nbsp;</p>
+
+<h3 align="left"><a name="intro"></a><font face="Arial">Úvod</font></h3>
+
+<p align="left"><font face="Arial">PiLibSDK je bare-metal
+knihovna pro moduly Raspberry Pi. &quot;Bare-metal&quot;
+znamená, že programy běží na čistém hardware bez operačního
+systému, nepodléhají operačnímu systému a mají plný přístup
+k hardware. Moduly Raspberry Pi lze tak používat podobným způsobem,
+jako mikročipy. Výhodou je i to, že zařízení je plně v
+provozu do 3 sekund od zapnutí napájení. V současnosti jsou
+podporovány moduly Raspberry Zero 1, Zero 2 W, Pi 2 a Pi 3.
+Podpora modulů Pi 4 a Pi 5 je velmi omezená, a pravděpodobně
+ani v budoucnu nebudou podporovány, protože jejich přínos je
+pro bare-metal využití malý.</font></p>
+
+<p align="left"><font face="Arial">Ukázkové programy jsou připravené
+pro hardware modulární mikročipové stavebnice BarePi (linky: </font><a
+href="https://www.breatharian.eu/hw/barepi/index.html"><font
+face="Arial">www</font></a><font face="Arial">, </font><a
+href="https://github.com/Panda381/BarePi"><font face="Arial">GitHub</font></a><font
+face="Arial">). Zapojení hardware samozřejmě není nutné dodržet,
+ale jedná se o nejobvyklejší přiřazení signálů pinům.
+Hlavním zařízením je herní konzole ZeroTiny, která
+odpovídá sestavení modulů stavebnice &quot;Zero&quot;,
+&quot;Base&quot; a &quot;KeyPad&quot;.</font></p>
+
+<p align="left"><font face="Arial">Pro zařízení BarePi je k
+dispozici boot loader, který umožňuje snadné spouštění
+programů z SD karty. Programy jsou připraveny pro BarePi i
+ZeroTiny, s moduly Zero 1, Zero 2 32bit nebo Zero 2 64bit. Moduly
+Zero 1 a Zero 2 se liší především rychlostí - Zero 2 je
+znatelně rychlejší než Zero 1. Vyšší rychlost je dána
+nejen vyšší frekvencí procesoru, ale také novější
+architekturou. Kromě toho modul Zero 2 disponuje 4 jádry,
+zatímco Zero 1 pouze jedním jádrem. Přednostně se proto
+doporučuje používat modul Zero 2. Modul Zero 1 použijte pouze
+v případě, že ho vlastníte a nemáte pro něj lepší využití.
+Modul Zero 2 lze provozovat v 32bitovém nebo 64bitovém módu. Překlady
+jsou připraveny pro oba módy. Z uživatelského hlediska není
+mezi módy znatelný rozdíl. Doporučuje se dávat přednost
+64bitovému módu, který může být v některých případech o
+trochu rychlejší.</font></p>
+
+<p align="center"><a href="img/KERNEL.PNG"><img
+src="img/KERNEL_m.JPG" border="0" width="320" height="240"></a></p>
+
+<p align="left"><font face="Arial">Zařízení stavebnice BarePi
+lze ovládat jednak herní klávesnicí &quot;KeyPad&quot; a
+jednak alfanumerickou klávesnicí &quot;MiniKey&quot;. Klávesy
+z klávesnice &quot;KeyPad&quot; jsou mapovány současně i na
+klávesy klávesnice &quot;MiniKey&quot;. Pro odlišení značení
+kláves se akční klávesy z herní klávesnice uvádí v
+hranatých závorkách, zatímco znakové klávesy se uvádí bez
+závorek. Např. &quot;[A]&quot; označuje akční tlačítko
+&quot;A&quot; na herní klávesnici. Význam tlačítek na herní
+klávesnici a jejich mapování na alfanumerickou klávesnici je
+následující.</font></p>
+
+<ul>
+    <li><p align="left"><font face="Arial"><strong>[A]</strong> =
+        <strong>Space</strong> ... Hlavní akční tlačítko</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>[B]</strong> =
+        <strong>Enter</strong> ... Vedlejší akční tlačítko</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>[X]</strong> =
+        <strong>Tab</strong> ... Pomocné tlačítko, např. nápověda</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>[Y] </strong>=
+        <strong>Esc</strong> ... Opuštění menu, ukončení
+        programu</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+Vlevo</strong>
+        = <strong>Home</strong> ... Skok na začátek</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+Vpravo</strong>
+        = <strong>End</strong> ... Skok na konec</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+Nahoru</strong>
+        = <strong>PgUp</strong> ... Stránka nahoru</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+Dolů</strong>
+        = <strong>PgDn</strong> ... Stránka dolů</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+A</strong>
+        = <strong>Insert</strong> ... Mód vkládání</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+B</strong>
+        = <strong>Edit</strong> ... Mód editace</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+X</strong>
+        = <strong>PrtScr</strong> ... Screenshot obrazovky do
+        souboru na SD kartu</font></p>
+    </li>
+    <li><p align="left"><font face="Arial"><strong>Alt+Y</strong>
+        = <strong>Menu</strong> ... Vyvolání systémového menu</font></p>
+    </li>
+</ul>
+
+<p align="left"><font face="Arial"><em>Poznámka:</em> Ke spouštění
+programů není boot loader nutný. Programy můžete spouštět
+i na samotném modulu Zero1/Zero2, bez dalšího hardware a bez
+boot loaderu. Na SD kartu nakopírujte systémové soubory z Root
+adresáře z příslušné složky !ZeroTiny*. Jsou zapotřebí
+soubory &quot;bootcode.bin&quot;, &quot;config.txt&quot;,
+&quot;fixup.dat&quot; a &quot;start.elf&quot;. Program
+zkopírujte do Root složky také, a přejmenujte ho na
+KERNEL.IMG. Po zapnutí napájení se program automaticky
+spustí.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h3 align="left"><a name="license"></a><font face="Arial">Licence</font></h3>
+
+<p align="left"><font face="Arial">Všechny mé zdrojové kódy a
+data jsou zcela volně k použití pro jakékoli účely. Výjimkou
+jsou některé soubory odvozené ze zdrojů třetích stran –
+na ty se vztahuje licence původního autora. Patří sem většina
+fontů, stejně jako části zdrojových souborů převzaté z
+knihovny Circle a kódu pro Linux – tyto části jsou ve
+zdrojových souborech označeny.</font></p>
+
+<p align="left"><font face="Arial">Většina fontů v této
+knihovně nejsou mým výtvorem. Byly staženy z internetu z neznámých
+zdrojů s neznámými licenčními podmínkami použití. Pokud
+chcete používat pouze striktní licence, nepoužívejte fonty z
+této knihovny.</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h3 align="left"><a name="compilation"></a><font face="Arial">Kompilace</font></h3>
+
+<p align="left"><font face="Arial">Ke kompilaci v 32-bit módu
+potřebujete AArch32 GCC (jménu toolu
+&quot;arm-none-eabi&quot;). Instalujte do C:\ARM_GCC32.</font></p>
+
+<p align="left"><a
+href="https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi.msi"><font
+face="Arial">https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi.msi</font></a></p>
+
+<p align="left"><font face="Arial">Ke kompilaci v 64-bit módu
+potřebzujete AArch64 GCC (jménu toolu
+&quot;aarch64-none-elf&quot;). Instalujte do C:\ARM_GCC64.</font></p>
+
+<p align="left"><a
+href="https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-aarch64-none-elf.msi"><font
+face="Arial">https://developer.arm.com/-/media/Files/downloads/gnu/15.2.rel1/binrel/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-aarch64-none-elf.msi</font></a></p>
+
+<p align="left"><font face="Arial">z </font><a
+href="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads"><font
+face="Arial">https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads</font></a></p>
+
+<p align="left"><font face="Arial">Pokud použijete jiné cesty,
+upravte cesty v _c1.bat (&quot;set GCC_PI_PATH&quot;).</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h3 align="left"><a name="directories"></a><font face="Arial">Adresáře</font></h3>
+
+<ul>
+    <li><p align="left"><font face="Arial">!BarePi ... obsah SD
+        karty pro stavebnici BarePi a ZeroTiny - společné
+        soubory</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">!BarePi_1 ... obsah SD
+        karty pro stavebnici BarePi a ZeroTiny - spustitelné pro
+        modul Zero 1</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">!BarePi_3 ... obsah SD
+        karty pro stavebnici BarePi a ZeroTiny - spustitelné pro
+        modul Zero 2 32-bit</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">!BarePi_4 ... obsah SD
+        karty pro stavebnici BarePi a ZeroTiny - spustitelné pro
+        modul Zero 2 64-bit</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">_devices ... zařízení:
+        BarePi = modulární mikročipová stavebnice a zařízení
+        ZeroTiny</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">_font ... fonty</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">_lib ... knihovny</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">_sdk ... SDK (drivery
+        periferií)</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">_tools ... kompilační
+        nástroje</font></p>
+    </li>
+    <li><p align="left"><font face="Arial">Apps ... zdrojové
+        kódy příkladů aplikací</font></p>
+    </li>
+</ul>
+
+<p align="left"><font face="Arial">K přípravě SD karty
+připravte SD kartu ve formátu FAT32, nahrajte na ni obsah složky
+!BarePi a také jednu ze složek !BarePi_* (podle typu modulu).</font></p>
+
+<p align="left">&nbsp;</p>
+
+<h3 align="left"><a name="zerotiny"></a><font face="Arial">ZeroTiny</font></h3>
+
+<p align="left"><font face="Arial">ZeroTiny je nejjednodušší
+herní konzole s moduly Raspberry Zero 1 nebo Zero 2. Odpovídá
+sestavení modulů &quot;Zero&quot;, &quot;Base&quot; a
+&quot;KeyPad&quot; ze stavebnice BarePi. Přednostně se
+doporučuje používat modul Zero 2 v 64bitovém módu. Modul
+Zero 1 může být v některých aplikacích znatelně pomalejší.
+ZeroTiny obsahuje 9 tlačítek, stereofonni zvukový PWM výstup
+a výstup na HDMI displej. K dispozici je boot loader umožňující
+snadné spouštění programů z SD karty.</font></p>
+
+<p align="left"><font face="Arial">Konstrukčně je ZeroTiny
+řešen sendvičovým stylem. U mého prototypu jsem modul Zero připojil
+k základní desce přes 8mm dutinkovou lištu - především z důvodu
+snadné výměny modulu. Přiletujete-li modul Zero k desce pouze
+přes pinovou lištu, konstrukce bude nižší. Ovšem může být
+obtížnější opravitelnost, např. výměna tlačítka.</font></p>
+
+<p align="left"><font face="Arial">Podrobné podklady k hardware
+ZeroTiny naleznete ve složce
+&quot;_devices/BarePi/ZeroTiny&quot;.</font></p>
+
+<p align="left"><font face="Arial">Zdrojové kódy s ukázkovými
+programy naleznete ve složce &quot;Apps&quot;.</font></p>
+
+<p align="left"><font face="Arial">Přeložené ukázkové
+programy naleznete ve složkách &quot;!BarePi*&quot;, podle typu
+modulu a podle módu procesoru.</font></p>
+
+<p align="left"><a href="img/ZeroTiny.jpg"><font face="Arial"><img
+src="img/ZeroTiny_m.jpg" border="0" width="300" height="192"></font></a><font
+face="Arial"> </font><a href="img/ZeroTiny5.jpg"><font
+face="Arial"><img src="img/ZeroTiny5_m.jpg" border="0"
+width="300" height="200"></font></a></p>
+
+<p align="left"><a href="img/ZeroTiny4.jpg"><font face="Arial"><img
+src="img/ZeroTiny4_m.jpg" border="0" width="300" height="200"></font></a><font
+face="Arial"> </font><a href="img/ZeroTiny1.jpg"><font
+face="Arial"><img src="img/ZeroTiny1_m.jpg" border="0"
+width="300" height="192"></font></a></p>
+
+<p align="left"><a href="img/ZeroTiny_3D.jpg"><img
+src="img/ZeroTiny_3D_m.jpg" border="0" width="400" height="297"></a>
+<a href="img/ZeroTiny_3D_bottom.jpg"><img
+src="img/ZeroTiny_3D_bottom_m.jpg" border="0" width="400"
+height="284"></a></p>
+
+<p align="left"><a href="img/ZeroTiny_diagram.png"><img
+src="img/ZeroTiny_diagram_m.jpg" border="0" width="574"
+height="321"></a></p>
+
+<p align="left"><a href="img/ZeroTiny_mounting.jpg"><img
+src="img/ZeroTiny_mounting_m.jpg" border="0" width="403"
+height="210"></a> <a href="img/ZeroTiny_label.png"><img
+src="img/ZeroTiny_label_m.jpg" border="0" width="390"
+height="183"></a></p>
+
+<p align="left"><a href="img/ZeroTiny_bottom.png"><img
+src="img/ZeroTiny_bottom_m.jpg" border="0" width="403"
+height="210"></a><a href="img/ZeroTiny_top.png"><img
+src="img/ZeroTiny_top_m.jpg" border="0" width="403" height="210"></a></p>
+
+<p align="left"><font face="Arial">Konzole ZeroTiny sestavená z
+modulů BarePi:</font></p>
+
+<p align="left"><a href="img/BarePi_ZeroTiny.jpg"><img
+src="img/BarePi_ZeroTiny_m.jpg" border="0" width="214"
+height="400"></a></p>
+
+<p align="left">&nbsp;</p>
+
+<h3 align="left"><a name="apps"></a><font face="Arial">Ukázkové
+aplikace</font></h3>
+
+<p align="left"><font face="Arial"><strong>System</strong></font></p>
+<div align="left">
+
+<table border="0" cellpadding="8">
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/KERNEL.PNG"><font face="Arial"><img
+        src="img/apps/KERNEL_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        KERNEL - Loader of<br>
+        applications</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/SYSINFO.PNG"><font face="Arial"><img
+        src="img/apps/SYSINFO_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        SYSINFO - System<br>
+        information</font></td>
+    </tr>
+</table>
+</div>
+
+<p align="left"><font face="Arial"><strong>Book</strong></font></p>
+<div align="left">
+
+<table border="0" cellpadding="8">
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/ABC.PNG"><font face="Arial"><img
+        src="img/apps/ABC_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        ABC - Fairy Tales<br>
+        from the Alphabet<br>
+        (Czech)</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/GINGER.PNG"><font face="Arial"><img
+        src="img/apps/GINGER_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        GINGER - Gingerbread<br>
+        House (English)</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/GINGERCZ.PNG"><font face="Arial"><img
+        src="img/apps/GINGERCZ_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        GINGERCZ - <br>
+        Gingerbread House<br>
+        (Czech)</font></td>
+        <td align="center" valign="top">&nbsp;</td>
+        <td align="center" valign="top">&nbsp;</td>
+    </tr>
+</table>
+</div>
+
+<p align="left"><font face="Arial"><strong>Demo</strong></font></p>
+<div align="left">
+
+<table border="0" cellpadding="8">
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/BALLOONS.PNG"><font face="Arial"><img
+        src="img/apps/BALLOONS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        BALLOONS - Flying<br>
+        balloons</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/BIGFACT.PNG"><font face="Arial"><img
+        src="img/apps/BIGFACT_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        BIGFACT - Factorial of<br>
+        123456789!</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/DRAW.PNG"><font face="Arial"><img
+        src="img/apps/DRAW_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        DRAW - Drawing<br>
+        graphic elements</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/EARTH.PNG"><font face="Arial"><img
+        src="img/apps/EARTH_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        EARTH - Rotating<br>
+        globe</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/FLAG.PNG"><font face="Arial"><img
+        src="img/apps/FLAG_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        FLAG - Fluttering flag</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/FLAG2.PNG"><font face="Arial"><img
+        src="img/apps/FLAG2_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        FLAG2 - Fluttering<br>
+        custom flag</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/FOUNTAIN.PNG"><font face="Arial"><img
+        src="img/apps/FOUNTAIN_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        FOUNTAIN - Draw<br>
+        3D graph</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/FRUITY.PNG"><font face="Arial"><img
+        src="img/apps/FRUITY_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        FRUITY - 130 music<br>
+        loops with MP3<br>
+        compression</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/HELLO.PNG"><font face="Arial"><img
+        src="img/apps/HELLO_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        HELLO - Simplest<br>
+        example</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/HYPNO.PNG"><font face="Arial"><img
+        src="img/apps/HYPNO_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        HYPNO - hypnotic<br>
+        rotating pattern</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/LEVMETER.PNG"><font face="Arial"><img
+        src="img/apps/LEVMETER_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        LEVMETER - <br>
+        simulation of music<br>
+        spectrum indicator</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/LINEART.PNG"><font face="Arial"><img
+        src="img/apps/LINEART_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        LINEART - draw line<br>
+        flower</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/LINES.PNG"><font face="Arial"><img
+        src="img/apps/LINES_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        LINES - relaxation line<br>
+        pattern generator</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/MATRIX.PNG"><font face="Arial"><img
+        src="img/apps/MATRIX_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        MATRIX - matrix code<br>
+        rain</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/OSCIL.PNG"><font face="Arial"><img
+        src="img/apps/OSCIL_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        OSCIL - simulation of<br>
+        oscilloscope signal </font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/PF2027.PNG"><font face="Arial"><img
+        src="img/apps/PF2027_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        PF2027 - Christmas<br>
+        animation</font></td>
+        <td align="center" valign="top"><a href="img/apps/PI.PNG"><font
+        face="Arial"><img src="img/apps/PI_m.jpg" border="0"
+        width="160" height="120"></font></a><font face="Arial"><br>
+        PI - calculating<br>
+        number Pi to 4780<br>
+        digits</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/PIXELS.PNG"><font face="Arial"><img
+        src="img/apps/PIXELS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        PIXELS - random<br>
+        generation of colored<br>
+        pixels</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/RAYTRACE.PNG"><font face="Arial"><img
+        src="img/apps/RAYTRACE_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        RAYTRACE - 3D<br>
+        pattern generation by<br>
+        ray tracing method</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/SPHERES.PNG"><font face="Arial"><img
+        src="img/apps/SPHERES_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        SPHERES - random<br>
+        spheres</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/SPOTS.PNG"><font face="Arial"><img
+        src="img/apps/SPOTS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        SPOTS - random<br>
+        spots</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/TWISTER.PNG"><font face="Arial"><img
+        src="img/apps/TWISTER_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        TWISTER - twisting<br>
+        textured block</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/WATER.PNG"><font face="Arial"><img
+        src="img/apps/WATER_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        WATER - simulation<br>
+        of rippling water<br>
+        surface</font></td>
+        <td align="center" valign="top">&nbsp;</td>
+        <td align="center" valign="top">&nbsp;</td>
+    </tr>
+</table>
+</div>
+
+<p align="left"><a name="games"></a><font face="Arial"><strong>Games</strong></font></p>
+<div align="left">
+
+<table border="0" cellpadding="8">
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/ANTS_Intro.PNG"><font face="Arial"><img
+        src="img/apps/ANTS_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/ANTS.PNG"><font face="Arial"><img
+        src="img/apps/ANTS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        ANTS - card game</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/ATOMS_Intro.PNG"><font face="Arial"><img
+        src="img/apps/ATOMS_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/ATOMS.PNG"><font face="Arial"><img
+        src="img/apps/ATOMS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        ATOMS - Game of exploding atoms</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/EGGS_Intro.PNG"><font face="Arial"><img
+        src="img/apps/EGGS_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/EGGS.PNG"><font face="Arial"><img
+        src="img/apps/EGGS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        EGGS - Logic game as Reversi</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/FIFTEEN_Intro.PNG"><font face="Arial"><img
+        src="img/apps/FIFTEEN_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/FIFTEEN.PNG"><font face="Arial"><img
+        src="img/apps/FIFTEEN_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        FIFTEEN - Logic puzzle game</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/FLAPPY_Intro.PNG"><font face="Arial"><img
+        src="img/apps/FLAPPY_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/FLAPPY.PNG"><font face="Arial"><img
+        src="img/apps/FLAPPY_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        FLAPPY - Logic game from Sharp MZ800</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/CHESS_Intro.PNG"><font face="Arial"><img
+        src="img/apps/CHESS_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/CHESS.PNG"><font face="Arial"><img
+        src="img/apps/CHESS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        CHESS - Chess game</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/INVADERS_Intro.PNG"><font face="Arial"><img
+        src="img/apps/INVADERS_Intro_m.jpg" border="0"
+        width="160" height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/INVADERS.PNG"><font face="Arial"><img
+        src="img/apps/INVADERS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        INVADERS - Shooting game Space Invaders</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/LIFE_Intro.PNG"><font face="Arial"><img
+        src="img/apps/LIFE_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/LIFE.PNG"><font face="Arial"><img
+        src="img/apps/LIFE_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        LIFE - Cell life simulator</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/MAZE_Intro.PNG"><font face="Arial"><img
+        src="img/apps/MAZE_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/MAZE.PNG"><font face="Arial"><img
+        src="img/apps/MAZE_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        MAZE - Find way out of maze</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/PACMAN_Intro.PNG"><font face="Arial"><img
+        src="img/apps/PACMAN_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/PACMAN.PNG"><font face="Arial"><img
+        src="img/apps/PACMAN_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        PACMAN - Action game Pac-Man</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/PICTOR_Intro.PNG"><font face="Arial"><img
+        src="img/apps/PICTOR_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/PICTOR.PNG"><font face="Arial"><img
+        src="img/apps/PICTOR_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        PICTOR - Picopad Collector</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/RAPTOR_Intro.PNG"><font face="Arial"><img
+        src="img/apps/RAPTOR_Intro_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/RAPTOR.PNG"><font face="Arial"><img
+        src="img/apps/RAPTOR_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        RAPTOR - Shooting game</font></td>
+    </tr>
+</table>
+</div>
+
+<p align="left"><a name="mp3"></a><font face="Arial"><strong>MP3</strong></font></p>
+
+<p align="left"><font face="Arial">Doporučuji používat MP3
+soubory s konstantní bitrate. Některé starší formáty MP3,
+nebo MP3 s variable bitrate, nemusí umožňovat posouvání
+ukazatele přehrávání, případně skladba může skončit
+předčasně před koncem. Přehrávač podporuje pouze krátká
+jména souborů - tj. jméno MP3 souboru může mít max 8 znaků.
+Bude-li složka obsahovat i JPG obrázek stejného jména jako
+MP3, o rozměru 320x240 pixelů, zobrazí se namísto info
+stránky. Obrázek nebo info lze přepínat klávesou [X].
+Klávesa [B] přehraje aktuální adresář od první skladby.
+Klávesa [A] začne přehrávání od aktuální skladby.</font></p>
+
+<p align="left"><font face="Arial">K přehrávači je k dispozici
+ukázková sada skladeb, ve stylu různých interpretů,
+vytvořená v nástroji Suno AI. Celkem je to 248 skladeb,
+obsahujících 13 hodin hudby. Skladby lze stáhnout zde.</font></p>
+
+<p align="left"><a
+href="https://www.breatharian.eu/hw/picolibsdk/dwn/MP3_1.zip"><font
+face="Arial">Download skladeb část 1</font></a><font
+face="Arial"> (200 MB): styly ABBA, The Beatles, Breton Celtic,
+Classical</font></p>
+
+<p align="left"><a
+href="https://www.breatharian.eu/hw/picolibsdk/dwn/MP3_2.zip"><font
+face="Arial">Download skladeb část 2</font></a><font
+face="Arial"> (224 MB): styly Computer, Cyberpunk, Enya, Folk</font></p>
+
+<p align="left"><a
+href="https://www.breatharian.eu/hw/picolibsdk/dwn/MP3_3.zip"><font
+face="Arial">Download skladeb část 3</font></a><font
+face="Arial"> (213 MB): styly Children, Jean-Michel Jarre, J-pop</font></p>
+
+<p align="left"><a
+href="https://www.breatharian.eu/hw/picolibsdk/dwn/MP3_4.zip"><font
+face="Arial">Download skladeb část 4</font></a><font
+face="Arial"> (217 MB): styly Loreena McKennitt, Medieval,
+Meditation, Metal, Vox Angeli</font></p>
+
+<p align="left"><a
+href="https://www.breatharian.eu/hw/picolibsdk/dwn/MP3_5.zip"><font
+face="Arial">Download skladeb část 5</font></a><font
+face="Arial"> (207 MB): styly Mixed, Nightwish s Tarja Turunen,
+Mike Oldfield</font></p>
+<div align="left">
+
+<table border="0" cellpadding="8">
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/MP3.PNG"><font face="Arial"><img
+        src="img/apps/MP3_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        MP3 - MP3 player</font></td>
+    </tr>
+</table>
+</div>
+
+<p align="left">&nbsp;</p>
+
+<p align="right"><font face="Arial">Miroslav Němeček</font></p>
+
+<p align="left"><a href="../index.html"><font size="3"
+face="Arial">&lt;&lt; Zpět</font></a></p>
+
+<p>&nbsp;</p>
+</body>
+</html>

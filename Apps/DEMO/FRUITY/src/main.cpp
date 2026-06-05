@@ -629,13 +629,13 @@ int main()
 		switch (KeyGet())
 		{
 		// mute
-		case KEY_SPACE:
+		case KEY_A:
 			Mute = !Mute;
 			NewLoop();
 			break;
 
 		// exit
-		case KEY_ESC:
+		case KEY_Y:
 			Reboot();
 			break;
 

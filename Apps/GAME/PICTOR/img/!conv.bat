@@ -124,7 +124,6 @@ rem This PiLibSDK library supports only CF_A8, CF_B8G8R8 and CF_A8B8G8R8 formats
 ..\..\..\..\_tools\BinC\BinC picopad2.png       picopad2.cpp      ImgPicopad2PNG
 ..\..\..\..\_tools\BinC\BinC picopad3.png       picopad3.cpp      ImgPicopad3PNG
 ..\..\..\..\_tools\BinC\BinC picopad4.png       picopad4.cpp      ImgPicopad4PNG
-..\..\..\..\_tools\BinC\BinC title_zeropc.png   title_zeropc.cpp  ImgTitleZeroPCPNG
-..\..\..\..\_tools\BinC\BinC title_zerotiny.png	title_zerotiny.cpp ImgTitleZeroTinyPNG
+..\..\..\..\_tools\BinC\BinC title_barepi.png	title_barepi.cpp  ImgTitleBarePiPNG
 
 ..\..\..\..\_tools\guipic\guipic shadow.bmp shadow.cpp ShadowImg CF_A8

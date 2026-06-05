@@ -460,7 +460,7 @@ int main()
 		int key = KeyGet();
 
 		// Program exit
-		if (key == KEY_ESC) break;
+		if (key == KEY_Y) break;
 
 		//  Screenshot - This may take a few seconds to write.
 		if (key == KEY_SCREENSHOT) ScreenShot();

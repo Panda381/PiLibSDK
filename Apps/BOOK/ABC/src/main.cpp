@@ -74,7 +74,7 @@ int main()
 		// keyboard
 		switch (KeyGet())
 		{
-		case KEY_ESC:
+		case KEY_Y:
 			Reboot();	// Program exit
 			break;
 

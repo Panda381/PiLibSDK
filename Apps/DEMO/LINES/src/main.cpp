@@ -147,7 +147,7 @@ int main()
 
 		// keyboard
 		int key = KeyGet();
-		if (key == KEY_ESC) Reboot();	// Program exit
+		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
 	}
 

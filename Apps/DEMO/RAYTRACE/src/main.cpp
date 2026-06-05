@@ -448,7 +448,7 @@ void CoreFnc(int core, void* arg)
 		if (core == 0)
 		{
 			int key = KeyGet();
-			if (key == KEY_ESC) Reboot();	// Program exit
+			if (key == KEY_Y) Reboot();	// Program exit
 			if (key == KEY_SCREENSHOT)
 			{
 				Paused = True;

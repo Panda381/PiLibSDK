@@ -719,7 +719,6 @@ PlayNextSound:
 		// keyboard control
 		switch (KeyGet())
 		{
-#if USE_ZEROPC
 		// left (rewind back)
 		case KEY_LEFT:
 			MP3SeekTime(mp3, MP3GetTimePos(mp3) - 10);
@@ -751,49 +750,6 @@ PlayNextSound:
 			} while (FileList[FileListSel].dir);
 			KeyFlush();
 			goto PlayNextSound;
-#endif // USE_ZEROPC
-
-#if USE_ZEROTINY
-		// left (rewind back)
-		case KEY_LEFT:
-			if (!KeyPressed(KEY_A))
-			{
-				MP3SeekTime(mp3, MP3GetTimePos(mp3) - 10);
-				KeyFlush();
-				break;
-			}
-			else
-			{
-				// previous
-				MP3PlayerTerm(mp3);
-				do {
-					FileListSel--;
-					if (FileListSel < 0) FileListSel = FileListNum-1;
-				} while (FileList[FileListSel].dir);
-				KeyFlush();
-				goto PlayNextSound;
-			}
-
-		// right (rewind forward)
-		case KEY_RIGHT:
-			if (!KeyPressed(KEY_A))
-			{
-				MP3SeekTime(mp3, MP3GetTimePos(mp3) + 10);
-				KeyFlush();
-				break;
-			}
-			else
-			{
-				// next
-				MP3PlayerTerm(mp3);
-				do {
-					FileListSel++;
-					if (FileListSel >= FileListNum) FileListSel = 0;
-				} while (FileList[FileListSel].dir);
-				KeyFlush();
-				goto PlayNextSound;
-			}
-#endif // USE_ZEROTINY
 
 		// up (volume up)
 		case KEY_UP:
@@ -817,7 +773,7 @@ PlayNextSound:
 			break;
 
 		// pause
-		case KEY_SPACE:
+		case KEY_A:
 			if (pause)
 			{
 				MP3Play(mp3, 0, False);
@@ -831,7 +787,7 @@ PlayNextSound:
 			break;
 
 		// info
-		case KEY_TAB:
+		case KEY_X:
 			DrawClear();
 			if (InfoMode && (JPGImage != NULL))
 			{
@@ -863,7 +819,7 @@ PlayNextSound:
 			break;
 
 		// quit
-		case KEY_ESC:
+		case KEY_Y:
 			MP3PlayerTerm(mp3);
 			KeyFlush();
 			return;
@@ -985,7 +941,7 @@ int main()
 				break;
 
 			// Esc exit
-			case KEY_ESC:
+			case KEY_Y:
 				Reboot();
 				break;
 
@@ -1106,8 +1062,8 @@ int main()
 				}
 				break;
 
-			// BackSpace - up directory
-			case KEY_BS:
+			// X - up directory
+			case KEY_X:
 				// not root directory yet
 				i = SoundPathLen;
 				if (i > 1)
@@ -1137,7 +1093,7 @@ int main()
 				break;
 
 			// play 1 or change directory
-			case KEY_SPACE:
+			case KEY_A:
 				if (FileListSel < FileListNum)
 				{
 					sSoundFile* fd = &FileList[FileListSel];
@@ -1200,7 +1156,7 @@ int main()
 				break;
 
 			// Enter play all
-			case KEY_ENTER:
+			case KEY_B:
 				if (FileListMP3 >= 0)
 				{
 					FileListSel = FileListMP3;

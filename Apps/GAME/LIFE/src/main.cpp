@@ -343,11 +343,11 @@ int main()
 	while ((u32)(Time() - t1) < 5000000)
 	{
 		int key = KeyGet();
-		if (key == KEY_ESC)
+		if (key == KEY_Y)
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
-		else if ((key == KEY_ENTER) || (key == KEY_SPACE) || (key == KEY_TAB))
+		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
 			break;
 	}
 	DrawClear();
@@ -422,7 +422,7 @@ int main()
 				break;
 		
 			// toggle
-			case KEY_SPACE:
+			case KEY_A:
 				CurFlip(); // flip cursor
 				DrawBoard();
 				break;
@@ -433,7 +433,7 @@ int main()
 				break;
 
 			// run
-			case KEY_ENTER:
+			case KEY_B:
 				CurOff(); // set cursor off
 				SaveSlot(); // save state
 				Run(); // run life
@@ -443,7 +443,7 @@ int main()
 				break;
 
 			// select slot
-			case KEY_TAB:
+			case KEY_X:
 				CurOff(); // set cursor off
 				SaveSlot();
 				SelSlot++;
@@ -453,7 +453,7 @@ int main()
 				DrawBoard();
 				break;
 
-			case KEY_ESC:
+			case KEY_Y:
 				Reboot();
 				break;
 			}

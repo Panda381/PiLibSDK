@@ -120,8 +120,7 @@
 #include "../img/picopad3.cpp"
 #include "../img/picopad4.cpp"
 #include "../img/shadow.cpp"
-#include "../img/title_zeropc.cpp"
-#include "../img/title_zerotiny.cpp"
+#include "../img/title_barepi.cpp"
 
 // sounds
 #include "../snd/bigbonus.cpp"
@@ -256,11 +255,7 @@ int main()
 	BloodImg = (u8*)PNGLOAD(ImgBloodPNG); if (BloodImg == NULL) Reboot();
 	BonuscloudImg = (u8*)PNGLOAD(ImgBonusPNG); if (BonuscloudImg == NULL) Reboot();
 	ExplosionImg = (u8*)PNGLOAD(ImgExplosionPNG); if (ExplosionImg == NULL) Reboot();
-#if USE_ZEROPC
-	TitleImg = (u8*)PNGLOAD(ImgTitleZeroPCPNG); if (TitleImg == NULL) Reboot();
-#else
-	TitleImg = (u8*)PNGLOAD(ImgTitleZeroTinyPNG); if (TitleImg == NULL) Reboot();
-#endif
+	TitleImg = (u8*)PNGLOAD(ImgTitleBarePiPNG); if (TitleImg == NULL) Reboot();
 
 	// load top list and max. score
 	MaxScore = LoadTop();

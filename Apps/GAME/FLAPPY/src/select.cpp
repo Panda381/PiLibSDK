@@ -118,16 +118,16 @@ Bool SetSelect()
 			ScreenShot();
 			break;
 
-		case KEY_SPACE: // OK enter
-		case KEY_ENTER:
+		case KEY_A: // OK enter
+		case KEY_B:
 			SceneInx = 0; // selected level
 			SceneSet = &SceneSets[SceneSetInx];
 			SceneBase = SceneSet->first;
 			SceneSetNum = SceneSet->num; // number of levels in current scene set
 			return True;
 
-		case KEY_TAB:
-		case KEY_ESC:
+		case KEY_X:
+		case KEY_Y:
 			return False;
 		}
 	}
@@ -257,12 +257,12 @@ Bool LevSelect()
 			ScreenShot();
 			break;
 
-		case KEY_SPACE: // select
-		case KEY_ENTER:
+		case KEY_A: // select
+		case KEY_B:
 			return True;
 
-		case KEY_TAB:
-		case KEY_ESC:
+		case KEY_X:
+		case KEY_Y:
 			return False;
 		}
 	}

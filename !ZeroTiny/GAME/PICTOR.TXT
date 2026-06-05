@@ -1,8 +1,0 @@
-^YPictor^0
-
-Picopad Collector
-
-^Warrows^0 ..... move
-^WSpace^0 ...... shooting
-^WB/X^0 ........ transformation
-^WY^0 .......... menu/exit

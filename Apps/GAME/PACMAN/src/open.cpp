@@ -23,9 +23,9 @@ Bool DispWait(u32 ms)
 	do {
 		t = Time(); 
 		int key = KeyGet();
-		if (key == KEY_ESC) Reboot();
+		if (key == KEY_Y) Reboot();
 		if (key == KEY_SCREENSHOT) ScreenShot();
-		if ((key == KEY_SPACE) || (key == KEY_ENTER) || (key == KEY_TAB))
+		if ((key == KEY_A) || (key == KEY_B) || (key == KEY_X))
 		{
 			StopAllSound();
 			return True;

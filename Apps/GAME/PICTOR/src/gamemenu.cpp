@@ -109,36 +109,20 @@ Bool GameMenu()
 		y += 64;
 
 		// display menu
-#if USE_ZEROPC
-		DrawTextW2("Esc", 0, y, MENU_COL_KEY);
-#else
-		DrawTextW2("Y", 0, y, MENU_COL_KEY);
-#endif
+		DrawTextW2("[Y]", 0, y, MENU_COL_KEY);
 		DrawTextW2("Continue", 192, y, MENU_COL_MENU);
 		y += 30;
 
-#if USE_ZEROPC
-		DrawTextW2("Tab", 0, y, MENU_COL_KEY);
-#else
-		DrawTextW2("X", 0, y, MENU_COL_KEY);
-#endif
+		DrawTextW2("[X]", 0, y, MENU_COL_KEY);
 		DrawTextW2("Exit", 192, y, MENU_COL_MENU);
 		y += 30;
 
-#if USE_ZEROPC
-		DrawTextW2("Enter", 0, y, MENU_COL_KEY);
-#else
-		DrawTextW2("B", 0, y, MENU_COL_KEY);
-#endif
+		DrawTextW2("[B]", 0, y, MENU_COL_KEY);
 		DrawTextW2("Sound is", 192, y, MENU_COL_MENU);
 		DrawTextW2((SoundMode == SOUNDMODE_OFF) ? "off" : ((SoundMode == SOUNDMODE_SOUND) ? "ON" : "ALL"), 15*32, y, MENU_COL_MENU);
 		y += 30;
 
-#if USE_ZEROPC
-		DrawTextW2("Space", 0, y, MENU_COL_KEY);
-#else
-		DrawTextW2("A", 0, y, MENU_COL_KEY);
-#endif
+		DrawTextW2("[A]", 0, y, MENU_COL_KEY);
 		DrawTextW2("Screenshot", 192, y, MENU_COL_MENU);
 
 		// display top list
@@ -151,20 +135,20 @@ Bool GameMenu()
 		switch (KeyGet())
 		{
 		// exit
-		case KEY_TAB:
+		case KEY_X:
 			return False;
 
 		// sound
-		case KEY_ENTER:
+		case KEY_B:
 			SoundMode++;
 			if (SoundMode > 2) SoundMode = 0;
 			break;
 
 		// screen shot
-		case KEY_SPACE:
+		case KEY_A:
 			// request to do screenshot
 			ReqScreenShot = True;
-			while (KeyPressed(KEY_SPACE)) {}
+			while (KeyPressed(KEY_A)) {}
 			return True;
 
 		case KEY_SCREENSHOT:
@@ -172,7 +156,7 @@ Bool GameMenu()
 			break;
 
 		// continue
-		case KEY_ESC:
+		case KEY_Y:
 			return True;
 		}
 	}

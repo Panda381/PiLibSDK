@@ -98,13 +98,8 @@ Bool Open()
 		DrawText("UP ....... Player 2 is", MENUX, MENUY+1*MENUDY, Players[1].color);
 		DrawText("RIGHT .... Player 3 is", MENUX, MENUY+2*MENUDY, Players[2].color);
 		DrawText("DOWN ..... Player 4 is", MENUX, MENUY+3*MENUDY, Players[3].color);
-#if USE_ZEROTINY
-		DrawText("B ........ Player 5 is", MENUX, MENUY+4*MENUDY, Players[4].color);
-		DrawText("A ........ Start The Game", MENUX, MENUY+5*MENUDY, COL_WHITE);
-#else
-		DrawText("Enter .... Player 5 is", MENUX, MENUY+4*MENUDY, Players[4].color);
-		DrawText("Space .... Start The Game", MENUX, MENUY+5*MENUDY, COL_WHITE);
-#endif
+		DrawText("[B] ...... Player 5 is", MENUX, MENUY+4*MENUDY, Players[4].color);
+		DrawText("[A] ...... Start The Game", MENUX, MENUY+5*MENUDY, COL_WHITE);
 
 		// draw values
 		for (i = 0; i < PLAYER_NUM; i++)
@@ -136,19 +131,19 @@ Bool Open()
 			if (Players[3].type > 2) Players[3].type = 0;
 			break;
 
-		case KEY_ENTER:
+		case KEY_B:
 			Players[4].type++;
 			if (Players[4].type > 2) Players[4].type = 0;
 			break;
 
-		case KEY_SPACE:
+		case KEY_A:
 			return True;
 
 		case KEY_SCREENSHOT:
 			ScreenShot(); //  Screenshot - This may take a few seconds to write.
 			break;
 
-		case KEY_ESC:
+		case KEY_Y:
 			return False;
 		}
 
@@ -482,14 +477,14 @@ void Game()
 			if (ch == KEY_SCREENSHOT)
 				ScreenShot();
 			else
-				if (ch == KEY_ESC) return;
+				if (ch == KEY_Y) return;
 		}
 
 		// auto player
 		if (Players[Player].type == PLAYER_COMP)
 		{
 			Auto();
-			ch = KEY_SPACE;
+			ch = KEY_A;
 		}
 		else
 			ch = KeyGet();
@@ -531,7 +526,7 @@ void Game()
 			CurTime = Time();
 			break;
 
-		case KEY_SPACE: // put atom
+		case KEY_A: // put atom
 			// check color
 			if ((Atoms[cur] == 0) || (Owner[cur] == Player))
 			{
@@ -579,7 +574,7 @@ void Game()
 			ScreenShot();
 			break;
 
-		case KEY_ESC:	// quit game
+		case KEY_Y:	// quit game
 			return;
 
 		}

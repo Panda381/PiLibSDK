@@ -22,19 +22,9 @@
 
 // devices
 
-// base device
-#if USE_PIBASE
-#include "_devices/pibase/_include.h"
-#endif
-
-// ZeroPC
-#if USE_ZEROPC
-#include "_devices/zeropc/_include.h"
-#endif
-
-// ZeroTiny
-#if USE_ZEROTINY
-#include "_devices/zerotiny/_include.h"
+// BarePi
+#if USE_BAREPI
+#include "_devices/barepi/_include.h"
 #endif
 
 #endif // _INCLUDE_H

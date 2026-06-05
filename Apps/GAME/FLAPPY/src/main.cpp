@@ -50,11 +50,11 @@ int main()
 	while ((u32)(Time() - t1) < 5000000)
 	{
 		int key = KeyGet();
-		if (key == KEY_ESC)
+		if (key == KEY_Y)
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
-		else if ((key == KEY_ENTER) || (key == KEY_SPACE) || (key == KEY_TAB))
+		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
 			break;
 	}
 

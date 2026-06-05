@@ -1240,9 +1240,8 @@ int main()
 				}
 				break;
 
-			// Enter, Space
-			case KEY_ENTER:
-			case KEY_SPACE:
+			// [A]
+			case KEY_A:
 				if ((uint)FileCur < (uint)FileNum)
 				{
 					fd = &FileDesc[FileCur];
@@ -1400,10 +1399,8 @@ int main()
 				}
 				break;
 
-			// BackSpace - out of directory
-			case KEY_BS:
-//				ScreenShot();	// ZeroTiny alternative screenshot
-
+			// [X] - out of directory
+			case KEY_X:
 				// not root directory yet
 				if (PathLen > 1)
 				{

@@ -1122,7 +1122,7 @@ MOVE_AGAIN:
 		sel = False;
 		switch (ch)
 		{
-		case KEY_SPACE:
+		case KEY_A:
 			if (ok) sel = True;
 			break;
 
@@ -1158,14 +1158,14 @@ MOVE_AGAIN:
 			ScreenShot();
 			break;
 
-		case KEY_TAB:
+		case KEY_X:
 			for (i = 0; i < MAPSIZE; i++) BoardEnable[i] = False;
 			DispBoard();
 			DispUpdate();
 			MoveComp();
 			return False;
 
-		case KEY_ESC:
+		case KEY_Y:
 			return True; // quit game
 		}
 		if (sel) break;
@@ -1239,11 +1239,11 @@ MOVE_AGAIN:
 		cancel = False;
 		switch (ch)
 		{
-		case KEY_SPACE:
+		case KEY_A:
 			if (ok) sel = True;
 			break;
 
-		case KEY_ESC:
+		case KEY_Y:
 			cancel = True;
 			break;
 
@@ -1358,11 +1358,7 @@ void Open()
 		DrawText("RIGHT ... Play with black",	MENUX, MENUY+1*MENUDY, COL_WHITE);
 		DrawText("DOWN .... Play 2 players",	MENUX, MENUY+2*MENUDY, COL_WHITE);
 		DrawText("UP ...... Demo",		MENUX, MENUY+3*MENUDY, COL_WHITE);
-#if USE_ZEROTINY
-		DrawText("A ....... Level:",	MENUX, MENUY+4*MENUDY, COL_WHITE);
-#else
-		DrawText("Space ... Level:",	MENUX, MENUY+4*MENUDY, COL_WHITE);
-#endif
+		DrawText("[A] ..... Level:",		MENUX, MENUY+4*MENUDY, COL_WHITE);
 
 #define MENUX2 (MENUX+17*8)
 #define MENUY2 (MENUY+4*MENUDY)
@@ -1405,7 +1401,7 @@ void Open()
 			Players[1].comp = True;
 			return;
 
-		case KEY_SPACE:
+		case KEY_A:
 			DeepMax++;
 			if (DeepMax > DEEP_MAX) DeepMax = 2;
 			break;
@@ -1414,7 +1410,7 @@ void Open()
 			ScreenShot();
 			break;
 
-		case KEY_ESC: Reboot();
+		case KEY_Y: Reboot();
 		}
 
 		DispUpdate();
@@ -1461,7 +1457,7 @@ int main()
 			else
 				if (MoveHuman()) break;
 
-			if (KeyGet() == KEY_ESC) break;
+			if (KeyGet() == KEY_Y) break;
 
 			// checkmat (9 chars)
 			if (LastMove == NULL)

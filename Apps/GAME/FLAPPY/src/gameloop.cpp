@@ -182,7 +182,7 @@ Bool GameLoop()
 		switch(ch)
 		{
 		// Y quit
-		case KEY_ESC:
+		case KEY_Y:
 			MusicStop();
 			StopSound();
 			return False;
@@ -192,8 +192,8 @@ Bool GameLoop()
 			ScreenShot();
 			break;
 
-		// X macro
-		case KEY_ENTER:
+		// macro
+		case KEY_B:
 			if ((SceneSet->solution != NULL) && (SceneInx < SceneSet->solutionnum))
 			{
 				NewGame(False);

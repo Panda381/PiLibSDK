@@ -119,13 +119,8 @@ void DispGameStart(Bool prompt)
 	// help
 	if (prompt)
 	{
-#if USE_ZEROPC
-		DrawText2("Press Enter/Tab to transform", OPEN_X - 28*16/2, 380, COL_YELLOW);
-		DrawText2("Press Space to start game", OPEN_X - 25*16/2, 410, COL_YELLOW);
-#else
-		DrawText2("Press B/X to transform", OPEN_X - 22*16/2, 380, COL_YELLOW);
-		DrawText2("Press A to start game", OPEN_X - 21*16/2, 410, COL_YELLOW);
-#endif
+		DrawText2("Press [B]/[X] to transform", OPEN_X - 26*16/2, 380, COL_YELLOW);
+		DrawText2("Press [A] to start game", OPEN_X - 23*16/2, 410, COL_YELLOW);
 	}
 
 	// display update
@@ -153,18 +148,18 @@ Bool GameStart()
 		switch (KeyGet())
 		{
 		// start game
-		case KEY_SPACE:
-			while (KeyPressed(KEY_SPACE)) {}
+		case KEY_A:
+			while (KeyPressed(KEY_A)) {}
 			return True;
 
 		// next actor
-		case KEY_ENTER:
+		case KEY_B:
 			SetActor(ActInx+1);
 			ActorReload = 0;
 			break;
 
 		// previous actor
-		case KEY_TAB:
+		case KEY_X:
 			SetActor(ActInx-1);
 			ActorReload = 0;
 			break;
@@ -174,7 +169,7 @@ Bool GameStart()
 			break;
 
 		// menu
-		case KEY_ESC:
+		case KEY_Y:
 			if (!GameMenu()) return False;
 			break;
 		}

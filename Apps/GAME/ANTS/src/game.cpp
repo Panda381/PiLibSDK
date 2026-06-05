@@ -1147,7 +1147,7 @@ void Game(int player1, int player2)
 
 				if (ch == KEY_SCREENSHOT)
 					ScreenShot();
-				else if (ch == KEY_ESC)
+				else if (ch == KEY_Y)
 					return;
 			}
 		}
@@ -1160,7 +1160,7 @@ void Game(int player1, int player2)
 			switch (ch)
 			{
 			// quit
-			case KEY_ESC:
+			case KEY_Y:
 				return;
 
 			// left
@@ -1183,7 +1183,7 @@ void Game(int player1, int player2)
 
 			// discard
 			case KEY_UP:
-			case KEY_ENTER:
+			case KEY_B:
 				PutCard(SelCard, True); // put card
 				CursorOn();
 				KeyFlush();
@@ -1191,14 +1191,14 @@ void Game(int player1, int player2)
 
 			// select
 			case KEY_DOWN:
-			case KEY_SPACE:
+			case KEY_A:
 				PutCard(SelCard, Players[Player].disable[SelCard]); // put card
 				CursorOn();
 				KeyFlush();
 				break;
 
 			// help
-			case KEY_TAB:
+			case KEY_X:
 				CursorOff();
 				SelCard = FindCard();
 				CursorOn();

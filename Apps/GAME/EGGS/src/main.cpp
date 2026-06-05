@@ -262,7 +262,7 @@ char OpenScreen()
 		case KEY_RIGHT:
 		case KEY_UP:
 		case KEY_DOWN:
-		case KEY_ESC:
+		case KEY_Y:
 			MP3PlayerTerm(mp3);
 			return ch;
 
@@ -604,7 +604,7 @@ void PlayGame(Bool comp1, Bool comp2)
 		if (ch == KEY_SCREENSHOT) ScreenShot();
 
 		// break demo
-		if (Demo && (ch == KEY_ESC))
+		if (Demo && (ch == KEY_Y))
 		{
 			Demo = False;
 			return;
@@ -621,13 +621,13 @@ void PlayGame(Bool comp1, Bool comp2)
 
 			// put stone
 			if (!Demo) KeyFlush();
-			ch = KEY_SPACE;
+			ch = KEY_A;
 		}
 
 		switch (ch)
 		{
 		// break game
-		case KEY_ESC:
+		case KEY_Y:
 			return;
 
 		// right
@@ -675,7 +675,7 @@ void PlayGame(Bool comp1, Bool comp2)
 			break;
 
 		// help
-		case KEY_ENTER:
+		case KEY_B:
 			CurOff();
 			FindPos();
 			CurOn();
@@ -683,7 +683,7 @@ void PlayGame(Bool comp1, Bool comp2)
 			break;
 
 		// put stone
-		case KEY_SPACE:
+		case KEY_A:
 			CurOff();
 			if (GetBoard(CurX, CurY) == TILE_DOT)
 			{
@@ -883,7 +883,7 @@ int main()
 			break;
 
 		// quit
-		case KEY_ESC:
+		case KEY_Y:
 			Reboot();
 			break;
 		}
