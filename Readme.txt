@@ -197,6 +197,9 @@ Games
 MP3
  MP3 ... MP3 player
 
+Test
+ TESTLED ... test BarePi bus with TESTLED module
+
 
 ----------------
 

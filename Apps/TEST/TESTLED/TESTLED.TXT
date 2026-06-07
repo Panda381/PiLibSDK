@@ -1,0 +1,8 @@
+^YTest BarePi bus signals^0
+^Yusing TESTLED module^0
+
+The program gradually lights
+up the LEDs of the TESTLED
+module.
+
+BarePi modules: Zero, TestLed
