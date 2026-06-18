@@ -62,6 +62,10 @@ disconnecting or connecting an HDMI monitor, you must exit or restart the
 program or loader. With the Raspberry Zero 1 module, it may be necessary to
 disconnect and reconnect the power supply to detect the HDMI monitor.
 
+If you connect a DS3231 real-time clock circuit to the device, applications
+will retrieve the current real-time clock value from it. The I2C EEPROM memory
+provides the ability to save program configurations.
+
 A boot loader is available for BarePi devices, which allows easy launching of
 programs from an SD card. The programs are ready for BarePi and ZeroTiny with
 Zero 1, Zero 2 32-bit, or Zero 2 64-bit modules. The Zero 1 and Zero 2 modules
