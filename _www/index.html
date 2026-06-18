@@ -32,11 +32,11 @@ content="text/html; charset=utf-8">
 <p align="center"><font color="#FF8000" size="4" face="Arial"><strong>Bare-metal
 SDK knihovna pro moduly Raspberry Pi</strong></font></p>
 
-<p align="center"><font face="Arial">Před-alfa verze 0.30, <strong>rozpracováno
+<p align="center"><font face="Arial">Před-alfa verze 0.40, <strong>rozpracováno
 - ve vývoji</strong></font></p>
 
 <p align="center"><font face="Arial">Poslední aktualizace:
-05.06.2026</font></p>
+18.06.2026</font></p>
 
 <p align="center"><font face="Arial">(c) 2026 Miroslav Němeček</font></p>
 
@@ -101,6 +101,42 @@ Hlavním zařízením je herní konzole ZeroTiny, která
 odpovídá sestavení modulů stavebnice &quot;Zero&quot;,
 &quot;Base&quot; a &quot;KeyPad&quot;.</font></p>
 
+<p align="left"><font face="Arial">K zařízení je možné připojit
+i LCD SPI displej 320x240 pixelů, s řadičem ST7789. Zapojení
+odpovídá modulu &quot;LCD320x240&quot; stavebnice BarePi.
+Software knihovny je připraven tak, že pokud detekuje připojení
+modulu LCD320x240, aktivuje SPI výstup na displej a odesílá
+obraz i na tento LCD displej. Detekce se provádí rezistorem 10K
+zapojeným mezi piny DC a CS. Chcete-li mít možnost u koncového
+zařízení výstup na LCD displej vypínat, můžete to provést
+vypínačem připojujícím tento rezistor 10K. Detekce probíhá
+při startu aplikace nebo loaderu - po změně přepínače je
+tedy nutné ukončit nebo spustit program nebo loader. Vypnutí
+výstupu na LCD displej zajistí rychlejší chod programu, protože
+odesílání dat na LCD displej program značně zatěžuje.</font></p>
+
+<p align="left"><font face="Arial">Přestože má LCD SPI displej
+rozlišení pouze 320x240 pixelů, je možné používat i
+programy s rozlišením 640x480 pixelů. Driver automaticky
+provede zmenšení obrazu na cílový rozměr. Je-li potřeba na
+LCD displeji zobrazit detaily, které se zmenšením obrazu
+ztratí, je to možné stiskem kláves Alt+[A] - funkce označená
+&quot;Insert&quot;, zde se používá ve významu
+&quot;Zoom&quot;. Při stisku kláves se na LCD displeji zobrazí
+postupně jednotlivé 4 kvadranty obrazu v plném rozlišení,
+pátým stiskem se obnoví zobrazení plného zmenšeného
+obrazu.</font></p>
+
+<p align="left"><font face="Arial">Není-li při použití LCD
+displeje potřeba výstup na HDMI monitor, kabel monitoru
+odpojte. To zajistí značný pokles odběru proudu (zhruba ze
+400mA na 200mA), což je významné především při provozu
+konzole z baterie. Detekce připojení HDMI monitoru se provádí
+při startu programu - po odpojení nebo připojení HDMI
+monitoru je proto nutné ukončit nebo spustit program nebo
+loader. U modulu Raspberry Zero 1 může být pro detekci HDMI
+monitoru nutné odpojit a připojit napájecí napětí.</font></p>
+
 <p align="left"><font face="Arial">Pro zařízení BarePi je k
 dispozici boot loader, který umožňuje snadné spouštění
 programů z SD karty. Programy jsou připraveny pro BarePi i
@@ -118,8 +154,8 @@ mezi módy znatelný rozdíl. Doporučuje se dávat přednost
 64bitovému módu, který může být v některých případech o
 trochu rychlejší.</font></p>
 
-<p align="center"><a href="img/KERNEL.PNG"><img
-src="img/KERNEL_m.JPG" border="0" width="320" height="240"></a></p>
+<p align="center"><a href="img/KERNEL.PNG"><font face="Arial"><img
+src="img/KERNEL_m.JPG" border="0" width="320" height="240"></font></a></p>
 
 <p align="left"><font face="Arial">Zařízení stavebnice BarePi
 lze ovládat jednak herní klávesnicí &quot;KeyPad&quot; a
@@ -160,7 +196,8 @@ následující.</font></p>
         = <strong>PgDn</strong> ... Stránka dolů</font></p>
     </li>
     <li><p align="left"><font face="Arial"><strong>Alt+A</strong>
-        = <strong>Insert</strong> ... Mód vkládání</font></p>
+        = <strong>Insert</strong> ... Mód vkládání (u LCD
+        displeje pomocná funkce &quot;Zoom&quot;)</font></p>
     </li>
     <li><p align="left"><font face="Arial"><strong>Alt+B</strong>
         = <strong>Edit</strong> ... Mód editace</font></p>
@@ -255,11 +292,13 @@ upravte cesty v _c1.bat (&quot;set GCC_PI_PATH&quot;).</font></p>
         BarePi = modulární mikročipová stavebnice a zařízení
         ZeroTiny</font></p>
     </li>
+    <li><p align="left"><font face="Arial">_drv ... drivery</font></p>
+    </li>
     <li><p align="left"><font face="Arial">_font ... fonty</font></p>
     </li>
     <li><p align="left"><font face="Arial">_lib ... knihovny</font></p>
     </li>
-    <li><p align="left"><font face="Arial">_sdk ... SDK (drivery
+    <li><p align="left"><font face="Arial">_sdk ... SDK (obsluha
         periferií)</font></p>
     </li>
     <li><p align="left"><font face="Arial">_tools ... kompilační
@@ -318,33 +357,35 @@ face="Arial"> </font><a href="img/ZeroTiny1.jpg"><font
 face="Arial"><img src="img/ZeroTiny1_m.jpg" border="0"
 width="300" height="192"></font></a></p>
 
-<p align="left"><a href="img/ZeroTiny_3D.jpg"><img
-src="img/ZeroTiny_3D_m.jpg" border="0" width="400" height="297"></a>
-<a href="img/ZeroTiny_3D_bottom.jpg"><img
-src="img/ZeroTiny_3D_bottom_m.jpg" border="0" width="400"
-height="284"></a></p>
+<p align="left"><a href="img/ZeroTiny_3D.jpg"><font face="Arial"><img
+src="img/ZeroTiny_3D_m.jpg" border="0" width="400" height="297"></font></a><font
+face="Arial"> </font><a href="img/ZeroTiny_3D_bottom.jpg"><font
+face="Arial"><img src="img/ZeroTiny_3D_bottom_m.jpg" border="0"
+width="400" height="284"></font></a></p>
 
-<p align="left"><a href="img/ZeroTiny_diagram.png"><img
-src="img/ZeroTiny_diagram_m.jpg" border="0" width="574"
-height="321"></a></p>
+<p align="left"><a href="img/ZeroTiny_diagram.png"><font
+face="Arial"><img src="img/ZeroTiny_diagram_m.jpg" border="0"
+width="574" height="321"></font></a></p>
 
-<p align="left"><a href="img/ZeroTiny_mounting.jpg"><img
-src="img/ZeroTiny_mounting_m.jpg" border="0" width="403"
-height="210"></a> <a href="img/ZeroTiny_label.png"><img
+<p align="left"><a href="img/ZeroTiny_mounting.jpg"><font
+face="Arial"><img src="img/ZeroTiny_mounting_m.jpg" border="0"
+width="403" height="210"></font></a><font face="Arial"> </font><a
+href="img/ZeroTiny_label.png"><font face="Arial"><img
 src="img/ZeroTiny_label_m.jpg" border="0" width="390"
-height="183"></a></p>
+height="183"></font></a></p>
 
-<p align="left"><a href="img/ZeroTiny_bottom.png"><img
-src="img/ZeroTiny_bottom_m.jpg" border="0" width="403"
-height="210"></a><a href="img/ZeroTiny_top.png"><img
-src="img/ZeroTiny_top_m.jpg" border="0" width="403" height="210"></a></p>
+<p align="left"><a href="img/ZeroTiny_bottom.png"><font
+face="Arial"><img src="img/ZeroTiny_bottom_m.jpg" border="0"
+width="403" height="210"></font></a><a
+href="img/ZeroTiny_top.png"><font face="Arial"><img
+src="img/ZeroTiny_top_m.jpg" border="0" width="403" height="210"></font></a></p>
 
 <p align="left"><font face="Arial">Konzole ZeroTiny sestavená z
 modulů BarePi:</font></p>
 
-<p align="left"><a href="img/BarePi_ZeroTiny.jpg"><img
-src="img/BarePi_ZeroTiny_m.jpg" border="0" width="214"
-height="400"></a></p>
+<p align="left"><a href="img/BarePi_ZeroTiny.jpg"><font
+face="Arial"><img src="img/BarePi_ZeroTiny_m.jpg" border="0"
+width="214" height="400"></font></a></p>
 
 <p align="left">&nbsp;</p>
 
@@ -740,17 +781,54 @@ Mike Oldfield</font></p>
 <table border="0" cellpadding="8">
     <tr>
         <td align="center" valign="top"><a
+        href="img/apps/EEPROM.PNG"><font face="Arial"><img
+        src="img/apps/EEPROM_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        EEPROM - View<br>
+        contents of I2C<br>
+        EEPROMs</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/I2CSCAN.PNG"><font face="Arial"><img
+        src="img/apps/I2CSCAN_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        I2CSCAN - Scan I2C0<br>
+        and I2C1 bus</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/LCD.PNG"><font face="Arial"><img
+        src="img/apps/LCD_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        LCD - Test LCD SPI<br>
+        display</font></td>
+        <td align="center" valign="top"><a
+        href="img/apps/RTC.PNG"><font face="Arial"><img
+        src="img/apps/RTC_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        RTC - Display and set<br>
+        current time, using<br>
+        RTC module</font></td>
+        <td align="center" valign="top"><a><font face="Arial"><img
+        src="img/apps/SSD1306_m.jpg" width="160" height="120"></font></a><font
+        face="Arial"><br>
+        SSD1306 - Test<br>
+        SSD1306 display</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
         href="img/apps/TESTLED.PNG"><font face="Arial"><img
         src="img/apps/TESTLED_m.jpg" border="0" width="160"
         height="120"></font></a><font face="Arial"><br>
-        TESTLED - test<br>
+        TESTLED - Test<br>
         BarePi bus with<br>
         TESTLED module</font></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td align="center" valign="top">&nbsp;</td>
+        <td>&nbsp;</td>
     </tr>
 </table>
 </div>
 
-<p align="left"><font face="Arial"><strong></strong></font>&nbsp;</p>
+<p align="left">&nbsp;</p>
 
 <p align="right"><font face="Arial">Miroslav Němeček</font></p>
 
