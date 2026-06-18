@@ -21,10 +21,10 @@
 // All functions should be called from core 0.
 // Correct functioning is not guaranteed from other cores.
 
-#if USE_PWMSND		// 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
+#if USE_PWMSND		// 1=use PWM sound output, 0=not used (drv_pwmsnd.*)
 
-#ifndef _LIB_PWMSND_H
-#define _LIB_PWMSND_H
+#ifndef _DRV_PWMSND_H
+#define _DRV_PWMSND_H
 
 #ifndef PWMSND_CHANNUM
 #define PWMSND_CHANNUM	4	// number of sound channels of sound mixer
@@ -400,6 +400,6 @@ void GlobalSoundSetOn();
 // set new global volume 0..VOLMAX (= 0..15)
 void GlobalVolumeSet(int vol);
 
-#endif // _LIB_PWMSND_H
+#endif // _DRV_PWMSND_H
 
 #endif // USE_PWMSND

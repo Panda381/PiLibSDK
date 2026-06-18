@@ -249,6 +249,12 @@ char OpenScreen()
 			ScreenShot();
 		}
 
+		// LCD display rezoom
+		if (ch == KEY_INSERT)
+		{
+			LCDRezoom();
+		}
+
 		// demo
 		if (Demo)
 		{
@@ -602,6 +608,9 @@ void PlayGame(Bool comp1, Bool comp2)
 
 		// screenshot
 		if (ch == KEY_SCREENSHOT) ScreenShot();
+
+		// LCD display rezoom
+		if (ch == KEY_INSERT) LCDRezoom();
 
 		// break demo
 		if (Demo && (ch == KEY_Y))

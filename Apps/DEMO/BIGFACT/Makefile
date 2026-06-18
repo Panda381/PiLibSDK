@@ -31,13 +31,13 @@ SRC += src/main.cpp
 USE_BIGINT=1
 
 # 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
-USE_CALENDAR=0
+USE_CALENDAR=1
 
 # 1=use Calendar 64-bit (year range -29227..+29227), 0=not used (lib_calendar64.*)
 USE_CALENDAR64=0
 
 # 1=use CRC Cyclic Redundancy Check, 0=not used (lib_crc.*)
-USE_CRC=0
+USE_CRC=1
 
 # 1=use JPG support, 0=not used (_lib/pic/lib_jpg*)
 USE_JPG=0
@@ -51,14 +51,35 @@ USE_MP3=0
 # 1=use PNG support, 0=not used (_lib/pic/lib_png*)
 USE_PNG=0
 
-# 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
-USE_PWMSND=0
-
 # 1=use REAL numbers, 0=not used (_lib/real/*)
 USE_REAL=1
 
 # 1=use text "string", 0=not used (lib_text*)
-USE_TEXT=0
+USE_TEXT=1
+
+##############################################################################
+#                         Drivers configuration
+##############################################################################
+# Select driver modules (folder _drv)
+# If you add a new flag, add the update flag to _drv\_makefile.inc.
+
+# 1=use EEPROM driver, 0=not used (lib_eeprom.*)
+USE_EEPROM=1
+
+# 1=use I2C bus driver, 0=not used (lib_i2cbus.*)
+USE_I2CBUS=1
+
+# 1=use LCD SPI display driver, 0=not used (drv_lcd.*)
+USE_LCD=1
+
+# 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
+USE_PWMSND=0
+
+# 1=use RTC driver, 0=not used (drv_rtc.*)
+USE_RTC=1
+
+# 1=use SSD1306 display driver, 0=not used (lib_ssd1306.*)
+USE_SSD1306=0
 
 ##############################################################################
 #                         Font configuration

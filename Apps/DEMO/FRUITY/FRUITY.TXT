@@ -8,3 +8,4 @@ with MP3 compression
 ^W[A]^0 ...... mute on/off
 ^WAlt+[X]^0 ... Screenshot
 ^W[Y]^0 ............. quit
+^WAlt+[A]^0 ..... LCD zoom

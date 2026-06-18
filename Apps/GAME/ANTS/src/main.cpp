@@ -299,6 +299,11 @@ int main()
 		case KEY_SCREENSHOT:
 			ScreenShot(); //  Screenshot - This may take a few seconds to write.
 			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
 		}
 	}
 

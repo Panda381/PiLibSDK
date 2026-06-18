@@ -3,6 +3,12 @@
 
 The program gradually lights
 up the LEDs of the TESTLED
-module.
+module, except SD pins.
 
 BarePi modules: Zero, TestLed
+
+This program cannot be terminated
+using the keyboard (because the
+keyboard pins are also being
+tested) - the module must be
+reset.

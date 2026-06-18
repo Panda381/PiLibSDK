@@ -46,6 +46,7 @@ int main()
 {
 	int i, j, k, rr, gg, bb;
 	sLine* line;
+	u32 t;
 
 	// initialize line head to random position and color
 	CoordMax[C_X1] = WIDTH-1;
@@ -71,6 +72,7 @@ int main()
 	memset(Lines, 0, sizeof(Lines));
 
 	// main loop
+	t = Time();
 	while (True)
 	{
 		// draw lines
@@ -143,12 +145,14 @@ int main()
 
 		// update display
 		DispUpdate();
-		WaitMs(20);
+		while ((u32)(Time() - t) < 20000) {}
+		t = Time();
 
 		// keyboard
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 	}
 
 	return 0;

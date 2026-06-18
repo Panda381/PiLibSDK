@@ -1,7 +1,7 @@
 
 // ****************************************************************************
 //
-//                     Auxiliaries - UART1, SPI1, SPI2
+//                     Auxiliaries - UART1, SPI1
 //
 // ****************************************************************************
 
@@ -174,7 +174,7 @@ NOINLINE u32 UART1_Print(const char* fmt, ...)
 
 #endif // USE_STREAM
 
-// convert SPI1/SPI2 speed in Hz (typically 30517 Hz .. 125 MHz) to clock divider (0..0x0FFF)
+// convert SPI1 speed in Hz (typically 30517 Hz .. 125 MHz) to clock divider (0..0x0FFF)
 u32 SPI_SpeedToDiv(u32 speed)
 {
 	// divide by zero
@@ -189,7 +189,7 @@ u32 SPI_SpeedToDiv(u32 speed)
 	return div;
 }
 
-// convert SPI1/SPI2 clock divider (0..0x0FFF) to speed in Hz (typically 30517 Hz .. 125 MHz)
+// convert SPI1 clock divider (0..0x0FFF) to speed in Hz (typically 30517 Hz .. 125 MHz)
 u32 SPI_DivToSpeed(u32 div)
 {
 	// divider
@@ -200,7 +200,7 @@ u32 SPI_DivToSpeed(u32 div)
 	return speed;
 }
 
-// Calculate SPI1/SPI2 speed error in percent, as the difference between the desired and actual speed.
+// Calculate SPI1 speed error in percent, as the difference between the desired and actual speed.
 double SPI_SpeedErr(u32 speed)
 {
 	// divide by zero
@@ -262,51 +262,6 @@ void SPI1_Init(u32 speed, Bool msb, Bool idlehigh, Bool outrise, Bool inrise)
 	SPI1_SoftEnable();
 }
 
-// initialize SPI2 as master, use 8-bit data, use fixed CS
-//   speed ...... transfer speed in Hz (typically 30517..125000000 Hz)
-//   msb ........ start with: True=MSB (most significant bit), False=LSB (least significant bit)
-//   idlehigh ... idle clock line is : True=high, False=low
-//   outrise .... OUT data are clocked on: True=rising edge, False=falling edge
-//   inrise ..... IN data are clocked on: True=rising edge, False=falling edge
-// GPIO pins should be set up first before enabling the SPI.
-void SPI2_Init(u32 speed, Bool msb, Bool idlehigh, Bool outrise, Bool inrise)
-{
-	// terminate SPI
-	SPI2_Term();
-
-	// SPI enable
-	SPI2_Enable();
-
-	// reset controls
-	AUX->spi2.CTRL1 = 0;		// disable interrupts
-	AUX->spi2.CTRL0 = B9|8;		// reset FIFO (must be enabled later), select 8-bit data of fixed length
-
-	// set MSB/LSB mode
-	if (msb)
-	{
-		SPI2_OutMSB();
-		SPI2_InMSB();
-	}
-
-	// set idle clock
-	if (idlehigh) SPI2_IdleHigh();
-
-	// OUT edge
-	if (outrise) SPI2_OutRise();
-
-	// IN edge
-	if (inrise) SPI2_InRise();
-
-	// setup clock divider
-	SPI2_SetSpeed(speed);
-
-	// enable FIFO
-	SPI2_FlushDisable();
-
-	// soft enable
-	SPI2_SoftEnable();
-}
-
 // terminate SPI1
 void SPI1_Term(void)
 {
@@ -319,21 +274,6 @@ void SPI1_Term(void)
 
 		// SPI disable
 		SPI1_Disable();
-	}
-}
-
-// terminate SPI2
-void SPI2_Term(void)
-{
-	// only if SP2 is enabled (otherwise inaccessible)
-	if (SPI2_IsEnabled())
-	{
-		// reset controls
-		AUX->spi2.CTRL1 = 0;	// disable interrupts
-		AUX->spi2.CTRL0 = B9;	// reset FIFO
-
-		// SPI disable
-		SPI2_Disable();
 	}
 }
 
@@ -381,58 +321,6 @@ void SPI1_WriteRead(int cs, const u8* wbuf, u8* rbuf, int num)
 		{
 			// receive byte
 			data = SPI1_Read();
-			rnum--;
-
-			// write byte to buffer
-			if (rbuf != NULL) *rbuf++ = (u8)data;
-		}
-	}
-}
-
-// write/read SPI2 data (must be initialized with SPI2_Init())
-//  cs ... chip select index 0..2
-//  wbuf ... write buffer (to send; NULL=not used, send default value 0xff)
-//  rbuf ... read buffer (to receive; NULL=not used)
-//  num ... number of bytes
-void SPI2_WriteRead(int cs, const u8* wbuf, u8* rbuf, int num)
-{
-	u32 data;
-
-	// prepare counters
-	int wnum = num;
-	int rnum = num;
-
-	// select CS
-	SPI2_CS(1<<cs);
-
-	// flush buffers
-	SPI2_Flush();
-
-	// transfer loop
-	while ((wnum > 0) || (wnum > 0))
-	{
-		// write enabled
-		if ((wnum > 0) && !SPI2_TxIsFull())
-		{
-			// get data to send
-			data = 0xff;
-			if (wbuf != NULL) data = *wbuf++;
-			
-			// send byte
-			wnum--;
-			if (wnum == 0)
-				SPI2_WriteLast(data); // send last byte
-			else
-				SPI2_Write(data); // send middle byte
-		}
-
-		// read enable
-		// also workaround for cases where the flag indicating the arrival
-		// of the last byte is lost after the transfer is completed
-		if ((rnum > 0) && (!SPI2_RxIsEmpty() || !SPI2_IsBusy()))
-		{
-			// receive byte
-			data = SPI2_Read();
 			rnum--;
 
 			// write byte to buffer

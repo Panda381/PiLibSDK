@@ -85,6 +85,7 @@ void Game()
 	DispFoot();
 
 	// game loop
+	u32 t = Time();
 	while (True)
 	{
 
@@ -188,11 +189,12 @@ void Game()
 #if !DEB_ENDLESS	// 1=endless level
 		if (CurrentFrame >= MaxFrame)
 		{
-			NewGame(Level+1);
+			if (!NewGame(Level+1)) return;
 		}
 #endif
 
-		WaitMs(40);
+		while ((u32)(Time() - t) < 80000) {}
+		t = Time();
 
 		// poll music
 		MusicPoll();

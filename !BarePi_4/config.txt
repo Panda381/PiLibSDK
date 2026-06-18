@@ -4,10 +4,13 @@
 
 kernel=KERNEL.IMG
 
+# disable_overscan ... 1=disable image border, stretch image
 disable_overscan=1
-hdmi_force_hotplug=1
-hdmi_drive=2
+
+# gpu_mem ... allocated GPU memory in MB
 gpu_mem=64
+
+# force_turbo ... 1=always use turbo mode (need to use stable VideoCore clock 250 MHz)
 force_turbo=1
 
 # Raspberry Pi Zero (32-bit)

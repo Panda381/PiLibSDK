@@ -40,9 +40,11 @@ int main()
 	float amp; // wave amplitude
 	float yamp;
 	int y, ys, x, x1, x2, x3, x4;
+	u32 t0, t;
 
 	// main loop
 	aa = 0; // angle counter
+	t0 = Time();
 	while (True)
 	{
 		ang = (sinf(aa)-1)*PI;
@@ -82,7 +84,10 @@ int main()
 		}
 
 		// increment angle of animation
-		aa += 0.005f;
+		t = Time();
+		x = t - t0;
+		t0 = t;
+		aa += 0.005f/10000*x;
 
 		// display update
 		DispUpdate();
@@ -91,6 +96,7 @@ int main()
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 	}
 
 	return 0;

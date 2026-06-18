@@ -155,7 +155,7 @@ enum COLFMT {
 //	CF_A4,			// (1B) A4, 4 bits alpha
 //	CF_A3,			// (1B) A3, 2+3+3 bits alpha
 //	CF_A2,			// (1B) A2, 2 bits alpha
-//	CF_A1,			// (1B) A1, 1 bit alpha
+	CF_A1,			// (1B) A1, 1 bit alpha
 
 	// compression
 //	CF_DXT1C,		// (1/2B) DXT1 compression, 8 byte texel 4x4 without alpha

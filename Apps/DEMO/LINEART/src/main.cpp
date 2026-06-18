@@ -53,9 +53,11 @@ void DrawVert(float ka)
 
 int main()
 {
+	u32 t, dt;
 	frame = 0; // current frame
 
 	// main loop
+	t = Time();
 	while (True)
 	{
 		// clear screen
@@ -93,13 +95,21 @@ int main()
 
 		// animation
 		frame++;
-		if (frame >= FRAMENUM) frame = 0;
-		WaitMs(10);
+		dt = 15000;
+		if ((u32)(Time() - t) >= dt)
+		{
+			dt *= 2;
+			frame++;
+		}
+		while ((u32)(Time() - t) < dt) {}
+		t = Time();
+		if (frame >= FRAMENUM) frame -= FRAMENUM;
 
 		// keyboard
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 	}
 
 	return 0;

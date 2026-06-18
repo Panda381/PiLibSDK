@@ -1158,6 +1158,11 @@ MOVE_AGAIN:
 			ScreenShot();
 			break;
 
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
+
 		case KEY_X:
 			for (i = 0; i < MAPSIZE; i++) BoardEnable[i] = False;
 			DispBoard();
@@ -1286,6 +1291,11 @@ MOVE_AGAIN:
 		case KEY_SCREENSHOT:
 			ScreenShot();
 			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
 		}
 		if (sel || cancel) break;
 
@@ -1408,6 +1418,11 @@ void Open()
 
 		case KEY_SCREENSHOT:
 			ScreenShot();
+			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
 			break;
 
 		case KEY_Y: Reboot();

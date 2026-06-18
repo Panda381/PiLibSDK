@@ -60,10 +60,6 @@
 #include "src/lib_print.cpp"	// Formatted print
 #endif
 
-#if USE_PWMSND		// 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
-#include "src/lib_pwmsnd.cpp"	// PWM sound output
-#endif
-
 #if USE_RAND		// 1=use Random number generator, 0=not used (lib_rand.*)
 #include "src/lib_rand.cpp"	// random number generator
 #endif

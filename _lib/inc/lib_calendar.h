@@ -96,13 +96,13 @@ Bool DateTimeInc(sDateTime* dt);
 Bool DateTimeDec(sDateTime* dt);
 
 // pack date and time into Unix time, optionally with ms and us if not NULL (day of week is ignored)
-u32 DateTimePack(const sDateTime* dt, s16* ms, s16* us);
+u32 DateTimePack(const sDateTime* dt, s16* ms = NULL, s16* us = NULL);
 
 // get day of week from Unix time
 int DateTimeGetDow(u32 ut);
 
 // unpack date and time from Unix time (updates day of week too)
-void DateTimeUnpack(sDateTime* dt, u32 ut, s16 ms, s16 us);
+void DateTimeUnpack(sDateTime* dt, u32 ut, s16 ms = 0, s16 us = 0);
 
 // datetime debug check (returns year of error or 0 if OK)
 //s16 DateTimeDebugCheck();

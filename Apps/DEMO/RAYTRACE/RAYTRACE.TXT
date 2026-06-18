@@ -5,6 +5,7 @@ Demo - 3D pattern
        tracing method
 
 Demo uses all CPU cores.
+No output to LCD display.
 
 ^W[Y]^0 ....... Exit
 ^WAlt+[X]^0 ... Screenshot

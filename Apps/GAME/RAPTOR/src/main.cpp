@@ -32,6 +32,9 @@
 #include "../snd/startup.cpp"		// const u8 StartupSnd[]
 #include "../snd/Raptor.cpp"		// const u8 RaptorSnd[] ... MP3
 
+// speed multiply (if using slow display)
+int SpeedMul = 1;
+
 #define SHIELD_MAX	7
 #define ENERGY_MAX	30
 #define SHIP_SPEED	10
@@ -347,7 +350,7 @@ void NewGame()
 void DoLandscape()
 {
 	// shift landscape
-	LandscapeY++;
+	LandscapeY += SpeedMul;
 	if (LandscapeY >= LANDSCAPEH) LandscapeY -= LANDSCAPEH;
 }
 
@@ -366,6 +369,9 @@ Bool DoKeys()
 
 		// screenshot
 		if (ch == KEY_SCREENSHOT) ScreenShot();
+
+		// LCD display rezoom
+		if (ch == KEY_INSERT) LCDRezoom();
 
 		// select weapon
 		if ((ch == KEY_B) && (WeaponMax > 0) && (Shields >= 0))
@@ -396,7 +402,7 @@ void DoShip()
 	Move = MOVE_NO;
 	if (KeyPressed(KEY_UP))
 	{
-		ShipY -= SHIP_SPEED;
+		ShipY -= SHIP_SPEED*SpeedMul;
 		if (ShipY < TILEH)
 			ShipY = TILEH;
 		else
@@ -405,7 +411,7 @@ void DoShip()
 
 	if (KeyPressed(KEY_DOWN))
 	{
-		ShipY += SHIP_SPEED;
+		ShipY += SHIP_SPEED*SpeedMul;
 		if (ShipY > HEIGHT-SPRITEH)
 			ShipY = HEIGHT-SPRITEH;
 		else
@@ -414,7 +420,7 @@ void DoShip()
 
 	if (KeyPressed(KEY_LEFT))
 	{
-		ShipX -= SHIP_SPEED;
+		ShipX -= SHIP_SPEED*SpeedMul;
 		if (ShipX < TILEW)
 			ShipX = TILEW;
 		else
@@ -423,7 +429,7 @@ void DoShip()
 
 	if (KeyPressed(KEY_RIGHT))
 	{
-		ShipX += SHIP_SPEED;
+		ShipX += SHIP_SPEED*SpeedMul;
 		if (ShipX > WIDTH-TILEW-SPRITEW)
 			ShipX = WIDTH-TILEW-SPRITEW;
 		else
@@ -440,8 +446,8 @@ void DoShooting()
 	if (Shields < 0) return; // dead
 
 	// shoot next missile
-	if (ReloadNext0 > 0) ReloadNext0--; // count machine gun
-	if (ReloadNext > 0) ReloadNext--; // count current weapon
+	if (ReloadNext0 > 0) ReloadNext0 -= SpeedMul; // count machine gun
+	if (ReloadNext > 0) ReloadNext -= SpeedMul; // count current weapon
 #if AUTOSHOOT	// DEBUG: 1=autoshoot
 	if (True)
 #else
@@ -464,7 +470,7 @@ void DoShooting()
 					m->x = ShipX;
 					m->y = ShipY;
 					m->dx = 0;
-					m->dy = SpeedList[0];
+					m->dy = SpeedList[0]*SpeedMul;
 					m->anim = 0;
 					ReloadNext0 = ReloadList[0];
 					break;
@@ -487,14 +493,14 @@ void DoShooting()
 					m->type = Weapon;
 					m->x = ShipX;
 					m->y = ShipY;
-					m->dy = SpeedList[Weapon];
+					m->dy = SpeedList[Weapon]*SpeedMul;
 					m->dx = 0;
 					m->anim = 0;
 
 					// serve artillery
 					if (Weapon == WEAPON_ARTILLERY)
 					{
-						float s = SpeedList[Weapon] * RandFloatMinMax(0.9f, 1.1f); // random speed
+						float s = SpeedList[Weapon]*SpeedMul * RandFloatMinMax(0.9f, 1.1f); // random speed
 						m->dx = 0.7f * RandFloatMinMax(-1.0f, +1.0f); // random direction
 						m->dy = sqrtf(1 - m->dx*m->dx);
 						m->dx *= s;
@@ -561,8 +567,8 @@ void MoveMissile()
 				{
 					e = &Enemy[kbest];
 					a = atan2f(e->y - m->y, e->x - m->x);
-					m->dx = cosf(a)*SpeedList[WEAPON_SONARBOMB];
-					m->dy = -sinf(a)*SpeedList[WEAPON_SONARBOMB];
+					m->dx = cosf(a)*SpeedList[WEAPON_SONARBOMB]*SpeedMul;
+					m->dy = -sinf(a)*SpeedList[WEAPON_SONARBOMB]*SpeedMul;
 				}
 			}
 
@@ -674,7 +680,7 @@ void DoEnemy()
 	sEnemy* e;
 
 	// randomness to generate new enemy
-	if (RandU16() < 2000 + 400*Level)
+	if (RandU16() < 2000*SpeedMul + 400*Level)
 	{
 		// find free entry
 		e = Enemy;
@@ -688,7 +694,7 @@ void DoEnemy()
 				e->x = RandU16MinMax(SPRITEW, WIDTH - TILEW - SPRITEW); // generate X coordinate
 				e->y = -4*SPRITEH;
 				e->dx = 0;
-				e->dy = EnemySpeed[e->type]; // enemy speed
+				e->dy = EnemySpeed[e->type]*SpeedMul; // enemy speed
 				e->anim = 0;
 				e->energy = EnemyEnergyList[e->type];
 				if (e->type > 1) e->dx = (ShipX - e->x)*0.01f; // move towards spaceship
@@ -728,7 +734,7 @@ void DoEnemyShooting()
 		if ((j >= 0) && (j < ENEMY_NUM)) // entry is valid and not dead
 		{
 			// randomness to generate missile
-			if (RandU16() < 500)
+			if (RandU16() < 500*SpeedMul)
 			{
 				// find unused missile entry
 				m = EnMissile;
@@ -739,7 +745,7 @@ void DoEnemyShooting()
 						m->type = j; // missile type
 						m->x = e->x;
 						m->y = e->y;
-						m->dy = EnemyMissileSpeed[j];
+						m->dy = EnemyMissileSpeed[j]*SpeedMul;
 						m->dx = 0;
 						if (j > 1) m->dx = (ShipX - m->x)*0.02f; // move towards spaceship
 						break;
@@ -1043,6 +1049,13 @@ int main()
 	SpritesImg = (u8*)PNGLOAD(SpritesImgPNG); if (SpritesImg == NULL) Reboot();
 	TilesImg = (u8*)PNGLOAD(TilesImgPNG); if (TilesImg == NULL) Reboot();
 
+	// speed multiply (if using slow display)
+#if RASPPI == 1
+	SpeedMul = 2;
+#else
+	if (LCDIsOn()) SpeedMul = 2;
+#endif
+
 	// intro screen
 	DrawImg(IntroImg);
 	DispUpdate();
@@ -1059,6 +1072,8 @@ int main()
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
+		else if (key == KEY_INSERT)
+			LCDRezoom();
 		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
 			break;
 	}
@@ -1152,7 +1167,7 @@ int main()
 // --- main loop
 
 		// display update and wait
-		WaitTime(50);
+		WaitTime(50*SpeedMul);
 
 		// frame counter (to serve some animations)
 		GameFrame++;

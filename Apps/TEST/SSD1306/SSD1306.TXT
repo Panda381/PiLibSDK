@@ -1,0 +1,12 @@
+^YTest SSD1306 display^0
+
+Connect OLED display with
+resolution 128x64 pixels
+to bus I2C0.
+
+Other resolutions are
+also supported in the
+source code.
+
+^W[Y]^0 ....... Exit
+^WAlt+[X]^0 ... Screenshot

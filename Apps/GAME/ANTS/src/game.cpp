@@ -577,7 +577,10 @@ void DispAll(Bool update = True)
 	DispCards();
 
 	// update screen
-	if (update) DispUpdate();
+	if (update)
+	{
+		DispUpdate();
+	}
 }
 
 // start new game
@@ -1147,6 +1150,8 @@ void Game(int player1, int player2)
 
 				if (ch == KEY_SCREENSHOT)
 					ScreenShot();
+				else if (ch == KEY_INSERT)
+					LCDRezoom();
 				else if (ch == KEY_Y)
 					return;
 			}
@@ -1208,6 +1213,11 @@ void Game(int player1, int player2)
 			// screenshot
 			case KEY_SCREENSHOT:
 				ScreenShot();
+				break;
+
+			// LCD display rezoom
+			case KEY_INSERT:
+				LCDRezoom();
 				break;
 
 			// no key

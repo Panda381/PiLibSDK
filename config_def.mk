@@ -15,13 +15,13 @@
 USE_BIGINT=0
 
 # 1=use Calendar 32-bit (year range 1970..2099), 0=not used (lib_calendar.*)
-USE_CALENDAR=0
+USE_CALENDAR=1
 
 # 1=use Calendar 64-bit (year range -29227..+29227), 0=not used (lib_calendar64.*)
 USE_CALENDAR64=0
 
 # 1=use CRC Cyclic Redundancy Check, 0=not used (lib_crc.*)
-USE_CRC=0
+USE_CRC=1
 
 # 1=use Decode integer number, 0=not used (lib_decnum.*)
 USE_DECNUM=1
@@ -53,9 +53,6 @@ USE_PNG=0
 # 1=use Formatted print, 0=not used (lib_print.*)
 USE_PRINT=1
 
-# 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
-USE_PWMSND=1
-
 # 1=use Random number generator, 0=not used (lib_rand.*)
 USE_RAND=1
 
@@ -66,10 +63,34 @@ USE_REAL=0
 USE_STREAM=1
 
 # 1=use text "string", 0=not used (lib_text*)
-USE_TEXT=0
+USE_TEXT=1
 
 # 1=use Tree list, 0=not used (lib_tree.*)
 USE_TREE=1
+
+##############################################################################
+#                         Drivers configuration
+##############################################################################
+# Select driver modules (folder _drv)
+# If you add a new flag, add the update flag to _drv\_makefile.inc.
+
+# 1=use EEPROM driver, 0=not used (drv_eeprom.*)
+USE_EEPROM=1
+
+# 1=use I2C bus driver, 0=not used (drv_i2cbus.*)
+USE_I2CBUS=1
+
+# 1=use LCD SPI display driver, 0=not used (drv_lcd.*)
+USE_LCD=1
+
+# 1=use PWM sound output, 0=not used (drv_pwmsnd.*)
+USE_PWMSND=1
+
+# 1=use RTC driver, 0=not used (drv_rtc.*)
+USE_RTC=1
+
+# 1=use SSD1306 display driver, 0=not used (drv_ssd1306.*)
+USE_SSD1306=0
 
 ##############################################################################
 #                         Font configuration

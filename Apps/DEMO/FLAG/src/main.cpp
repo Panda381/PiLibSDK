@@ -21,8 +21,9 @@ u8* FlagImg;
 
 int main()
 {
-	int x, x2, y;
+	int x, x2, y, dt;
 	float phase;
+	u32 t, t0;
 
 	// decompress images from JPG format
 	CloudsImg = (u8*)JPGLOAD(CloudsImgJpg);
@@ -41,12 +42,15 @@ int main()
 
 	// main loop
 	phase = 0;
+	t0 = Time();
+
 	while (True)
 	{
 		// keyboard
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 
 		// draw flag
 		for (x = 0; x < FLAGW; x++)
@@ -66,8 +70,13 @@ int main()
 			}
 		}
 
+		// delta time
+		t = Time();
+		dt = t - t0;
+		t0 = t;
+
 		// increase phase
-		phase += WAVESPEED;
+		phase += WAVESPEED/10000 * dt;
 		if (phase > PI*2) phase -= PI*2;
 
 		DispUpdate();

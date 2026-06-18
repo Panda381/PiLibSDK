@@ -16,7 +16,8 @@
 #include "src/sdk_mailbox.cpp"		// Mailbox
 #include "src/sdk_mailprop.cpp"		// Mailbox properties
 #include "src/sdk_mmu.cpp"		// MMU Memory Management Unit
-#include "src/sdk_multicore.cpp"		// Multicore
+#include "src/sdk_multicore.cpp"	// Multicore
+#include "src/sdk_pcm.cpp"		// PCM I2S audio
 #include "src/sdk_pwm.cpp"		// PWM - Pulse Width Modulator
 #include "src/sdk_pwr.cpp"		// Power Manager
 #include "src/sdk_rng.cpp"		// Hardware Random Number Generator

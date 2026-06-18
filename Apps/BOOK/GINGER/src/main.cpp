@@ -274,6 +274,11 @@ int main()
 			AutoPlay = !AutoPlay;
 			DispPage();
 			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
 		}
 
 		// polling MP3

@@ -18,10 +18,11 @@
 #define WIDTH		640		// draw width (0=do not initialize default videomode)
 #define HEIGHT		480		// draw height
 #define SCREENSCALE	0		// 0 = no back buffer, using back buffer with screen scale 1, 2 or 4
+#define USE_LCD320x240	1		// 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240)
 
 // 1=use multicore (for applications), 0=do not use other cores (for loader)
 // Loader must be run without multicore, because cannot park other cores to their original address
-#define USE_MULTICORE	0
+#define USE_MULTICORE	1
 
 // Real numbers (also set USE_REAL=1 and USE_BIGINT=1 in Makefile to enable it)
 //#define USE_REAL16		1		// 1 = use real16 numbers (3 digits, exp +-4)

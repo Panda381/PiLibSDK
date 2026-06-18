@@ -21,6 +21,11 @@ ifeq ($(PI_FONT_DIR),)
 PI_FONT_DIR = ${PI_ROOT_PATH}/_font
 endif
 
+# Path to _drv directory (without trailing '/' delimiter)
+ifeq ($(PI_DRV_DIR),)
+PI_DRV_DIR = ${PI_ROOT_PATH}/_drv
+endif
+
 # Path to _lib directory (without trailing '/' delimiter)
 ifeq ($(PI_LIB_DIR),)
 PI_LIB_DIR = ${PI_ROOT_PATH}/_lib
@@ -49,6 +54,9 @@ DEFINE += -D _STDIO_H_
 
 # SDK
 include ${PI_SDK_DIR}/_makefile.inc
+
+# Drivers
+include ${PI_DRV_DIR}/_makefile.inc
 
 # Libraries
 include ${PI_LIB_DIR}/_makefile.inc

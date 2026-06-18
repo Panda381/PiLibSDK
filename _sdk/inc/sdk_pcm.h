@@ -291,4 +291,10 @@ STATIC_ASSERT(sizeof(PCM_t) == 0x24, "Incorrect PCM_t!");
 
 #define PCM	((PCM_t*)ARM_PCM_BASE)
 
+// start PCM clock in [Hz] (using 19.2 MHz base clock)
+void PCM_ClockStart(u32 freq);
+
+// stop PCM clock
+void PCM_ClockStop();
+
 #endif // _SDK_PCM_H

@@ -1,0 +1,10 @@
+^YTest I2C EEPROMs^0
+
+Check access to config
+EEPROM at I2C address 0x57
+and data EEPROM at addres
+0x50.
+
+^W[Y]^0 ....... Exit
+^WAlt+[X]^0 ... Screenshot
+^WAlt+[A]^0 ... LCD zoom

@@ -22,6 +22,7 @@
 #include "inc/sdk_mailbox.h"		// Mailbox
 #include "inc/sdk_mmu.h"		// MMU Memory Management Unit
 #include "inc/sdk_multicore.h"		// Multicore
+#include "inc/sdk_pcm.h"		// PCM I2S audio
 #include "inc/sdk_pwm.h"		// PWM - Pulse Width Modulator
 #include "inc/sdk_pwr.h"		// Power Manager
 #include "inc/sdk_rng.h"		// Hardware Random Number Generator

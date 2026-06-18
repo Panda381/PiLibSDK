@@ -7,7 +7,7 @@
 
 #include "../../includes.h"	// includes
 
-#if USE_PWMSND		// 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
+#if USE_PWMSND		// 1=use PWM sound output, 0=not used (drv_pwmsnd.*)
 
 // global sound mute
 Bool GlobalSoundMute = False;

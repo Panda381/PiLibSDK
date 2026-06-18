@@ -464,5 +464,8 @@ int main()
 
 		//  Screenshot - This may take a few seconds to write.
 		if (key == KEY_SCREENSHOT) ScreenShot();
+
+		// LCD display rezoom
+		if (key == KEY_INSERT) LCDRezoom();
 	}
 }

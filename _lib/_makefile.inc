@@ -13,7 +13,6 @@ DEFINE += -D USE_MAT2D=$(USE_MAT2D)
 DEFINE += -D USE_MP3=$(USE_MP3)
 DEFINE += -D USE_PNG=$(USE_PNG)
 DEFINE += -D USE_PRINT=$(USE_PRINT)
-DEFINE += -D USE_PWMSND=$(USE_PWMSND)
 DEFINE += -D USE_RAND=$(USE_RAND)
 DEFINE += -D USE_REAL=$(USE_REAL)
 DEFINE += -D USE_STREAM=$(USE_STREAM)
@@ -66,9 +65,6 @@ SRC += ${PI_LIB_DIR}/pic/lib_png.cpp
 endif
 ifeq ($(strip $(USE_PRINT)),1)
 SRC += ${PI_LIB_DIR}/src/lib_print.cpp
-endif
-ifeq ($(strip $(USE_PWMSND)),1)
-SRC += ${PI_LIB_DIR}/src/lib_pwmsnd.cpp
 endif
 ifeq ($(strip $(USE_RAND)),1)
 SRC += ${PI_LIB_DIR}/src/lib_rand.cpp

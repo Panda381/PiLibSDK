@@ -12,6 +12,16 @@
 #ifndef _SDK_I2C_H
 #define _SDK_I2C_H
 
+// number of I2C drivers
+#if RASPPI < 4
+#define I2C_NUM		2
+#else
+#define I2C_NUM		7	// including I2C2, which cannot be used
+#endif
+
+// I2C default speed in Hz (should be 100000 to 400000)
+#define I2C_DEF_SPEED	100000
+
 // I2C controller
 typedef struct {
 	io32	CTRL;		// 0x00: control
@@ -95,18 +105,26 @@ typedef struct {
 } I2C_t;
 STATIC_ASSERT(sizeof(I2C_t) == 0x20, "Incorrect I2C_t!");
 
+// flag - I2C was initialized
+extern Bool I2C_IsInit[I2C_NUM];
+
+// last used I2C speed i Hz
+extern volatile int I2C_LastSpeed[I2C_NUM];
+
 #define I2C_FIFO_SIZE	16	// FIFO size
 
-// I2C controller address
+// I2C controller address (I2C2 cannot be used)
 #define I2C0		((I2C_t*)ARM_I2C0_BASE)
 #define I2C1		((I2C_t*)ARM_I2C1_BASE)
-#define I2C(inx)	(((inx) == 0) ? I2C0 : I2C1)	// address of 0=I2C0 or 1=I2C1
 
 #if RASPPI >= 4
 #define I2C3		((I2C_t*)ARM_I2C3_BASE)
 #define I2C4		((I2C_t*)ARM_I2C4_BASE)
 #define I2C5		((I2C_t*)ARM_I2C5_BASE)
 #define I2C6		((I2C_t*)ARM_I2C6_BASE)
+#define I2C(inx)	(((inx)==0)?I2C0:(((inx)==1)?I2C1:(((inx)==3)?I2C3:(((inx)==4)?I2C4:(((inx)==5)?I2C5:I2C6)))))
+#else
+#define I2C(inx)	(((inx) == 0) ? I2C0 : I2C1)	// address of 0=I2C0 or 1=I2C1
 #endif
 
 // GPIOs
@@ -146,22 +164,156 @@ INLINE void I2C0_SetAddr(int addr) { I2C0->ADDR = addr; }
 INLINE void I2C1_SetAddr(int addr) { I2C0->ADDR = addr; }
 INLINE void I2C_SetAddr(int i2c, int addr) { I2C(i2c)->ADDR = addr; }
 
-// read data from I2C
-//  i2c ... I2C peripheral 0..1
-//  addr ... slave address 0..127
-//  buf ... destination buffer
-//  num ... number of bytes 1..65535
-// Returns number of received bytes ('result < num' means error)
-// Remap GPIOs before using.
-int I2C_Read(int i2c, int addr, void* buf, int num);
+// initialize I2C and setup GPIOs (uses GPIO0/1 or GPIO2/3)
+//  clk ... set clock in Hz (3814 Hz - 125 MHz; usually 100000 to 400000, default I2C_DEF_SPEED = 100000)
+void I2C_Init(int i2c, int clk = I2C_DEF_SPEED);
 
-// write data to I2C
+// terminate I2C
+void I2C_Term(int i2c);
+
+// auto-initialize I2C, if not initialized
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+// If it has already been initialized, it only updates the transfer rate.
+void I2C_AutoInit(int i2c, int speed = 0);
+
+// read data from I2C (returns False on error)
 //  i2c ... I2C peripheral 0..1
 //  addr ... slave address 0..127
-//  buf ... source buffer
-//  num ... number of bytes 1..65535
-// Returns number of sent bytes ('result < num' means error)
-// Remap GPIOs before using.
-int I2C_Write(int i2c, int addr, const void* buf, int num);
+//  data ... data buffer, part 1 (can be NULL if len = 0)
+//  len ... number of bytes 0..65535, part 1
+//  data2 ... data buffer, part 2 (can be NULL if len2 = 0)
+//  len2 ... number of bytes 0..65535, part 2
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+// Do not check device presence reading 0 bytes, it does not work.
+// I2C is auto-initialized, if not initialized yet.
+Bool I2C_Read(int i2c, int addr, void* data, int len, void* data2 = NULL, int len2 = 0, int speed = 0);
+
+// write data to I2C (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  data ... data buffer, part 1 (can be NULL if len = 0)
+//  len ... number of bytes 0..65535, part 1
+//  data2 ... data buffer, part 2 (can be NULL if len2 = 0)
+//  len2 ... number of bytes 0..65535, part 2
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+// The presence of a device can be tested by writing a data length of 0.
+// I2C is auto-initialized, if not initialized yet.
+Bool I2C_Write(int i2c, int addr, const void* data, int len, const void* data2 = NULL, int len2 = 0, int speed = 0);
+
+// check presence of the I2C device (to scan devices on the bus; returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+// I2C is auto-initialized, if not initialized yet.
+Bool I2C_Check(int i2c, int addr, int speed = I2C_DEF_SPEED);
+
+// read registers with 8-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 8-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_ReadReg8(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0);
+
+// read registers with 16-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 16-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_ReadReg16(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0);
+
+// read registers with 24-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 24-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_ReadReg24(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0);
+
+// read registers with 32-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 32-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_ReadReg32(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0);
+
+// write registers with 8-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 8-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_WriteReg8(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0);
+
+// write registers with 16-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 16-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_WriteReg16(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0);
+
+// write registers with 24-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 24-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_WriteReg24(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0);
+
+// write registers with 32-bit addressing (returns False on error)
+//  i2c ... I2C peripheral 0..1
+//  addr ... slave address 0..127
+//  inx ... 32-bit index of first register
+//  reg ... pointer to array of registers
+//  num ... number of registers
+//  speed ... transfer speed in Hz (usually 100000 to 400000, 0 = use last speed)
+Bool I2C_WriteReg32(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0);
+
+#if !USE_I2CBUS		// 1=use I2C bus driver, 0=not used (drv_i2cbus.*)
+
+INLINE Bool I2Cbus_Read(int i2c, int addr, void* buf, int num, int speed = I2C_DEF_SPEED)
+	{ return I2C_Read(i2c, addr, buf, num); }
+
+INLINE Bool I2Cbus_Write(int i2c, int addr, const void* buf, int num, int speed = I2C_DEF_SPEED)
+	{ return I2C_Write(i2c, addr, buf, num); }
+
+INLINE Bool I2Cbus_Check(int i2c, int addr, int speed = I2C_DEF_SPEED)
+	{ return I2C_Check(i2c, addr, speed); }
+
+INLINE Bool I2Cbus_ReadReg8(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0)
+	{ return I2C_ReadReg8(i2c, addr, inx, reg, num, speed); }
+
+INLINE Bool I2Cbus_ReadReg16(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0)
+	{ return I2C_ReadReg16(i2c, addr, inx, reg, num, speed); }
+
+INLINE Bool I2Cbus_ReadReg24(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0)
+	{ return I2C_ReadReg24(i2c, addr, inx, reg, num, speed); }
+
+INLINE Bool I2Cbus_ReadReg32(int i2c, int addr, int inx, u8* reg, int num = 1, int speed = 0)
+	{ return I2C_ReadReg32(i2c, addr, inx, reg, num, speed); }
+
+INLINE Bool I2Cbus_WriteReg8(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0)
+	{ return I2C_WriteReg8(i2c, addr, inx, reg, num, speed); }
+
+INLINE Bool I2Cbus_WriteReg16(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0)
+	{ return I2C_WriteReg16(i2c, addr, inx, reg, num, speed); }
+
+INLINE Bool I2Cbus_WriteReg24(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0)
+	{ return I2C_WriteReg24(i2c, addr, inx, reg, num, speed); }
+
+INLINE Bool I2Cbus_WriteReg32(int i2c, int addr, int inx, const u8* reg, int num = 1, int speed = 0)
+	{ return I2C_WriteReg32(i2c, addr, inx, reg, num, speed); }
+
+#endif // USE_I2CBUS
 
 #endif // _SDK_I2C_H

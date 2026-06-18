@@ -657,6 +657,11 @@ int main()
 			if (Loop >= LOOP_NUM) Loop = 0;
 			NewLoop();
 			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
 		}
 
 		sMP3Player* mp3 = &MP3Player;

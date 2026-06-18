@@ -35,6 +35,10 @@
 #define SCREENSCALE		1		// 0 = no back buffer, using back buffer with screen scale 1, 2 or 4
 #endif
 
+#ifndef USE_LCD320x240
+#define USE_LCD320x240		1		// 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240), 2=use core3
+#endif
+
 // Print
 #ifndef USE_DRAW_STDIO
 #define USE_DRAW_STDIO		1		// use DRAW stdio (printf() or DrawPrint() function)
@@ -80,6 +84,11 @@
 #define SYSTIME_INIT_HOUR	12
 #endif
 
+// OLED SSD1306 default address
+#ifndef SSD1306_ADDR
+#define SSD1306_ADDR	0x3c	// SSD1306 default I2C address
+#endif
+
 // PWM sound output
 #ifndef PWMSND_CHANNUM
 #define PWMSND_CHANNUM	4	// number of sound channels of sound mixer
@@ -95,6 +104,15 @@
 
 #ifndef PWMSND_SWAP
 #define PWMSND_SWAP	0	// 1=swap channels (PWM1 left, PWM0 right), 0=no swap (PWM0 left, PWM1 right)
+#endif
+
+// I2C bus driver
+#ifndef USE_I2C0BUS
+#define USE_I2C0BUS	1	// 1=use I2C0 bus (USE_I2CBUS must be set), 0=not used
+#endif
+
+#ifndef USE_I2C1BUS
+#define USE_I2C1BUS	1	// 1=use I2C1 bus (USE_I2CBUS must be set), 0=not used
 #endif
 
 // Big integer numbers

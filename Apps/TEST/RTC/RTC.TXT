@@ -1,0 +1,8 @@
+^YReal time clock DS3231^0
+
+Display and set current time.
+
+^WLeft/Right^0 ... select
+^WUp/Down^0 ...... chacnge
+^W[Y]^0 .......... Exit
+^WAlt+[X]^0 ...... Screenshot

@@ -18,6 +18,9 @@ volatile int CurTimeMs = 0;		// current time in [ms] 0..999
 volatile u32 NextTimeUs = 0;		// time LOW of next tick
 volatile u32 SysTimeLock = 0;		// odd number - lock to access to time variables
 
+// last time of I2C bus driver watchdog
+u32 I2Cbus_WatchdogLast;
+
 // get 64-bit absolute system time in [us]
 u64 SysTime64(void)
 {
@@ -101,6 +104,15 @@ void SysTick_Handler()
 #if SYSTICK_KEYSCAN	// call KeyScan() function from SysTick system timer
 	KeyScan();
 #endif
+
+#if USE_I2CBUS		// 1=use I2C bus driver, 0=not used (drv_i2cbus.*)
+	// I2C bus driver watchdog (every 100ms)
+	if ((u32)(Time() - I2Cbus_WatchdogLast) >= 100000)
+	{
+		I2Cbus_WatchdogLast = Time();
+		I2Cbus_Watchdog();
+	}
+#endif
 }
 
 // initialize System timer to interrupt every SYSTICK_MS ms ... this is called from SysInit()
@@ -118,6 +130,9 @@ void SysTimerInit()
 
 	// clear status flag
 	SysTimer->CS = B3;
+
+	// last time of I2C bus driver watchdog
+	I2Cbus_WatchdogLast = Time();
 
 	// enable interrupts
 	dmb();

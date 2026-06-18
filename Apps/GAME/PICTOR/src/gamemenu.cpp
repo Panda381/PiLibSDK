@@ -155,6 +155,11 @@ Bool GameMenu()
 			ScreenShot();
 			break;
 
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
+
 		// continue
 		case KEY_Y:
 			return True;

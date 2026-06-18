@@ -32,7 +32,7 @@
 #define GPIOCLOCK_0		14	// on GPIO4 Alt0, GPIO20 Alt5 (B+ and CM only), GPIO32 Alt0 (CM only), GPIO34 Alt0 (CM only)
 #define GPIOCLOCK_1		15	// CLOCK1 is reserved for system use; on GPIO5 Alt0 (B+ and CM only), GPIO21 Alt5 (not B v2), GPIO42 Alt0 (CM only), GPIO44 Alt0 (CM only)
 #define GPIOCLOCK_2		16	// on GPIO6 Alt0 (B+ and CM only), GPIO43 Alt0 (CM only)
-#define GPIOCLOCK_PCM		19
+#define GPIOCLOCK_PCM		19	// PCM
 #define GPIOCLOCK_PWM		20	// PWM
 #define GPIOCLOCK_SMI		22
 

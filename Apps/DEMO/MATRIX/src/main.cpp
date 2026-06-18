@@ -81,6 +81,7 @@ int main()
 	u32 c;
 	char* d;
 	u32* dd;
+	u32 t;
 
 	// generate new drops
 	for (i = 0; i < TEXTWIDTH; i++)
@@ -98,6 +99,7 @@ int main()
 	}
 
 	// main loop
+	t = Time();
 	while (True)
 	{
 		// update color attributes
@@ -145,12 +147,14 @@ int main()
 
 		// update display
 		DispUpdate();
-		WaitMs(20);
+		while ((u32)(Time() - t) < 20000) {}
+		t = Time();
 
 		// keyboard
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 	}
 
 	return 0;

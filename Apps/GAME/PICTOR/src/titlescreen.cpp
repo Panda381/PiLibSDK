@@ -43,6 +43,11 @@ Bool TitleScreen()
 			ScreenShot();
 			break;
 
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
+
 		case KEY_Y:
 			if (!GameMenu()) return False;
 			break;

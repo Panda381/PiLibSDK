@@ -19,6 +19,8 @@ u8 *ForestImg, *DuckImg;
 
 int main()
 {
+	u32 t0, t, dt;
+
 	// decompress images
 	ForestImg = (u8*)JPGLOAD(ForestImgJPG);
 	if (ForestImg == NULL) Reboot(); // emergency exit
@@ -37,6 +39,7 @@ int main()
 	// main loop
 	phase = 0;
 	duckx2 = 660;
+	t0 = Time();
 	while (True)
 	{
 		// animate water
@@ -59,11 +62,16 @@ int main()
 		duckx = float2int(duckx2 + 0.5f);
 		DrawImg(DuckImg, duckx, 360);
 
+		// delta time
+		t = Time();
+		dt = t - t0;
+		t0 = t;
+
 		// increase animation phase
-		phase += ANIMSPEED;
+		phase += ANIMSPEED/10000*dt;
 
 		// shift duck
-		duckx2 -= 8*ANIMSPEED;
+		duckx2 -= 8*ANIMSPEED/10000*dt;
 		if (duckx2 < -200) duckx2 = 660;
 
 		// display update
@@ -73,6 +81,7 @@ int main()
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 	}
 
 	return 0;

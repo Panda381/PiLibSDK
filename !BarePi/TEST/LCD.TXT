@@ -1,0 +1,8 @@
+^YTest LCD SPI display^0
+
+Supported display modules:
+- LCD320x240 (ST7789)
+- LCD160x80 (ST7735)
+
+^W[Y]^0 ....... Exit
+^WAlt+[X]^0 ... Screenshot

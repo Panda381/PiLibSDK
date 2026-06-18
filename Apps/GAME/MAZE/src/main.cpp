@@ -263,6 +263,8 @@ int main()
 			Reboot();
 		else if (ch == KEY_SCREENSHOT)
 			ScreenShot();
+		else if (ch == KEY_INSERT)
+			LCDRezoom();
 		else if ((ch == KEY_B) || (ch == KEY_A) || (ch == KEY_X))
 			break;
 	}
@@ -402,6 +404,10 @@ int main()
 
 		case KEY_SCREENSHOT:
 			ScreenShot();
+			break;
+
+		case KEY_INSERT:
+			LCDRezoom();
 			break;
 
 		// no key

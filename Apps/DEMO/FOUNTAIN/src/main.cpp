@@ -33,6 +33,7 @@ int main()
 	int x, y, m, n, s;
 	float i, p, q, r;
 	float a = 0;
+	u32 t0, t;
 	m = 0;
 	n = 0;
 
@@ -43,12 +44,14 @@ int main()
 #define COL	COL_MAGENTA
 
 	// main loop
+	t0 = Time();
 	while (True)
 	{
 		// keyboard
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 
 		// clear screen
 		DrawClear();
@@ -78,7 +81,10 @@ int main()
 		DispUpdate();
 
 		// animation
-		a += 0.02f;
+		t = Time();
+		i = t - t0;
+		t0 = t;
+		a += 0.02f/10000*i;;
 		if (a >= (float)PI2) a -= (float)PI2;
 	}
 

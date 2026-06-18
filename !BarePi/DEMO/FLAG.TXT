@@ -4,3 +4,4 @@ Demo - fluttering flag
 
 ^W[Y]^0 ....... Exit
 ^WAlt+[X]^0 ... Screenshot
+^WAlt+[A]^0 ... LCD zoom

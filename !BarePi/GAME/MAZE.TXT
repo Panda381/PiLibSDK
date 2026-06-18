@@ -9,3 +9,4 @@ Find way out of maze
 ^W[A]^0 ....... show door
 ^W[Y]^0 ....... quit
 ^WAlt+[X]^0 ... screenshot
+^WAlt+[A]^0 ... LCD zoom

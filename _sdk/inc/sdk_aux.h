@@ -1,7 +1,7 @@
 
 // ****************************************************************************
 //
-//                     Auxiliaries - UART1, SPI1, SPI2
+//                      Auxiliaries - UART1, SPI1
 //
 // ****************************************************************************
 // Note - AUX timing is derived from the VideoCore system clock, which may change during operation.
@@ -80,8 +80,7 @@ UART1 (Mini-UART):
 */
 
 /*
-SPI1, SPI2:
-SPI2 is present in Pi 4 and higher chips, but it is not mapped to any GPIO pins and is therefore unusable.
+SPI1:
 	- speed up to SPI clock 125 MHz
 	- single-beat bit length 1 - 32 bits
 	- signle-beat variabe bit length 1 - 24 bits
@@ -103,16 +102,16 @@ SPI2 is present in Pi 4 and higher chips, but it is not mapped to any GPIO pins 
 #define UART1_RTSLEVEL_3	0	// 3 empty spaces left
 #define UART1_RTSLEVEL_4	3	// 4 empty spaces left
 
-// SPI1/SPI2 extra data out hold time in system clocks
-#define SPI12_HOLD_NO		0	// no additional clocks
-#define SPI12_HOLD_1		1	// 1 additional clock
-#define SPI12_HOLD_4		2	// 4 additional clocks
-#define SPI12_HOLD_7		3	// 7 additional clocks
+// SPI1 extra data out hold time in system clocks
+#define SPI1_HOLD_NO		0	// no additional clocks
+#define SPI1_HOLD_1		1	// 1 additional clock
+#define SPI1_HOLD_4		2	// 4 additional clocks
+#define SPI1_HOLD_7		3	// 7 additional clocks
 
-// SPI1/SPI2 pattern output CSx bits
-#define SPI12_CS0		B0	// output on CS0 pin
-#define SPI12_CS1		B1	// output on CS0 pin
-#define SPI12_CS2		B2	// output on CS0 pin
+// SPI1 pattern output CSx bits
+#define SPI1_CS0		B0	// output on CS0 pin
+#define SPI1_CS1		B1	// output on CS0 pin
+#define SPI1_CS2		B2	// output on CS0 pin
 
 // Mini-UART structure
 typedef struct
@@ -282,7 +281,6 @@ typedef struct
 		struct {
 		        AuxSPI_t spi1;	// 0x80 (64 = 0x40): SPI1
 		        AuxSPI_t spi2;	// 0xC0 (64 = 0x40): SPI2
-	// SPI2 is present in Pi 4 and higher chips, but it is not mapped to any GPIO pins and is therefore unusable.
 		};
 	};
 
@@ -475,7 +473,7 @@ NOINLINE u32 UART1_Print(const char* fmt, ...);
 
 #endif // USE_STREAM
 
-// ==== SPI1, SPI2
+// ==== SPI1
 // SPI2 is present in Pi 4 and higher chips, but it is not mapped to any GPIO pins and is therefore unusable.
 
 // Before enable SPI1/SPI2, setup GPIO pins with GPIO_Func(gpio, GPIO_FUNC_AF4). Use GPIOs:
@@ -494,225 +492,152 @@ NOINLINE u32 UART1_Print(const char* fmt, ...);
 // SPI2_CE1_N	GPIO44
 // SPI2_CE2_N	GPIO45
 
-// SPI1/SPI2 enable/disable/check
+// SPI1 enable/disable/check
 // - If disabled, all SPI registers are disabled and unaccessbile.
 // - GPIO pins should be set up first before enabling the SPI.
 INLINE void SPI1_Enable(void) { AUX->ENABLE |= B1; }
-INLINE void SPI2_Enable(void) { AUX->ENABLE |= B2; }
-
 INLINE void SPI1_Disable(void) { AUX->ENABLE &= ~B1; }
-INLINE void SPI2_Disable(void) { AUX->ENABLE &= ~B2; }
-
 INLINE Bool SPI1_IsEnabled(void) { return (AUX->ENABLE & B1) != 0; }
-INLINE Bool SPI2_IsEnabled(void) { return (AUX->ENABLE & B2) != 0; }
 
-// Check if SPI1/SPI2 interrupt is pending
+// Check if SPI1 interrupt is pending
 INLINE Bool SPI1_IntPending(void) { return (AUX->IRQ & B1) != 0; }
-INLINE Bool SPI2_IntPending(void) { return (AUX->IRQ & B2) != 0; }
 
-// set/get SPI1/SPI2 clock divider 0..0x0FFF (SPI1/SPI2 must be enabled first)
+// set/get SPI1 clock divider 0..0x0FFF (SPI1 must be enabled first)
 //  speed = CoreClock / ( 2 * (divider + 1) )
 //  with 250 MHz is speed in range 30517 Hz .. 125 MHz
 //  To ensure a stable frequency, use parameters "force_turbo=1" and "core_freq=..." in config.txt.
 INLINE void SPI1_SetDiv(u32 div) { AUX->spi1.CTRL0 = (AUX->spi1.CTRL0 & ~(0xfff<<20)) | (div<<20); }
-INLINE void SPI2_SetDiv(u32 div) { AUX->spi2.CTRL0 = (AUX->spi2.CTRL0 & ~(0xfff<<20)) | (div<<20); }
-
 INLINE u32 SPI1_GetDiv(void) { return (AUX->spi1.CTRL0 >> 20) & 0xfff; }
-INLINE u32 SPI2_GetDiv(void) { return (AUX->spi2.CTRL0 >> 20) & 0xfff; }
 
-// convert SPI1/SPI2 speed in Hz (typically 30517 Hz .. 125 MHz) to clock divider (0..0x0FFF)
+// convert SPI1 speed in Hz (typically 30517 Hz .. 125 MHz) to clock divider (0..0x0FFF)
 u32 SPI_SpeedToDiv(u32 speed);
 
-// convert SPI1/SPI2 clock divider (0..0x0FFF) to speed in Hz (typically 30517 Hz .. 125 MHz)
+// convert SPI1 clock divider (0..0x0FFF) to speed in Hz (typically 30517 Hz .. 125 MHz)
 u32 SPI_DivToSpeed(u32 div);
 
-// Calculate SPI1/SPI2 speed error in percent, as the difference between the desired and actual speed.
+// Calculate SPI1 speed error in percent, as the difference between the desired and actual speed.
 double SPI_SpeedErr(u32 speed);
 
-// set SPI1/SPI2 speed 30517..125000000 Hz (or another range with CoreClock other than 250 MHz)
-// SPI1/SPI2 must be enabled first.
+// set SPI1 speed 30517..125000000 Hz (or another range with CoreClock other than 250 MHz)
+// SPI1 must be enabled first.
 //  To ensure a stable frequency, use parameters "force_turbo=1" and "core_freq=..." in config.txt.
 INLINE void SPI1_SetSpeed(u32 speed) { SPI1_SetDiv(SPI_SpeedToDiv(speed)); }
-INLINE void SPI2_SetSpeed(u32 speed) { SPI2_SetDiv(SPI_SpeedToDiv(speed)); }
 
-// get SPI1/SPI2 current speed in Hz (SPI1/SPI2 must be enabled first)
+// get SPI1 current speed in Hz (SPI1 must be enabled first)
 INLINE u32 SPI1_GetSpeed(void) { return SPI_DivToSpeed(SPI1_GetDiv()); }
-INLINE u32 SPI2_GetSpeed(void) { return SPI_DivToSpeed(SPI2_GetDiv()); }
-
-// convert SPI1/SPI2 speed in Hz (typically 30517 Hz .. 125 MHz) to clock divider (0..0x0FFF)
-u32 SPI_SpeedToDiv(u32 speed);
-
-// convert SPI1/SPI2 clock divider (0..0x0FFF) to speed in Hz (typically 30517 Hz .. 125 MHz)
-u32 SPI_DivToSpeed(u32 div);
-
-// Calculate SPI1/SPI2 speed error in percent, as the difference between the desired and actual speed.
-double SPI_SpeedErr(u32 speed);
 
 // set word length 1..32, number of bits to shift (only in fixed shift mode SPIx_FixLen())
 INLINE void SPI1_SetLen(int len) { AUX->spi1.CTRL0 = (AUX->spi1.CTRL0 & ~0x3f) | len; }
-INLINE void SPI2_SetLen(int len) { AUX->spi2.CTRL0 = (AUX->spi2.CTRL0 & ~0x3f) | len; }
 
 // set transmitter shift direction - start with MSB (most significant bit) or with LSB (least significant bit)
 INLINE void SPI1_OutMSB(void) { AUX->spi1.CTRL0 |= B6; }
-INLINE void SPI2_OutMSB(void) { AUX->spi2.CTRL0 |= B6; }
-
 INLINE void SPI1_OutLSB(void) { AUX->spi1.CTRL0 &= ~B6; }
-INLINE void SPI2_OutLSB(void) { AUX->spi2.CTRL0 &= ~B6; }
 
 // set receiver shift direction - start with MSB (most significant bit) or with LSB (least significant bit)
 INLINE void SPI1_InMSB(void) { AUX->spi1.CTRL1 |= B1; }
-INLINE void SPI2_InMSB(void) { AUX->spi2.CTRL1 |= B1; }
-
 INLINE void SPI1_InLSB(void) { AUX->spi1.CTRL1 &= ~B1; }
-INLINE void SPI2_InLSB(void) { AUX->spi2.CTRL1 &= ~B1; }
 
 // set idle clock line to LOW or HIGH
 INLINE void SPI1_IdleLow(void) { AUX->spi1.CTRL0 &= ~B7; }
-INLINE void SPI2_IdleLow(void) { AUX->spi2.CTRL0 &= ~B7; }
-
 INLINE void SPI1_IdleHigh(void) { AUX->spi1.CTRL0 |= B7; }
-INLINE void SPI2_IdleHigh(void) { AUX->spi2.CTRL0 |= B7; }
 
 // set data to be clocked OUT on Falling or Rising edge of the clock
 INLINE void SPI1_OutFall(void) { AUX->spi1.CTRL0 &= ~B8; }
-INLINE void SPI2_OutFall(void) { AUX->spi2.CTRL0 &= ~B8; }
-
 INLINE void SPI1_OutRise(void) { AUX->spi1.CTRL0 |= B8; }
-INLINE void SPI2_OutRise(void) { AUX->spi2.CTRL0 |= B8; }
 
 // set data to be clocked IN on Falling or Rising edge of the clock
 INLINE void SPI1_InFall(void) { AUX->spi1.CTRL0 &= ~B10; }
-INLINE void SPI2_InFall(void) { AUX->spi2.CTRL0 &= ~B10; }
-
 INLINE void SPI1_InRise(void) { AUX->spi1.CTRL0 |= B10; }
-INLINE void SPI2_InRise(void) { AUX->spi2.CTRL0 |= B10; }
 
 // Enable/Disable clearing both FIFO (must be disabled during normal operation)
 INLINE void SPI1_FlushEnable(void) { AUX->spi1.CTRL0 |= B9; }
-INLINE void SPI2_FlushEnable(void) { AUX->spi2.CTRL0 |= B9; }
-
 INLINE void SPI1_FlushDisable(void) { AUX->spi1.CTRL0 &= ~B9; }
-INLINE void SPI2_FlushDisable(void) { AUX->spi2.CTRL0 &= ~B9; }
-
 INLINE void SPI1_Flush(void) { SPI1_FlushEnable(); SPI1_FlushDisable(); }
-INLINE void SPI2_Flush(void) { SPI2_FlushEnable(); SPI2_FlushDisable(); }
 
-// Soft Enable/Disable SPI1/SPI2 - FIFO can still be written or read if disable
+// Soft Enable/Disable SPI1 - FIFO can still be written or read if disable
 INLINE void SPI1_SoftEnable(void) { AUX->spi1.CTRL0 |= B11; }
-INLINE void SPI2_SoftEnable(void) { AUX->spi2.CTRL0 |= B11; }
-
 INLINE void SPI1_SoftDisable(void) { AUX->spi1.CTRL0 &= ~B11; }
-INLINE void SPI2_SoftDisable(void) { AUX->spi2.CTRL0 &= ~B11; }
 
-// Set extra data out hold time in system clocks SPI12_HOLD_*
+// Set extra data out hold time in system clocks SPI1_HOLD_*
 //  Holds MOSI data additional more time after clock edge.
 INLINE void SPI1_SetHold(int hold) { AUX->spi1.CTRL0 = (AUX->spi1.CTRL0 & ~(3<<12)) | (hold<<12); }
-INLINE void SPI2_SetHold(int hold) { AUX->spi2.CTRL0 = (AUX->spi2.CTRL0 & ~(3<<12)) | (hold<<12); }
 
 // Set variable or fixed length of transmitted data
 //  - On fixed length - length 1..32 is set by the function SPIx_SetLen().
 //  - On variable length - length 1..24 is set in bits 24..28 of transmitted data
 INLINE void SPI1_VarLen(void) { AUX->spi1.CTRL0 |= B14; }
-INLINE void SPI2_VarLen(void) { AUX->spi2.CTRL0 |= B14; }
-
 INLINE void SPI1_FixLen(void) { AUX->spi1.CTRL0 &= ~B14; }
-INLINE void SPI2_FixLen(void) { AUX->spi2.CTRL0 &= ~B14; }
 
 // Set variable or fixed CS pattern of transmitted data
 //  - On fixed pattern - CSx pins are set with functions SPIx_CSx()
 //  - On variable pattern - CSx pins are set in bits 29..31 of transmitted data (variable length must be enabled too)
 INLINE void SPI1_VarCS(void) { AUX->spi1.CTRL0 |= B15; }
-INLINE void SPI2_VarCS(void) { AUX->spi2.CTRL0 |= B15; }
-
 INLINE void SPI1_FixCS(void) { AUX->spi1.CTRL0 &= ~B15; }
-INLINE void SPI2_FixCS(void) { AUX->spi2.CTRL0 &= ~B15; }
 
 // Enable/Disable post-input mode (input data are taken 1 bit later)
 INLINE void SPI1_PostInEnable(void) { AUX->spi1.CTRL0 |= B16; }
-INLINE void SPI2_PostInEnable(void) { AUX->spi2.CTRL0 |= B16; }
-
 INLINE void SPI1_PostInDisable(void) { AUX->spi1.CTRL0 &= ~B16; }
-INLINE void SPI2_PostInDisable(void) { AUX->spi2.CTRL0 &= ~B16; }
 
-// Select CSx pattern output - combination of SPI12_CS* flags (only in fixed mode SPIx_FixCS())
+// Select CSx pattern output - combination of SPI1_CS* flags (only in fixed mode SPIx_FixCS())
 INLINE void SPI1_CS(int cs) { AUX->spi1.CTRL0 = (AUX->spi1.CTRL0 & ~(7<<17)) | (cs<<17); }
-INLINE void SPI2_CS(int cs) { AUX->spi2.CTRL0 = (AUX->spi2.CTRL0 & ~(7<<17)) | (cs<<17); }
 
 // Enable/Disable clear receiver shift register between transactions
 //  If clear is disabled, it will concatenate data in FIFO entries - you'll get 0x0081 0x8146 instead of 0x0081 0x0046.
 INLINE void SPI1_ClearEnable(void) { AUX->spi1.CTRL1 &= ~B0; }
-INLINE void SPI2_ClearEnable(void) { AUX->spi2.CTRL1 &= ~B0; }
-
 INLINE void SPI1_ClearDisable(void) { AUX->spi1.CTRL1 |= B0; }
-INLINE void SPI2_ClearDisable(void) { AUX->spi2.CTRL1 |= B0; }
 
 // Enable/Disable interrupt when all data are sent and transmit shift register is empty (= all done)
 INLINE void SPI1_DoneIntEnable(void) { AUX->spi1.CTRL1 |= B6; }
-INLINE void SPI2_DoneIntEnable(void) { AUX->spi2.CTRL1 |= B6; }
-
 INLINE void SPI1_DoneIntDisable(void) { AUX->spi1.CTRL1 &= ~B6; }
-INLINE void SPI2_DoneIntDisable(void) { AUX->spi2.CTRL1 &= ~B6; }
 
 // Enable/Disable interrupt when transmit FIFO is empty (= Tx empty)
 INLINE void SPI1_TxEmptyIntEnable(void) { AUX->spi1.CTRL1 |= B7; }
-INLINE void SPI2_TxEmptyIntEnable(void) { AUX->spi2.CTRL1 |= B7; }
-
 INLINE void SPI1_TxEmptyIntDisable(void) { AUX->spi1.CTRL1 &= ~B7; }
-INLINE void SPI2_TxEmptyIntDisable(void) { AUX->spi2.CTRL1 &= ~B7; }
 
 // Set additional clock cycles 0..7 when CS goes high after end of transmission
 INLINE void SPI1_CSClk(int clk) { AUX->spi1.CTRL1 = (AUX->spi1.CTRL1 & ~(7<<8)) | (clk<<7); }
-INLINE void SPI2_CSClk(int clk) { AUX->spi2.CTRL1 = (AUX->spi2.CTRL1 & ~(7<<8)) | (clk<<7); }
 
 // get number of remaining bits to be sent 0..32
 INLINE int SPI1_Remain(void) { return AUX->spi1.STAT & 0x3f; }
-INLINE int SPI2_Remain(void) { return AUX->spi2.STAT & 0x3f; }
 
 // check if busy transferring data
 INLINE Bool SPI1_IsBusy(void) { return (AUX->spi1.STAT & B6) != 0; }
-INLINE Bool SPI2_IsBusy(void) { return (AUX->spi2.STAT & B6) != 0; }
 
 // check if receiver FIFO is empty
 INLINE Bool SPI1_RxIsEmpty(void) { return (AUX->spi1.STAT & B7) != 0; }
-INLINE Bool SPI2_RxIsEmpty(void) { return (AUX->spi2.STAT & B7) != 0; }
 
 // check if receiver FIFO is full
 INLINE Bool SPI1_RxIsFull(void) { return (AUX->spi1.STAT & B8) != 0; }
-INLINE Bool SPI2_RxIsFull(void) { return (AUX->spi2.STAT & B8) != 0; }
 
 // check if transmit FIFO is empty
 INLINE Bool SPI1_TxIsEmpty(void) { return (AUX->spi1.STAT & B9) != 0; }
-INLINE Bool SPI2_TxIsEmpty(void) { return (AUX->spi2.STAT & B9) != 0; }
 
 // check if transmit FIFO is full
 INLINE Bool SPI1_TxIsFull(void) { return (AUX->spi1.STAT & B10) != 0; }
-INLINE Bool SPI2_TxIsFull(void) { return (AUX->spi2.STAT & B10) != 0; }
 
 // get number of entries 0..4 in receiver FIFO
 INLINE int SPI1_RxEntry(void) { return (AUX->spi1.STAT >> 16) & 0x0f; }
-INLINE int SPI2_RxEntry(void) { return (AUX->spi2.STAT >> 16) & 0x0f; }
 
 // get number of entries 0..4 in transmit FIFO
 INLINE int SPI1_TxEntry(void) { return (AUX->spi1.STAT >> 24) & 0x0f; }
-INLINE int SPI2_TxEntry(void) { return (AUX->spi2.STAT >> 24) & 0x0f; }
 
 // get received data without deleting from FIFO
 INLINE u32 SPI1_Peek(void) { return AUX->spi1.PEEK; }
-INLINE u32 SPI2_Peek(void) { return AUX->spi2.PEEK; }
 
 // read data
 INLINE u32 SPI1_Read(void) { return AUX->spi1.IO[0]; }
-INLINE u32 SPI2_Read(void) { return AUX->spi2.IO[0]; }
 
 // send middle data, CS continue to hold
+//  If you are sending data with fewer than 32 bits and transmitting in
+//  MSB mode, shift the data to the left toward the higher-order bits.
 INLINE void SPI1_Write(u32 data) { AUX->spi1.TXHOLD[0] = data; }
-INLINE void SPI2_Write(u32 data) { AUX->spi2.TXHOLD[0] = data; }
 
 // send last data, CS will de-assert
+//  If you are sending data with fewer than 32 bits and transmitting in
+//  MSB mode, shift the data to the left toward the higher-order bits.
 INLINE void SPI1_WriteLast(u32 data) { AUX->spi1.IO[0] = data; }
-INLINE void SPI2_WriteLast(u32 data) { AUX->spi2.IO[0] = data; }
 
-// initialize SPI2 as master, use 8-bit data, use fixed CS
+// initialize SPI as master, use 8-bit data, use fixed CS
 //   speed ...... transfer speed in Hz (typically 30517..125000000 Hz)
 //   msb ........ start with: True=MSB (most significant bit), False=LSB (least significant bit)
 //   idlehigh ... idle clock line is : True=high, False=low
@@ -720,11 +645,9 @@ INLINE void SPI2_WriteLast(u32 data) { AUX->spi2.IO[0] = data; }
 //   inrise ..... IN data are clocked on: True=rising edge, False=falling edge
 // GPIO pins should be set up first before enabling the SPI.
 void SPI1_Init(u32 speed, Bool msb, Bool idlehigh, Bool outrise, Bool inrise);
-void SPI2_Init(u32 speed, Bool msb, Bool idlehigh, Bool outrise, Bool inrise);
 
-// terminate SPI1/SPI2
+// terminate SPI1
 void SPI1_Term(void);
-void SPI2_Term(void);
 
 // write/read SPI1 data (must be initialized with SPI1_Init())
 //  cs ... chip select index 0..2
@@ -732,6 +655,5 @@ void SPI2_Term(void);
 //  rbuf ... read buffer (to receive; NULL=not used)
 //  num ... number of bytes
 void SPI1_WriteRead(int cs, const u8* wbuf, u8* rbuf, int num);
-void SPI2_WriteRead(int cs, const u8* wbuf, u8* rbuf, int num);
 
 #endif // _SDK_AUX_H

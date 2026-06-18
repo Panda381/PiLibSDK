@@ -143,6 +143,11 @@ Bool Open()
 			ScreenShot(); //  Screenshot - This may take a few seconds to write.
 			break;
 
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
+
 		case KEY_Y:
 			return False;
 		}
@@ -476,8 +481,10 @@ void Game()
 			ch = KeyGet();
 			if (ch == KEY_SCREENSHOT)
 				ScreenShot();
-			else
-				if (ch == KEY_Y) return;
+			else if (ch == KEY_INSERT)
+				LCDRezoom();
+			else if (ch == KEY_Y)
+				return;
 		}
 
 		// auto player
@@ -572,6 +579,11 @@ void Game()
 
 		case KEY_SCREENSHOT:
 			ScreenShot();
+			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
 			break;
 
 		case KEY_Y:	// quit game

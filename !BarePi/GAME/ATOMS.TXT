@@ -9,3 +9,4 @@ Game of exploding atoms
 ^W[A]^0 ........ put stone
 ^W[Y]^0 ........ quit
 ^WAlt+[X]^0 .... screenshot
+^WAlt+[A]^0 .... LCD zoom

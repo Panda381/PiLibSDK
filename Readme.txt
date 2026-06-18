@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.30, in progress - under development
-Last update: 06/05/2026
+Pre-alpha version 0.40, in progress - under development
+Last update: 06/18/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -108,6 +108,7 @@ Directories
 !BarePi_3 ... content of SD card for kit BarePi and ZeroTiny - executables for module Zero 2 32-bit
 !BarePi_4 ... content of SD card for kit BarePi and ZeroTiny - executables for module Zero 2 64-bit
 _devices ... devices: BarePi = modular microchip kit and ZeroTiny device
+_drv ... drivers
 _font ... fonts
 _lib ... libraries
 _sdk ... SDK (peripherals drivers)
@@ -198,7 +199,8 @@ MP3
  MP3 ... MP3 player
 
 Test
- TESTLED ... test BarePi bus with TESTLED module
+ I2CSCAN ... Scan I2C0 and I2C1 bus
+ TESTLED ... Test BarePi bus with TESTLED module
 
 
 ----------------

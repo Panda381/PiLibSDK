@@ -93,6 +93,11 @@ int main()
 			if (Page >= PAGENUM) Page = 0;
 			DispPage();
 			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
 		}
 	}
 

@@ -1,0 +1,4 @@
+^YScan I2C0 and I2C1 bus^0
+
+^W[Y]^0 ....... Exit
+^WAlt+[X]^0 ... Screenshot

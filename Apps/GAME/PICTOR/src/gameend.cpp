@@ -121,6 +121,11 @@ void GameEnd()
 				ScreenShot();
 				break;
 
+			// LCD display rezoom
+			case KEY_INSERT:
+				LCDRezoom();
+				break;
+
 			case KEY_A:
 				// move top table
 				memmove(&Top[1], &Top[0], (TOP_NUM-1)*sizeof(sTop));
@@ -145,6 +150,7 @@ void GameEnd()
 					{
 						key = KeyGet();
 						if (key == KEY_SCREENSHOT) ScreenShot();
+						if (key == KEY_INSERT) LCDRezoom();
 						if (key == KEY_Y) return;
 						if (key == KEY_A) break;
 					}

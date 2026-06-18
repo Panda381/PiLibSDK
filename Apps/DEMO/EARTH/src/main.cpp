@@ -64,6 +64,7 @@ int main()
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 
 		// Y loop
 		for (y = -GLOBER; y < +GLOBER; y++)
@@ -166,7 +167,12 @@ int main()
 		}
 
 		// shift angle
-		off -= 1;
+		t2 = Time();
+		i = t2 - t;
+		t = t2;
+		i = i / 10000;
+		if (i < 1) i = 1;
+		off -= i;
 		while (off < EARTHW) off += EARTHW;
 
 		// display update

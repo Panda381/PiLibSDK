@@ -24,6 +24,7 @@ SRC += ${PI_SDK_DIR}/src/sdk_mailbox.cpp
 SRC += ${PI_SDK_DIR}/src/sdk_mailprop.cpp
 SRC += ${PI_SDK_DIR}/src/sdk_mmu.cpp
 SRC += ${PI_SDK_DIR}/src/sdk_multicore.cpp
+SRC += ${PI_SDK_DIR}/src/sdk_pcm.cpp
 SRC += ${PI_SDK_DIR}/src/sdk_pwm.cpp
 SRC += ${PI_SDK_DIR}/src/sdk_pwr.cpp
 SRC += ${PI_SDK_DIR}/src/sdk_rng.cpp

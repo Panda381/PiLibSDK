@@ -132,13 +132,18 @@ void DispUpdate()
 
 	// auto-update
 	sFrameBuffer* f = &FrameBuffer;
-	f->lastupdate = Time();	// time in [us] of last display update DispUpdate()
 
 	// drawing directly to screen buffer
 	if (f->drawbuf == f->screenbuf)
 	{
 		// update data cache
 		CleanDataCache();
+
+#if USE_LCD && USE_LCD320x240 // 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240), 2=use core3
+		LCDDisp.UpdateMain();	// display update
+#endif
+
+		f->lastupdate = Time();	// time in [us] of last display update DispUpdate()
 		return;
 	}
 
@@ -216,6 +221,12 @@ void DispUpdate()
 
 	// update data cache
 	CleanDataCache();
+
+#if USE_LCD && USE_LCD320x240 // 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240), 2=use core3
+	LCDDisp.UpdateMain();	// display update
+#endif
+
+	f->lastupdate = Time();	// time in [us] of last display update DispUpdate()
 }
 
 // update draw buffer with auto interval

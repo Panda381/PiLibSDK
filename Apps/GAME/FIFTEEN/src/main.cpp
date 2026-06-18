@@ -640,6 +640,11 @@ void Game()
 			ScreenShot();
 			break;
 
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
+			break;
+
 		// solver
 		case KEY_B:
 			Solver();
@@ -714,6 +719,11 @@ Bool Select()
 
 		case KEY_SCREENSHOT:
 			ScreenShot();
+			break;
+
+		// LCD display rezoom
+		case KEY_INSERT:
+			LCDRezoom();
 			break;
 
 		case KEY_LEFT:
@@ -791,6 +801,8 @@ int main()
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
+		else if (key == KEY_INSERT)
+			LCDRezoom();
 		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
 			break;
 	}

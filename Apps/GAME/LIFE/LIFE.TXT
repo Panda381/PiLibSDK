@@ -1,5 +1,4 @@
-^YLife^0
-Cell life simulator
+^YLife^0 Cell life simulator
 ^WLeft^0 ....... left
 ^WRight^0 ...... right
 ^WUp^0 ......... up
@@ -9,6 +8,7 @@ Cell life simulator
 ^W[X]^0 ........ next slot
 ^W[Y]^0 ........ quit
 ^WAlt+[X]^0 .... screenshot
+^WAlt+[A]^0 .... LCD zoom
 Cell rules:
 ^W3 cells^0 .... born new cell
 ^W2 cells^0 .... stable state

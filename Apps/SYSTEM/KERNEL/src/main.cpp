@@ -1432,6 +1432,11 @@ int main()
 			case KEY_SCREENSHOT:
 				ScreenShot();
 				break;
+
+			// LCD display rezoom
+			case KEY_INSERT:
+				LCDRezoom();
+				break;
 			}
 		}
 

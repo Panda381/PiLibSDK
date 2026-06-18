@@ -62,10 +62,6 @@
 #include "inc/lib_print.h"	// Formatted print
 #endif
 
-#if USE_PWMSND		// 1=use PWM sound output, 0=not used (lib_pwmsnd.*)
-#include "inc/lib_pwmsnd.h"	// PWM sound output
-#endif
-
 #if USE_RAND		// 1=use Random number generator, 0=not used (lib_rand.*)
 #include "inc/lib_rand.h"	// random number generator
 #endif

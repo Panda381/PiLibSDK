@@ -8,3 +8,4 @@ Kresby: Miroslav Netik
 ^WLeft/Right^0 .... page
 ^W[Y]^0 ........... Exit
 ^WAlt+[X]^0 ....... Screenshot
+^WAlt+[A]^0 ....... LCD zoom

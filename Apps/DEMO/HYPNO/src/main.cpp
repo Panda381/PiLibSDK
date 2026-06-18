@@ -40,6 +40,7 @@ int main()
 {
 	int x, y, k;
 	float r, a, y2;
+	u32 t0, t;
 	u32* d;
 
 	// inicialize source image
@@ -76,10 +77,14 @@ int main()
 
 	// main loop
 	a = 0;
+	t0 = Time();
 	while (True)
 	{
 		SetMat(a);
-		a -= 0.1f;
+		t = Time();
+		k = t - t0;
+		t0 = t;
+		a -= 0.1f/10000*k;
 		if (a < 0) a += PI*2;
 
 		// draw image with transformation
@@ -92,6 +97,7 @@ int main()
 		int key = KeyGet();
 		if (key == KEY_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
 	}
 
 	return 0;

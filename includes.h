@@ -17,6 +17,9 @@
 // SDK includes
 #include "_sdk/_include.h"
 
+// drivers includes
+#include "_drv/_include.h"
+
 // library includes
 #include "_lib/_include.h"
 
