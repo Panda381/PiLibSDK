@@ -26,7 +26,7 @@ bare-metal use are minimal.
 
 Sample programs have been prepared for the BarePi modular microchip kit.
 (links: https://www.breatharian.eu/hw/barepi/index_en.html,
-https://github.com/Panda381/BarePi). Of course, you don’t have to follow the
+https://github.com/Panda381/BarePi). Of course, you don't have to follow the
 hardware wiring exactly, but this is the most common pin-to-signal mapping.
 The main device is the ZeroTiny game console, which corresponds to the
 configuration of the "Zero," "Base," and "KeyPad" modules.
@@ -75,7 +75,7 @@ newer architecture. In addition, the Zero 2 module has 4 cores, while the
 Zero 1 has only one core. Therefore, it is strongly recommended to use the
 Zero 2 module. Use the Zero 1 module only if you own it and have no better use
 for it. The Zero 2 module can be operated in 32-bit or 64-bit mode. The
-compilations are prepared for both modes. From a user’s point of view, there is
+compilations are prepared for both modes. From a user's point of view, there is
 no noticeable difference between the modes. It is recommended to prefer 64-bit
 mode, which may be slightly faster in some cases.
 
@@ -113,7 +113,7 @@ License
 =======
 All of my source code and data are completely free to use for any purpose. The
 exception is certain files derived from third-party sources - these are subject
-to the original author’s license. This includes most fonts, as well as portions
+to the original author's license. This includes most fonts, as well as portions
 of source files taken from the Circle library and Linux code - these sections
 are marked in the source files.
 
