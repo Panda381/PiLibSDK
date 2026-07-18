@@ -74,14 +74,32 @@ USE_TREE=1
 # Select driver modules (folder _drv)
 # If you add a new flag, add the update flag to _drv\_makefile.inc.
 
+# 1=use BarePi CalcKey, 0=not used (drv_calckey.*)
+USE_CALCKEY=0
+
 # 1=use EEPROM driver, 0=not used (drv_eeprom.*)
 USE_EEPROM=1
 
 # 1=use I2C bus driver, 0=not used (drv_i2cbus.*)
 USE_I2CBUS=1
 
+# 1=use BarePi KeyPad, 0=not used (drv_keypad.*)
+USE_KEYPAD=1
+
 # 1=use LCD SPI display driver, 0=not used (drv_lcd.*)
 USE_LCD=1
+
+# 1=use LCD TEXT I2C display driver, 0=not used (drv_lcdtxt.*)
+USE_LCDTXT=0
+
+# 1=use BarePi LED12 display, 0=not used (drv_led12.*)
+USE_LED12=0
+
+# 1=use BarePi MiniKey, 0=not used (drv_minikey.*)
+USE_MINIKEY=1
+
+# 1=use BarePi 12-channel PORT module, 0=not used (drv_port12.*)
+USE_PORT12=0
 
 # 1=use PWM sound output, 0=not used (drv_pwmsnd.*)
 USE_PWMSND=1

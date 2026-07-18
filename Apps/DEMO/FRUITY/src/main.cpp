@@ -629,13 +629,13 @@ int main()
 		switch (KeyGet())
 		{
 		// mute
-		case KEY_A:
+		case KEY_PAD_A:
 			Mute = !Mute;
 			NewLoop();
 			break;
 
 		// exit
-		case KEY_Y:
+		case KEY_PAD_Y:
 			Reboot();
 			break;
 
@@ -659,7 +659,7 @@ int main()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 		}

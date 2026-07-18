@@ -365,16 +365,16 @@ Bool DoKeys()
 		if (ch == NOKEY) break;
 
 		// quit the game
-		if (ch == KEY_Y) return True;
+		if (ch == KEY_PAD_Y) return True;
 
 		// screenshot
 		if (ch == KEY_SCREENSHOT) ScreenShot();
 
 		// LCD display rezoom
-		if (ch == KEY_INSERT) LCDRezoom();
+		if (ch == KEY_ZOOM) LCDRezoom();
 
 		// select weapon
-		if ((ch == KEY_B) && (WeaponMax > 0) && (Shields >= 0))
+		if ((ch == KEY_PAD_B) && (WeaponMax > 0) && (Shields >= 0))
 		{
 			Weapon++;
 			if (Weapon > WeaponMax) Weapon = 1;
@@ -382,7 +382,7 @@ Bool DoKeys()
 		}
 
 		// select weapon
-		if ((ch == KEY_X) && (WeaponMax > 0) && (Shields >= 0))
+		if ((ch == KEY_PAD_X) && (WeaponMax > 0) && (Shields >= 0))
 		{
 			Weapon--;
 			if (Weapon < 1) Weapon = WeaponMax;
@@ -451,7 +451,7 @@ void DoShooting()
 #if AUTOSHOOT	// DEBUG: 1=autoshoot
 	if (True)
 #else
-	if (KeyPressed(KEY_A))
+	if (KeyPressed(KEY_PAD_A))
 #endif
 	{
 		// playing sound of machine gun
@@ -1068,13 +1068,13 @@ int main()
 	while ((u32)(Time() - t1) < 5000000)
 	{
 		int key = KeyGet();
-		if (key == KEY_Y)
+		if (key == KEY_PAD_Y)
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
-		else if (key == KEY_INSERT)
+		else if (key == KEY_ZOOM)
 			LCDRezoom();
-		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
+		else if ((key == KEY_PAD_B) || (key == KEY_PAD_A) || (key == KEY_PAD_X))
 			break;
 	}
 	StopSound();

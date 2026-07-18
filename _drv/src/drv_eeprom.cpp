@@ -12,11 +12,23 @@
 // EEPROM models
 const sEEPROMmodel EEPROMmodelList[EEPROM_MODEL_NUM] = {
 	// sizebits  pagebits
-	{	12,	5, },	// EEPROM_MODEL_4K,	// AT24C32, 4 KB, page 32 bytes
-	{	13,	5, },	// EEPROM_MODEL_8K,	// AT24C64, 8 KB, page 32 bytes
-	{	14,	6, },	// EEPROM_MODEL_16K,	// AT24C128, 16 KB, page 64 bytes
-	{	15,	6, },	// EEPROM_MODEL_32K,	// AT24C256, 32 KB, page 64 bytes
-	{	16,	7, },	// EEPROM_MODEL_64K,	// 24LC512, 64 KB, page 128 bytes
+	{	0,	0, },	// EEPROM_MODEL_1,	// 0: 24C00-1, 1 B, page 1 bytes, 8-bit addressing, config magic 'BPi0'
+	{	1,	1, },	// EEPROM_MODEL_2,	// 1: 24C00-2, 2 B, page 2 bytes, 8-bit addressing, config magic 'BPi1'
+	{	2,	2, },	// EEPROM_MODEL_4,	// 2: 24C00-4, 4 B, page 4 bytes, 8-bit addressing, config magic 'BPi2'
+	{	3,	3, },	// EEPROM_MODEL_8,	// 3: 24C00-8, 8 B, page 8 bytes, 8-bit addressing, config magic 'BPi3'
+	{	4,	3, },	// EEPROM_MODEL_16,	// 4: 24C00-16, 16 B, page 8 bytes, 8-bit addressing, config magic 'BPi4'
+	{	5,	3, },	// EEPROM_MODEL_32,	// 5: 24C00-32, 32 B, page 8 bytes, 8-bit addressing, config magic 'BPi5'
+	{	6,	3, },	// EEPROM_MODEL_64,	// 6: 24C00, 64 B, page 8 bytes, 8-bit addressing, config magic 'BPi6'
+	{	7,	3, },	// EEPROM_MODEL_128,	// 7: 24C01, 128 B, page 8 bytes, 8-bit addressing, config magic 'BPi7'
+	{	8,	3, },	// EEPROM_MODEL_256,	// 8: 24C02, 256 B, page 8 bytes, 8-bit addressing, config magic 'BPi8'
+	{	9,	4, },	// EEPROM_MODEL_512,	// 9: simulated 24C04, 512 B, page 16 bytes, 16-bit addressing, config magic 'BPi9' (single-address alternative)
+	{	10,	4, },	// EEPROM_MODEL_1K,	// 10: simulated 24C08, 1 KB, page 16 bytes, 16-bit addressing, config magic 'BPiA' (single-address alternative)
+	{	11,	4, },	// EEPROM_MODEL_2K,	// 11: simulated 24C16, 2 KB, page 16 bytes, 16-bit addressing, config magic 'BPiB' (single-address alternative)
+	{	12,	5, },	// EEPROM_MODEL_4K,	// 12: 24C32, 4 KB, page 32 bytes, 16-bit addressing, config magic 'BPiC'
+	{	13,	5, },	// EEPROM_MODEL_8K,	// 13: 24C64, 8 KB, page 32 bytes, 16-bit addressing, config magic 'BPiD'
+	{	14,	6, },	// EEPROM_MODEL_16K,	// 14: 24C128, 16 KB, page 64 bytes, 16-bit addressing, config magic 'BPiE'
+	{	15,	6, },	// EEPROM_MODEL_32K,	// 15: 24C256, 32 KB, page 64 bytes, 16-bit addressing, config magic 'BPiF'
+	{	16,	7, },	// EEPROM_MODEL_64K,	// 16: 24C512, 64 KB, page 128 bytes, 16-bit addressing, config magic 'BPiG'
 };
 
 // generate random number byte
@@ -30,8 +42,8 @@ u8 cEEPROM::RandByte()
 // initialize custom EEPROM
 //  i2c ... I2C bus index (0 or 1)
 //  addr ... I2C address (0x50-0x57)
-//  sizebits ... total size in bits (12=4K, 13=8K, 14=16K, 15=32K, 16=64K)
-//  pagebits ... page size in bits (5=32B, 6=64B, 7=128B)
+//  sizebits ... total size in bits (0=1B, 1=2B, 2=4B, 3=8B, ... 12=4K, 13=8K, 14=16K, 15=32K, 16=64K)
+//  pagebits ... page size in bits (0=1B, 1=2B, 2=4B, 3=8B, 4=16B, 5=32B, 6=64B, 7=128B)
 //  speed ... transfer speed in Hz (usually 100000 to 400000, default I2C_DEF_SPEED=100000)
 void cEEPROM::InitSet(int i2c, int addr, int sizebits, int pagebits, int speed /* = I2C_DEF_SPEED */)
 {
@@ -39,8 +51,8 @@ void cEEPROM::InitSet(int i2c, int addr, int sizebits, int pagebits, int speed /
 	this->addr = addr;			// I2C base address (0x50-0x57)
 	this->speed = speed;			// transfer speed in Hz (usually 100000 to 400000)
 
-	this->sizebits = sizebits;		// total size in bits (12=4K, 13=8K, 14=16K, 15=32K, 16=64K)
-	this->pagebits = pagebits;		// page size in bits (5=32B, 6=64B, 7=128B)
+	this->sizebits = sizebits;		// total size in bits (0=1B, 1=2B, 2=4B, 3=8B, ... 12=4K, 13=8K, 14=16K, 15=32K, 16=64K)
+	this->pagebits = pagebits;		// page size in bits (0=1B, 1=2B, 2=4B, 3=8B, 4=16B, 5=32B, 6=64B, 7=128B)
 
 	this->size = 1 << sizebits;		// total size in bytes
 	this->pagesize = 1 << pagebits;		// page size in bytes
@@ -62,6 +74,7 @@ void cEEPROM::Init(int i2c, int addr, int model, int speed /* = I2C_DEF_SPEED */
 //  i2c ... I2C bus index (0 or 1)
 //  addr ... I2C address (0x50-0x57)
 //  speed ... transfer speed in Hz (usually 100000 to 400000, default I2C_DEF_SPEED=100000)
+// Only EEPROMs with 16-bit addressing (24C04 - 24C512).
 Bool cEEPROM::Detect(int i2c, int addr, int speed /* = I2C_DEF_SPEED */)
 {
 	// emergency init
@@ -74,10 +87,9 @@ Bool cEEPROM::Detect(int i2c, int addr, int speed /* = I2C_DEF_SPEED */)
 	// check EEPROM config magic 'BPi'
 	if ((buf[0] != 'B') || (buf[1] != 'P') || (buf[2] != 'i')) return False;
 
-	// prepare EEPROM model (only models 4..64KB are supported - magic 'B' to 'G')
-	if ((buf[3] < 'C') || (buf[3] > 'G')) return False;
-	int model = buf[3] - 'C';
-	model += EEPROM_MODEL_4K;
+	// prepare EEPROM model (only models 512..64KB are supported - magic '9' to 'G')
+	if (((buf[3] < 'A') || (buf[3] > 'G')) && (buf[3] != '9')) return False;
+	int model = (buf[3] == '9') ? EEPROM_MODEL_512 : (buf[3] - 'A' + EEPROM_MODEL_1K);
 
 	// initialize EEPROM
 	this->Init(i2c, addr, model, speed);
@@ -98,7 +110,16 @@ Bool cEEPROM::Read(int off, void* buf, int num)
 		if (num < n) n = num;
 
 		// read data from I2C
-		if (!I2Cbus_ReadReg16(this->i2c, this->addr, off, d, n, this->speed)) return False;
+		if (this->sizebits > 8)
+		{
+			// 16-bit addressing
+			if (!I2Cbus_ReadReg16(this->i2c, this->addr, off, d, n, this->speed)) return False;
+		}
+		else
+		{
+			// 8-bit addressing
+			if (!I2Cbus_ReadReg8(this->i2c, this->addr, off, d, n, this->speed)) return False;
+		}
 
 		// shift address
 		d += n;
@@ -122,14 +143,23 @@ Bool cEEPROM::Write(int off, const void* buf, int num)
 		if (num < n) n = num;
 
 		// write address and data
-		if (!I2Cbus_WriteReg16(this->i2c, this->addr, off, s, n, this->speed)) return False;
+		if (this->sizebits > 8)
+		{
+			// 16-bit addressing
+			if (!I2Cbus_WriteReg16(this->i2c, this->addr, off, s, n, this->speed)) return False;
+		}
+		else
+		{
+			// 8-bit addressing
+			if (!I2Cbus_WriteReg8(this->i2c, this->addr, off, s, n, this->speed)) return False;
+		}
 
-		// wait for write (time-out 20ms)
+		// wait for write (time-out EEPROM 20ms, simulated EEPROM 50ms, using 100ms because I2C bus can be busy)
 		u32 start = Time();
 		while (True)
 		{
 			if (I2Cbus_Check(this->i2c, this->addr, this->speed)) break;
-			if ((u32)(Time() - start) > 20000) return False;
+			if ((u32)(Time() - start) > 100000) return False;
 		}
 
 		// shift address
@@ -171,14 +201,23 @@ Bool cEEPROM::WritePattern(int off, int num, u32 seed /* = 0x12345678 */)
 		for (i = 0; i < n; i++) this->pagebuf[i] = this->RandByte();
 
 		// write address and data
-		if (!I2Cbus_WriteReg16(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return False;
+		if (this->sizebits > 8)
+		{
+			// 16-bit addressing
+			if (!I2Cbus_WriteReg16(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return False;
+		}
+		else
+		{
+			// 8-bit addressing
+			if (!I2Cbus_WriteReg8(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return False;
+		}
 
-		// wait for write (time-out 20ms)
+		// wait for write (time-out EEPROM 20ms, simulated EEPROM 50ms, using 100ms because I2C bus can be busy)
 		u32 start = Time();
 		while (True)
 		{
 			if (I2Cbus_Check(this->i2c, this->addr, this->speed)) break;
-			if ((u32)(Time() - start) > 20000) return False;
+			if ((u32)(Time() - start) > 100000) return False;
 		} 
 
 		// shift address
@@ -204,7 +243,16 @@ int cEEPROM::CheckPattern(int off, int num, u32 seed /* = 0x12345678 */)
 		if (num < n) n = num;
 
 		// read data from I2C
-		if (!I2Cbus_ReadReg16(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return -1;
+		if (this->sizebits > 8)
+		{
+			// 16-bit addressing
+			if (!I2Cbus_ReadReg16(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return -1;
+		}
+		else
+		{
+			// 8-bit addressing
+			if (!I2Cbus_ReadReg8(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return -1;
+		}
 
 		// verify data
 		for (i = 0; i < n; i++)
@@ -252,14 +300,23 @@ Bool cEEPROM::Clear(int off, int num, int data /* = 0xff */)
 		if (num < n) n = num;
 
 		// write address and data
-		if (!I2Cbus_WriteReg16(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return False;
+		if (this->sizebits > 8)
+		{
+			// 16-bit addressing
+			if (!I2Cbus_WriteReg16(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return False;
+		}
+		else
+		{
+			// 8-bit addressing
+			if (!I2Cbus_WriteReg8(this->i2c, this->addr, off, this->pagebuf, n, this->speed)) return False;
+		}
 
-		// wait for write (time-out 20ms)
+		// wait for write (time-out EEPROM 20ms, simulated EEPROM 50ms, using 100ms because I2C bus can be busy)
 		u32 start = Time();
 		while (True)
 		{
 			if (I2Cbus_Check(this->i2c, this->addr, this->speed)) break;
-			if ((u32)(Time() - start) > 20000) return False;
+			if ((u32)(Time() - start) > 100000) return False;
 		} 
 
 		// shift address
@@ -272,7 +329,7 @@ Bool cEEPROM::Clear(int off, int num, int data /* = 0xff */)
 // format new EEPROM config storage (destroys EEPROM content; returns False on error)
 // - The entire EEPROM is first initialized to the values 0xff.
 // - The beginning of the EEPROM contains the 3-character magic string "BPi" (= Bare Pi).
-// - At offset 3 is character indicating size in bits ('7'=128B,...'9'=512B,'A'=1KB,...'G'=64KB).
+// - At offset 3 is character indicating size in bits ('3'=8B,... '9'=512B, 'A'=1KB,... 'G'=64KB).
 // - Each configuration entry begins with a 16-bit ID, a 16-bit count of data bytes, and the data itself.
 // - The list of configuration items ends with the 16-bit value 0xFFFF.
 // - ID values 0x0001 - 0x00FF are reserved for BarePi library.

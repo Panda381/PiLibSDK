@@ -36,7 +36,7 @@ Bool TitleScreen()
 		// keyboard
 		switch (KeyGet())
 		{
-		case KEY_A:
+		case KEY_PAD_A:
 			return True;
 
 		case KEY_SCREENSHOT:
@@ -44,11 +44,11 @@ Bool TitleScreen()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
-		case KEY_Y:
+		case KEY_PAD_Y:
 			if (!GameMenu()) return False;
 			break;
 		}

@@ -250,7 +250,7 @@ char OpenScreen()
 		}
 
 		// LCD display rezoom
-		if (ch == KEY_INSERT)
+		if (ch == KEY_ZOOM)
 		{
 			LCDRezoom();
 		}
@@ -268,7 +268,7 @@ char OpenScreen()
 		case KEY_RIGHT:
 		case KEY_UP:
 		case KEY_DOWN:
-		case KEY_Y:
+		case KEY_PAD_Y:
 			MP3PlayerTerm(mp3);
 			return ch;
 
@@ -610,10 +610,10 @@ void PlayGame(Bool comp1, Bool comp2)
 		if (ch == KEY_SCREENSHOT) ScreenShot();
 
 		// LCD display rezoom
-		if (ch == KEY_INSERT) LCDRezoom();
+		if (ch == KEY_ZOOM) LCDRezoom();
 
 		// break demo
-		if (Demo && (ch == KEY_Y))
+		if (Demo && (ch == KEY_PAD_Y))
 		{
 			Demo = False;
 			return;
@@ -630,13 +630,13 @@ void PlayGame(Bool comp1, Bool comp2)
 
 			// put stone
 			if (!Demo) KeyFlush();
-			ch = KEY_A;
+			ch = KEY_PAD_A;
 		}
 
 		switch (ch)
 		{
 		// break game
-		case KEY_Y:
+		case KEY_PAD_Y:
 			return;
 
 		// right
@@ -684,7 +684,7 @@ void PlayGame(Bool comp1, Bool comp2)
 			break;
 
 		// help
-		case KEY_B:
+		case KEY_PAD_B:
 			CurOff();
 			FindPos();
 			CurOn();
@@ -692,7 +692,7 @@ void PlayGame(Bool comp1, Bool comp2)
 			break;
 
 		// put stone
-		case KEY_A:
+		case KEY_PAD_A:
 			CurOff();
 			if (GetBoard(CurX, CurY) == TILE_DOT)
 			{
@@ -892,7 +892,7 @@ int main()
 			break;
 
 		// quit
-		case KEY_Y:
+		case KEY_PAD_Y:
 			Reboot();
 			break;
 		}

@@ -12,7 +12,7 @@
 #define DOWRITE		0		// 1=do test write
 #define DOCLEAR		0		// 1=clear EEPROMs with pattern
 #define DOFORMAT	0		// 1=format EEPROM to config 'BarePi' storage format
-#define DODETECT	0		// 1=detect EEPROM from configuratio header
+#define DODETECT	1		// 1=detect EEPROM from configuration header
 #define LOADCFG		0		// 1=load test config
 #define SAVECFG		0		// 1=save test config
 
@@ -21,12 +21,12 @@
 #define EEPROM1_ADDR	0x50		// EEPROM1 address
 #define EEPROM1_MODEL	EEPROM_MODEL_32K // EEPROM1 model
 #define EEPROM1_SIZE	(32*1024)	// EEPROM1 size
-#define EEPROM1_SPEED	200000		// EEPROM1 speed
+#define EEPROM1_SPEED	100000		// EEPROM1 speed
 
 #define EEPROM2_ADDR	0x57		// EEPROM2 address
 #define EEPROM2_MODEL	EEPROM_MODEL_4K // EEPROM2 model
 #define EEPROM2_SIZE	(4*1024)	// EEPROM2 size
-#define EEPROM2_SPEED	200000		// EEPROM2 speed
+#define EEPROM2_SPEED	100000		// EEPROM2 speed
 
 // EEPROM
 cEEPROM EEPROM1;	// EEPROM 32KB
@@ -48,9 +48,9 @@ void Keyboard()
 {
 	// keyboard
 	int key = KeyGet();
-	if (key == KEY_Y) Reboot();	// Program exit
+	if (key == KEY_PAD_Y) Reboot();	// Program exit
 	if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
-	if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
+	if (key == KEY_ZOOM) LCDRezoom();	// LCD display rezoom
 }
 
 // display memory (n = number of rows)
@@ -90,10 +90,10 @@ int main()
 	u32 t1, t2, seed;
 
 	// initialize or detect EEPROM
-#if DODETECT	// 1=detect EEPROM from configuratio header
+#if DODETECT	// 1=detect EEPROM from configuration header
 	WaitMs(1000);
 	if (EEPROM1.Detect(0, EEPROM1_ADDR, EEPROM1_SPEED))
-		printf("EEPROM1: detect %dKB\n", EEPROM1.size/1024);
+		printf("EEPROM1: detect %dB\n", EEPROM1.size);
 	else
 	{
 		printf("EEPROM1: cannot detect\n");
@@ -101,7 +101,7 @@ int main()
 	}
 
 	if (EEPROM2.Detect(0, EEPROM2_ADDR, EEPROM2_SPEED))
-		printf("EEPROM2: detect %dKB\n", EEPROM2.size/1024);
+		printf("EEPROM2: detect %dB\n", EEPROM2.size);
 	else
 	{
 		printf("EEPROM2: cannot detect\n");

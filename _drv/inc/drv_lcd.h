@@ -351,6 +351,6 @@ public:
 	int DrawTextBg4(const char* text, int x, int y, u32 colfg, u32 colbg = 0);
 };
 
-#endif // _DRV_ST7789_H
+#endif // _DRV_LCD_H
 
-#endif // USE_ST7789
+#endif // USE_LCD

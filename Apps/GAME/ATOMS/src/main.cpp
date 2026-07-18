@@ -131,12 +131,12 @@ Bool Open()
 			if (Players[3].type > 2) Players[3].type = 0;
 			break;
 
-		case KEY_B:
+		case KEY_PAD_B:
 			Players[4].type++;
 			if (Players[4].type > 2) Players[4].type = 0;
 			break;
 
-		case KEY_A:
+		case KEY_PAD_A:
 			return True;
 
 		case KEY_SCREENSHOT:
@@ -144,11 +144,11 @@ Bool Open()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
-		case KEY_Y:
+		case KEY_PAD_Y:
 			return False;
 		}
 
@@ -481,9 +481,9 @@ void Game()
 			ch = KeyGet();
 			if (ch == KEY_SCREENSHOT)
 				ScreenShot();
-			else if (ch == KEY_INSERT)
+			else if (ch == KEY_ZOOM)
 				LCDRezoom();
-			else if (ch == KEY_Y)
+			else if (ch == KEY_PAD_Y)
 				return;
 		}
 
@@ -491,7 +491,7 @@ void Game()
 		if (Players[Player].type == PLAYER_COMP)
 		{
 			Auto();
-			ch = KEY_A;
+			ch = KEY_PAD_A;
 		}
 		else
 			ch = KeyGet();
@@ -533,7 +533,7 @@ void Game()
 			CurTime = Time();
 			break;
 
-		case KEY_A: // put atom
+		case KEY_PAD_A: // put atom
 			// check color
 			if ((Atoms[cur] == 0) || (Owner[cur] == Player))
 			{
@@ -582,11 +582,11 @@ void Game()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
-		case KEY_Y:	// quit game
+		case KEY_PAD_Y:	// quit game
 			return;
 
 		}

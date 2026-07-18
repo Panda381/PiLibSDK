@@ -55,12 +55,23 @@ void DevInit()
 #endif
 
 	// keyboard initialize
+	// - Must be initialized after initialization of the I2C bus driver.
 	KeyInit();
+
+#if USE_CALCKEY		// 1=use BarePi CalcKey, 0=not used (drv_calckey.*)
+	// CalcKey initialize
+	CalcKeyInit();
+#endif
 }
 
 // terminate device
 void DevTerm()
 {
+#if USE_CALCKEY		// 1=use BarePi CalcKey, 0=not used (drv_calckey.*)
+	// CalcKey terminate
+	CalcKeyTerm();
+#endif
+
 	// keyboard terminate
 	KeyTerm();
 

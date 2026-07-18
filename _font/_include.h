@@ -19,6 +19,7 @@ extern const ALIGNED u8 FontIbm8x14[1792];
 extern const ALIGNED u8 FontIbm8x16[2048];
 extern const ALIGNED u8 FontIbmTiny8x8[1024];
 extern const ALIGNED u8 FontItalic8x8[1024];
+extern const ALIGNED u8 FontLcd5x7[1024];
 extern const ALIGNED u8 FontThin8x8[1024];
 extern const ALIGNED u8 FontTiny5x8[1024];
 extern const ALIGNED u8 FontZx[1024];

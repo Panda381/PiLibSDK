@@ -9,7 +9,9 @@
 0x00 ........ broadcaast
 0x01-0x03 ... reserved
 0x04-0x07 ... high-speed masters codes
+0x08-0x1F ... not widely used; suitable for small modules
 0x20-0x27 ... I/O expanders for matrix keyboards or text displays
+0x30-0x37 ... suitable for custom modules
 0x38-0x3F ... acceletometers, sensors, keyboards, displays
 0x3C-0x3D ... OLED SSD1306
 0x40-0x4F ... PWM controllers, ADC, temperature sensors
@@ -20,6 +22,19 @@
 0x7C-0x7F ... reserved, ID mode
 
 most available addresses: 0x30-0x37, 0x60-0x67, 0x70-0x77
+
+BarePi modules:
+---------------
+0x30 ... LCD SPI graphics display (LCD320x240, LCD160x80)
+0x31 ... LCD text display (LCD16x2)
+0x32 ... LED 7-segment display (LED12)
+0x34 ... alphanumeric keyboard (MiniKey)
+0x35 ... calculator keyboard (CalcKey)
+0x38 ... PORT interface (Port module)
+0x3C ... OLED display SSD1306
+0x50-0x56 ... EEPROMs
+0x57 ... configuration EEPROM 4KB AT24C32
+0x68 ... RTC clock DS3231
 
 
 List of usual I2C addresses

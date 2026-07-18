@@ -5,5 +5,4 @@
 //
 // ****************************************************************************
 
-#include "barepi_keys.h"	// keyboard
 #include "barepi_init.h"	// initialize

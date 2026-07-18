@@ -1,0 +1,4 @@
+^YTest LED12 display^0
+
+^W[Y]^0 ....... Exit
+^WAlt+[X]^0 ... Screenshot

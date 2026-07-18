@@ -135,20 +135,20 @@ Bool GameMenu()
 		switch (KeyGet())
 		{
 		// exit
-		case KEY_X:
+		case KEY_PAD_X:
 			return False;
 
 		// sound
-		case KEY_B:
+		case KEY_PAD_B:
 			SoundMode++;
 			if (SoundMode > 2) SoundMode = 0;
 			break;
 
 		// screen shot
-		case KEY_A:
+		case KEY_PAD_A:
 			// request to do screenshot
 			ReqScreenShot = True;
-			while (KeyPressed(KEY_A)) {}
+			while (KeyPressed(KEY_PAD_A)) {}
 			return True;
 
 		case KEY_SCREENSHOT:
@@ -156,12 +156,12 @@ Bool GameMenu()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
 		// continue
-		case KEY_Y:
+		case KEY_PAD_Y:
 			return True;
 		}
 	}

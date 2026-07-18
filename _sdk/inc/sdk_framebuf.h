@@ -125,6 +125,7 @@ INLINE void SelFont6x8() { DrawSelFont(FontCond6x8, 6, 8); }
 INLINE void SelFont5x8() { DrawSelFont(FontTiny5x8, 5, 8); }
 INLINE void SelFont8x8Game() { DrawSelFont(FontGame8x8, 8, 8); }
 INLINE void SelFont8x8Italic() { DrawSelFont(FontItalic8x8, 8, 8); }
+INLINE void SelFont5x7Lcd() { DrawSelFont(FontLcd5x7, 6, 8); }
 INLINE void SelFont8x8Thin() { DrawSelFont(FontThin8x8, 8, 8); }
 
 // select current proportional font (with format "sFont")

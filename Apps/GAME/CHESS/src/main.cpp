@@ -1122,7 +1122,7 @@ MOVE_AGAIN:
 		sel = False;
 		switch (ch)
 		{
-		case KEY_A:
+		case KEY_PAD_A:
 			if (ok) sel = True;
 			break;
 
@@ -1159,18 +1159,18 @@ MOVE_AGAIN:
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
-		case KEY_X:
+		case KEY_PAD_X:
 			for (i = 0; i < MAPSIZE; i++) BoardEnable[i] = False;
 			DispBoard();
 			DispUpdate();
 			MoveComp();
 			return False;
 
-		case KEY_Y:
+		case KEY_PAD_Y:
 			return True; // quit game
 		}
 		if (sel) break;
@@ -1244,11 +1244,11 @@ MOVE_AGAIN:
 		cancel = False;
 		switch (ch)
 		{
-		case KEY_A:
+		case KEY_PAD_A:
 			if (ok) sel = True;
 			break;
 
-		case KEY_Y:
+		case KEY_PAD_Y:
 			cancel = True;
 			break;
 
@@ -1293,7 +1293,7 @@ MOVE_AGAIN:
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 		}
@@ -1411,7 +1411,7 @@ void Open()
 			Players[1].comp = True;
 			return;
 
-		case KEY_A:
+		case KEY_PAD_A:
 			DeepMax++;
 			if (DeepMax > DEEP_MAX) DeepMax = 2;
 			break;
@@ -1421,11 +1421,11 @@ void Open()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
-		case KEY_Y: Reboot();
+		case KEY_PAD_Y: Reboot();
 		}
 
 		DispUpdate();
@@ -1472,7 +1472,7 @@ int main()
 			else
 				if (MoveHuman()) break;
 
-			if (KeyGet() == KEY_Y) break;
+			if (KeyGet() == KEY_PAD_Y) break;
 
 			// checkmat (9 chars)
 			if (LastMove == NULL)

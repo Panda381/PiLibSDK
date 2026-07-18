@@ -343,13 +343,13 @@ int main()
 	while ((u32)(Time() - t1) < 5000000)
 	{
 		int key = KeyGet();
-		if (key == KEY_Y)
+		if (key == KEY_PAD_Y)
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
-		else if (key == KEY_INSERT)
+		else if (key == KEY_ZOOM)
 			LCDRezoom();
-		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
+		else if ((key == KEY_PAD_B) || (key == KEY_PAD_A) || (key == KEY_PAD_X))
 			break;
 	}
 	DrawClear();
@@ -424,7 +424,7 @@ int main()
 				break;
 		
 			// toggle
-			case KEY_A:
+			case KEY_PAD_A:
 				CurFlip(); // flip cursor
 				DrawBoard();
 				break;
@@ -435,12 +435,12 @@ int main()
 				break;
 
 			// LCD display rezoom
-			case KEY_INSERT:
+			case KEY_ZOOM:
 				LCDRezoom();
 				break;
 
 			// run
-			case KEY_B:
+			case KEY_PAD_B:
 				CurOff(); // set cursor off
 				SaveSlot(); // save state
 				Run(); // run life
@@ -450,7 +450,7 @@ int main()
 				break;
 
 			// select slot
-			case KEY_X:
+			case KEY_PAD_X:
 				CurOff(); // set cursor off
 				SaveSlot();
 				SelSlot++;
@@ -460,7 +460,7 @@ int main()
 				DrawBoard();
 				break;
 
-			case KEY_Y:
+			case KEY_PAD_Y:
 				Reboot();
 				break;
 			}

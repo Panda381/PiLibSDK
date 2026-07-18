@@ -1,0 +1,4 @@
+^YTest MiniKey keyboard^0
+
+2x^W[Y]^0 ..... Exit
+^WAlt+[X]^0 ... Screenshot

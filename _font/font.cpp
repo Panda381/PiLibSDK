@@ -24,6 +24,7 @@
 #include "fixed_cpp/font_ibm_8x8.cpp"
 #include "fixed_cpp/font_ibmtiny_8x8.cpp"
 #include "fixed_cpp/font_italic_8x8.cpp"
+#include "fixed_cpp/font_lcd_5x7.cpp"
 #include "fixed_cpp/font_thin_8x8.cpp"
 #include "fixed_cpp/font_tiny_5x8.cpp"
 #include "fixed_cpp/font_zx.cpp"

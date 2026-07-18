@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.40, in progress - under development
-Last update: 06/18/2026
+Pre-alpha version 0.41, in progress - under development
+Last update: 07/18/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -234,9 +234,14 @@ MP3
  MP3 ... MP3 player
 
 Test
+ CALCKEY ... Test CalcKey keyboard
  EEPROM ... View contents of I2C EEPROMs
  I2CSCAN ... Scan I2C0 and I2C1 bus
  LCD ... Test LCD SPI display
+ LCD16X2 ... Test LCD16x2 text display
+ LED12 ... Test LED12 display
+ MINIKEY ... Test MiniKey keyboard
+ PORT12 ... Test PORT12 module
  RTC ... Display and set current time, using RTC module
  SSD1306 ... Test SSD1306 display
  TESTLED ... Test BarePi bus with TESTLED module

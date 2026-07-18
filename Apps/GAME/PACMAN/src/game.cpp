@@ -840,7 +840,7 @@ void OpenGame()
 			break;
 
 		// pause
-		case KEY_A:
+		case KEY_PAD_A:
 			StopSound();
 			KeyFlush();
 			DispAll(1);
@@ -848,7 +848,7 @@ void OpenGame()
 			PlaySound(SirenSnd);
 			break;
 
-		case KEY_Y:
+		case KEY_PAD_Y:
 			return;
 
 		case KEY_SCREENSHOT:

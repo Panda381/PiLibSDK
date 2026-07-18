@@ -270,15 +270,15 @@ int main()
 			break;
 
 		// Tab
-		case KEY_X:
+		case KEY_PAD_X:
 			SoundMode--;
 			if (SoundMode < 0) SoundMode = 2;
 			DispOpen();
 			break;
 
 		// Enter, Space
-		case KEY_A:
-		case KEY_B:
+		case KEY_PAD_A:
+		case KEY_PAD_B:
 			switch (OpenSelInx)
 			{
 			case 0: Game(PLAYER_HUMAN, PLAYER_HUMAN); break;
@@ -291,7 +291,7 @@ int main()
 			break;
 
 		// ESC
-		case KEY_Y:
+		case KEY_PAD_Y:
 			Reboot();	// Program exit
 			break;
 
@@ -301,7 +301,7 @@ int main()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 		}

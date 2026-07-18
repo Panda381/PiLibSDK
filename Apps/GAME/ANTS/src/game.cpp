@@ -1150,9 +1150,9 @@ void Game(int player1, int player2)
 
 				if (ch == KEY_SCREENSHOT)
 					ScreenShot();
-				else if (ch == KEY_INSERT)
+				else if (ch == KEY_ZOOM)
 					LCDRezoom();
-				else if (ch == KEY_Y)
+				else if (ch == KEY_PAD_Y)
 					return;
 			}
 		}
@@ -1165,7 +1165,7 @@ void Game(int player1, int player2)
 			switch (ch)
 			{
 			// quit
-			case KEY_Y:
+			case KEY_PAD_Y:
 				return;
 
 			// left
@@ -1188,7 +1188,7 @@ void Game(int player1, int player2)
 
 			// discard
 			case KEY_UP:
-			case KEY_B:
+			case KEY_PAD_B:
 				PutCard(SelCard, True); // put card
 				CursorOn();
 				KeyFlush();
@@ -1196,14 +1196,14 @@ void Game(int player1, int player2)
 
 			// select
 			case KEY_DOWN:
-			case KEY_A:
+			case KEY_PAD_A:
 				PutCard(SelCard, Players[Player].disable[SelCard]); // put card
 				CursorOn();
 				KeyFlush();
 				break;
 
 			// help
-			case KEY_X:
+			case KEY_PAD_X:
 				CursorOff();
 				SelCard = FindCard();
 				CursorOn();
@@ -1216,7 +1216,7 @@ void Game(int player1, int player2)
 				break;
 
 			// LCD display rezoom
-			case KEY_INSERT:
+			case KEY_ZOOM:
 				LCDRezoom();
 				break;
 

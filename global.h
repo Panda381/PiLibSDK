@@ -252,8 +252,30 @@ INLINE void operator delete (void* adr, void* p)
 
 #define CH_DEL		0x7F	// '\x7F' delete			... delete character on cursor, Ctrl: delete block, delete file
 
+// special non-ASCII characters
+#define CH_ZOOM		(char)(CH_SPC+0x80)	// Zoom
+#define CH_SCREENSHOT	(char)(CH_TAB+0x80)	// Screenshot (PrintScreen)
+#define CH_MENU		(char)(CH_ESC+0x80)	// Menu
+#define CH_DISPM	(char)('Z'+0x80)	// Disp-
+#define CH_DISPP	(char)('X'+0x80)	// Disp+
+#define CH_VOLM		(char)('A'+0x80)	// Vol-
+#define CH_VOLP		(char)('S'+0x80)	// Vol+
+#define CH_EDIT		(char)(CH_CR+0x80)	// Edit
+#define CH_BREAK	CH_MENU			// Break
+
+#define CH_F1		(char)('1'+0x80)	// F1
+#define CH_F2		(char)('2'+0x80)	// F2
+#define CH_F3		(char)('3'+0x80)	// F3
+#define CH_F4		(char)('4'+0x80)	// F4
+#define CH_F5		(char)('5'+0x80)	// F5
+#define CH_F6		(char)('6'+0x80)	// F6
+#define CH_F7		(char)('7'+0x80)	// F7
+#define CH_F8		(char)('8'+0x80)	// F8
+#define CH_F9		(char)('9'+0x80)	// F9
+#define CH_F10		(char)('0'+0x80)	// F10
+
 #define NOCHAR		0	// no character
-#define NOKEY		-1	// no key from keyboard
+#define NOKEY		0	// no key from keyboard
 
 #define BIGINT		0x40000000 // big integer number
 

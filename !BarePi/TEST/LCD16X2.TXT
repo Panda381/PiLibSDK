@@ -1,0 +1,5 @@
+^YTest LCD16x2 text display^0
+
+^WArrows^0 .... select test
+^W[Y]^0 ....... Exit
+^WAlt+[X]^0 ... Screenshot

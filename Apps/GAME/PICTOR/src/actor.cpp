@@ -196,24 +196,24 @@ Bool CtrlActor()
 	switch (KeyGet())
 	{
 	// Space: shooting
-	//case KEY_A:
+	//case KEY_PAD_A:
 	//	{
 	//		NewGame(Level+1);
 	//	}
 	//	break;
 
 	// Enter: Next actor
-	case KEY_B:
+	case KEY_PAD_B:
 		SetActor(ActInx+1);
 		break;
 
 	// Tab: previous actor
-	case KEY_X:
+	case KEY_PAD_X:
 		SetActor(ActInx-1);
 		break;
 
 	// Esc: game menu
-	case KEY_Y:
+	case KEY_PAD_Y:
 		if (!GameMenu()) return False;
 
 		// display header
@@ -232,14 +232,14 @@ Bool CtrlActor()
 		break;
 
 	// LCD display rezoom
-	case KEY_INSERT:
+	case KEY_ZOOM:
 		LCDRezoom();
 		break;
 	}
 
 	// Shooting
 #if !DEB_AUTOSHOOT			// 1=autoshoot
-	if (KeyPressed(KEY_A))
+	if (KeyPressed(KEY_PAD_A))
 #endif
 	{
 		// generate missile

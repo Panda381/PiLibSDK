@@ -15,7 +15,11 @@
 
 // keyboard
 #ifndef SYSTICK_KEYSCAN
+#if USE_KEYPAD || USE_MINIKEY
+#define SYSTICK_KEYSCAN		1		// call KeyScan() function from SysTick system timer
+#else
 #define SYSTICK_KEYSCAN		0		// call KeyScan() function from SysTick system timer
+#endif
 #endif
 
 #ifndef SYSTICK_MS

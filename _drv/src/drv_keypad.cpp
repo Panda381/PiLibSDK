@@ -1,34 +1,34 @@
 
 // ****************************************************************************
 //
-//                           BarePi - Keyboard KeyPad
+//                           BarePi keyboard KeyPad
 //
 // ****************************************************************************
 
-#include "../../includes.h"
+#include "../../includes.h"	// includes
+
+#if USE_KEYPAD && !USE_MINIKEY	// 1=use BarePi KeyPad, 0=not used (drv_keypad.*)
 
 // keyboard is initialized
 Bool KeyIsInit = False;
 
-// current row
-volatile int KeyCurRow = 0;
-
-// key map, counters of pressed keys - key is pressed if counter > 0
-volatile u8 KeyMap[KEY_NUM];	// key pressed counters
-volatile u8 KeyRelMap[KEY_NUM];	// key release counters
+// key map
+volatile Bool KeyMap[KEYPAD_NUM];	// key pressed flags
+volatile u32 KeyPressTime[KEYPAD_NUM];	// time of next press
+volatile u32 KeyRelTime[KEYPAD_NUM];	// time of last release
 
 // keyboard buffer
-int KeyBuf[KEYBUF_SIZE]; 	// keyboard buffer
-int KeyRetBuf = NOKEY;		// returned key to keyboard buffer (NOKEY = no key)
+u8 KeyBuf[KEYBUF_SIZE]; 	// keyboard buffer
+u8 KeyRetBuf = NOKEY;		// returned key to keyboard buffer (NOKEY = no key)
 volatile int KeyWriteOff = 0;	// write offset to keyboard buffer
 volatile int KeyReadOff = 0;	// read offset from keyboard buffer
 
 // keyboard GPIOs
-extern const u8 KeyGPIOList[KEY_NUM] = {
-	KEY_A_GPIO,
-	KEY_B_GPIO,
-	KEY_X_GPIO,
-	KEY_Y_GPIO,
+extern const u8 KeyGPIOList[KEYPAD_NUM] = {
+	KEY_PAD_A_GPIO,
+	KEY_PAD_B_GPIO,
+	KEY_PAD_X_GPIO,
+	KEY_PAD_Y_GPIO,
 	KEY_RIGHT_GPIO,
 	KEY_UP_GPIO,
 	KEY_LEFT_GPIO,
@@ -40,17 +40,18 @@ extern const u8 KeyGPIOList[KEY_NUM] = {
 void KeyInit(void)
 {
 	int i;
+	u8 gpio;
 
 	// initialize keys - inputs with pull-ups
-	for (i = 0; i < KEY_NUM; i++)
+	for (i = 0; i < KEYPAD_NUM; i++)
 	{
-		GPIO_Func(KeyGPIOList[i], GPIO_FUNC_IN);
-		GPIO_Pull(KeyGPIOList[i], GPIO_PULL_UP);
+		gpio = KeyGPIOList[i];
+		GPIO_Func(gpio, GPIO_FUNC_IN);
+		GPIO_Pull(gpio, GPIO_PULL_UP);
 	}
 
 	// clear key map
-	memset((void*)KeyMap, 0, sizeof(KeyMap));
-	memset((void*)KeyRelMap, 0, sizeof(KeyRelMap));
+	memset((void*)KeyMap, False, sizeof(KeyMap));
 
 	// keyboard buffer
 	KeyRetBuf = NOKEY;	// returned key to keyboard buffer (NOKEY = no key)
@@ -65,6 +66,9 @@ void KeyInit(void)
 // keyboard terminate
 void KeyTerm(void)
 {
+	int i;
+	u8 gpio;
+
 	// keyboard is not initialized
 	KeyIsInit = False;
 	cb();
@@ -72,18 +76,29 @@ void KeyTerm(void)
 	// flush keyboard buffer
 	KeyFlush();
 
-	int i;
-
 	// terminate pins
-	for (i = 0; i < KEY_NUM; i++)
+	for (i = 0; i < KEYPAD_NUM; i++)
 	{
-		GPIO_Func(KeyGPIOList[i], GPIO_FUNC_IN);
-		GPIO_Pull(KeyGPIOList[i], (KeyGPIOList[i] >= 9) ? GPIO_PULL_DOWN : GPIO_PULL_UP);
+		gpio = KeyGPIOList[i];
+		GPIO_Func(gpio, GPIO_FUNC_IN);
+		GPIO_Pull(gpio, (gpio >= 9) ? GPIO_PULL_DOWN : GPIO_PULL_UP);
 	}
 }
 
+// check if key KEY_* is pressed (must be valid key code)
+Bool KeyPressed(u8 key)
+{
+	// ALT flag
+	if ((key & KEYFLAG_ALT) != 0)
+	{
+		key &= KEY_MASK;
+		return KeyMap[key-1] && KeyMap[KEY_ALT-1];
+	}
+	return KeyMap[key-1];
+}
+
 // write key to keyboard buffer
-void KeyWriteKey(int key)
+void KeyWriteKey(u8 key)
 {
 	// get current and next write offset
 	int w = KeyWriteOff;	// current write offset
@@ -111,85 +126,73 @@ void KeyScan(void)
 	if (!KeyIsInit) return;
 
 	// key map
-	int key = 0;
-	volatile u8* m = KeyMap;		// key pressed map
-	volatile u8* r = KeyRelMap;		// key released map
+	u8 key = 1;
+	volatile Bool* m = KeyMap;		// key pressed flags
+	volatile u32* p = KeyPressTime;		// time of next press
+	volatile u32* r = KeyRelTime;		// time of last release
 
 	// scan keys
-	for (; key < KEY_NUM; key++)
+	for (; key <= KEYPAD_NUM; key++)
 	{
-		// load maps
-		int mm = *m;	// load pressed map
-		int rr = *r;	// load released map
-
 		// check if key is pressed
-		if (GPIO_In(KeyGPIOList[key]) == 0)
+		if (GPIO_In(KeyGPIOList[key-1]) == 0)
 		{
 			// first press
-			if (mm == 0)
+			if (!*m)
 			{
-				mm = KEY_REP_TIME1; // first press time
-				KeyWriteKey(key);
+				*m = True;			// key is pressed
+				*p = Time() + KEY_REP_TIME1*1000; // time of next press
+				KeyWriteKey(key);		// write key to buffer
 			}
 
-			// key is already pressed - check repeat interval
+			// key is already pressed - repead press
 			else
 			{
 				// Alt does not repeat
 				if (key != KEY_ALT)
 				{
-					// press counter
-					mm--;
-					if (mm == 0)
+					// check press time
+					if ((s32)(Time() - *p) >= 0)
 					{
-						mm = KEY_REP_TIME2; // repeat press time
-						KeyWriteKey(key);
+						*p = Time() + KEY_REP_TIME2*1000; // time of next press
+						KeyWriteKey(key);		// write key to buffer
 					}
 				}
 			}
 
-			// reset release time
-			rr = KEY_REL_TIME;
+			// time of last release
+			*r = Time();
 		}
 
 		// button is not pressed
 		else
 		{
-			// if not released yet
-			if (rr > 0)
+			// if released
+			if ((u32)(Time() - *r) >= KEY_REL_TIME*1000)
 			{
-				rr--;
-
-				// release
-				if (rr == 0)
-				{
-					// reset pressed counter
-					mm = 0;
-				}
+				// clear pressed flag
+				*m = False;
 			}
 		}
 
-		// update map
-		*m = mm;
-		*r = rr;
-
 		// next key
 		m++;
+		p++;
 		r++;
 	}
 }
 
 // get scan code from keyboard buffer (returns NOKEY if no scan code)
-int KeyGet()
+u8 KeyGet()
 {
 #if !SYSTICK_KEYSCAN	// call KeyScan() function from SysTick system timer
 	// scan keyboard
 	KeyScan();
-	WaitMs(4);
+	WaitMs(5);
 #endif
 
 	// get key from temporary 1-key buffer
-	int key = KeyRetBuf;
+	u8 key = KeyRetBuf;
 	if (key != NOKEY)
 	{
 		KeyRetBuf = NOKEY;
@@ -220,7 +223,7 @@ void KeyFlush()
 }
 
 // return key to keyboard buffer (can hold only 1 key)
-void KeyRet(char key)
+void KeyRet(u8 key)
 {
 	KeyRetBuf = key;
 }
@@ -229,7 +232,7 @@ void KeyRet(char key)
 Bool KeyNoPressed()
 {
 	int i;
-	for (i = 0; i < KEY_NUM; i++) if (KeyMap[i] > 0) return False;
+	for (i = 0; i < KEYPAD_NUM; i++) if (KeyMap[i]) return False;
 	return True;
 }
 
@@ -238,3 +241,5 @@ void KeyWaitNoPressed()
 {
 	while (!KeyNoPressed()) {}
 }
+
+#endif // USE_KEYPAD && !USE_MINIKEY

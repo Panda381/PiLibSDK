@@ -685,7 +685,7 @@ void FireMushroom()
 	if ((MushroomsStock == 0) || (Chicken.state < UP) || (Chicken.state > RIGHT)) return;
 
 	// keyboard or macro shoot
-	Bool shoot = KeyPressed(KEY_A);
+	Bool shoot = KeyPressed(KEY_PAD_A);
 	if ((MacroRep != 0) && ((MacroCh == 'X') || (MacroCh == 'x')))
 	{
 		MacroRep--;

@@ -1241,7 +1241,7 @@ int main()
 				break;
 
 			// [A]
-			case KEY_A:
+			case KEY_PAD_A:
 				if ((uint)FileCur < (uint)FileNum)
 				{
 					fd = &FileDesc[FileCur];
@@ -1400,7 +1400,7 @@ int main()
 				break;
 
 			// [X] - out of directory
-			case KEY_X:
+			case KEY_PAD_X:
 				// not root directory yet
 				if (PathLen > 1)
 				{
@@ -1434,7 +1434,7 @@ int main()
 				break;
 
 			// LCD display rezoom
-			case KEY_INSERT:
+			case KEY_ZOOM:
 				LCDRezoom();
 				break;
 			}

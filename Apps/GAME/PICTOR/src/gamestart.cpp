@@ -148,18 +148,18 @@ Bool GameStart()
 		switch (KeyGet())
 		{
 		// start game
-		case KEY_A:
-			while (KeyPressed(KEY_A)) {}
+		case KEY_PAD_A:
+			while (KeyPressed(KEY_PAD_A)) {}
 			return True;
 
 		// next actor
-		case KEY_B:
+		case KEY_PAD_B:
 			SetActor(ActInx+1);
 			ActorReload = 0;
 			break;
 
 		// previous actor
-		case KEY_X:
+		case KEY_PAD_X:
 			SetActor(ActInx-1);
 			ActorReload = 0;
 			break;
@@ -169,12 +169,12 @@ Bool GameStart()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
 		// menu
-		case KEY_Y:
+		case KEY_PAD_Y:
 			if (!GameMenu()) return False;
 			break;
 		}

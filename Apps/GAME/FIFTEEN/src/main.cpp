@@ -630,7 +630,7 @@ void Game()
 			break;
 
 		// numbers
-		case KEY_A:
+		case KEY_PAD_A:
 			DispTileNum = !DispTileNum;
 			DrawBoard();
 			break;
@@ -641,12 +641,12 @@ void Game()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
 		// solver
-		case KEY_B:
+		case KEY_PAD_B:
 			Solver();
 			for (i = 0; i < TILESNUM; i++)
 			{
@@ -657,7 +657,7 @@ void Game()
 			DrawBoard();
 			break;
 
-		case KEY_Y:
+		case KEY_PAD_Y:
 			return;
 		}
 
@@ -709,11 +709,11 @@ Bool Select()
 		int key = KeyGet();
 		switch (key)
 		{
-		case KEY_Y:
+		case KEY_PAD_Y:
 			return False;
 
-		case KEY_A:
-		case KEY_B:
+		case KEY_PAD_A:
+		case KEY_PAD_B:
 			Img = ImgList[PuzzleInx];
 			return True;
 
@@ -722,7 +722,7 @@ Bool Select()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 
@@ -797,13 +797,13 @@ int main()
 	while ((u32)(Time() - t1) < 5000000)
 	{
 		key = KeyGet();
-		if (key == KEY_Y)
+		if (key == KEY_PAD_Y)
 			Reboot();
 		else if (key == KEY_SCREENSHOT)
 			ScreenShot();
-		else if (key == KEY_INSERT)
+		else if (key == KEY_ZOOM)
 			LCDRezoom();
-		else if ((key == KEY_B) || (key == KEY_A) || (key == KEY_X))
+		else if ((key == KEY_PAD_B) || (key == KEY_PAD_A) || (key == KEY_PAD_X))
 			break;
 	}
 

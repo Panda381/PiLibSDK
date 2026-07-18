@@ -105,6 +105,10 @@ void SysTick_Handler()
 	KeyScan();
 #endif
 
+#if USE_CALCKEY		// 1=use BarePi CalcKey, 0=not used (drv_calckey.*)
+	CalcKeyScan();
+#endif
+
 #if USE_I2CBUS		// 1=use I2C bus driver, 0=not used (drv_i2cbus.*)
 	// I2C bus driver watchdog (every 100ms)
 	if ((u32)(Time() - I2Cbus_WatchdogLast) >= 100000)

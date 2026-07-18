@@ -206,8 +206,8 @@ typedef struct
 	io32	CTRL0;		// 0x00: SPI control register 0
 				//	bit 0..5: shift length, number of bits to shift (only if not variable shift mode)
 				//	bit 6: start out data with 0=LS (low bit), 1=MS (most significiant bit = bit 31 or 23)
-				//	bit 7: 'idle' clock line is 0=low, 1=high
-				//	bit 8: data is clocked OUT on 0=falling, 1=rising edge of the clock
+				//	bit 7: clock polarity CPOL, 'idle' clock line is 0=low, 1=high
+				//	bit 8: clock phase CPHA, data is clocked OUT on 0=falling, 1=rising edge of the clock
 				//	bit 9: clear FIFO, 1=receive and transmit FIFOs are held in reset and flushed, 0=normal operation
 				//	bit 10: data is clocked IN on 0=falling, 1=rising edge of the clock
 				//	bit 11: 1=enable SPI, 0=disable SPI but FIFO can still be written or read

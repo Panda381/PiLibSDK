@@ -10,14 +10,14 @@
 // display driver
 cLCD LCD;
 
-// display ST7780 320x240 (default)
+// display ST7789 240x320 (default)
 #define LCD_MODEL	LCD_MODEL_ST7789
 #define LCD_WIDTH	240
 #define LCD_HEIGHT	320
 #define LCD_OFFX	0
 #define LCD_OFFY	0
 
-// display ST7735 160x80
+// display ST7735 80x160
 #define LCD_MODEL2	LCD_MODEL_ST7735
 #define LCD_WIDTH2	80
 #define LCD_HEIGHT2	160
@@ -89,13 +89,14 @@ int main()
 		LCD.CopyToScreen((WIDTH - LCD.w)/2, (HEIGHT - LCD.h)/2);
 		DispUpdate();
 
-		// keyboard
-		key = KeyGet();
-		if (key == KEY_Y) Reboot();	// Program exit
-		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
-
-		// delay
-		WaitMs(1000);
+		// keyboard (wait 1 sec)
+		for (i = 10; i > 0; i--)
+		{
+			WaitMs(100);
+			key = KeyGet();
+			if (key == KEY_PAD_Y) Reboot();	// Program exit
+			if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
+		}
 
 		// rotate
 		rot++;

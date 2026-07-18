@@ -17,6 +17,7 @@ _RaspPicoImg	fixed_bmp\font_ibm_8x16.bmp	fixed_cpp\font_ibm_8x16.cpp	FontIbm8x16
 _RaspPicoImg	fixed_bmp\font_ibm_8x8.bmp	fixed_cpp\font_ibm_8x8.cpp	FontIbm8x8
 _RaspPicoImg	fixed_bmp\font_ibmtiny_8x8.bmp	fixed_cpp\font_ibmtiny_8x8.cpp	FontIbmTiny8x8
 _RaspPicoImg	fixed_bmp\font_italic_8x8.bmp	fixed_cpp\font_italic_8x8.cpp	FontItalic8x8
+_RaspPicoImg	fixed_bmp\font_lcd_5x7.bmp	fixed_cpp\font_lcd_5x7.cpp	FontLcd5x7
 _RaspPicoImg	fixed_bmp\font_thin_8x8.bmp	fixed_cpp\font_thin_8x8.cpp	FontThin8x8
 _RaspPicoImg	fixed_bmp\font_tiny_5x8.bmp	fixed_cpp\font_tiny_5x8.cpp	FontTiny5x8
 _RaspPicoImg	fixed_bmp\font_zx.bmp		fixed_cpp\font_zx.cpp		FontZx

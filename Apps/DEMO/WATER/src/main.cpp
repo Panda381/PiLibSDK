@@ -79,9 +79,9 @@ int main()
 
 		// keyboard
 		int key = KeyGet();
-		if (key == KEY_Y) Reboot();	// Program exit
+		if (key == KEY_PAD_Y) Reboot();	// Program exit
 		if (key == KEY_SCREENSHOT) ScreenShot(); //  Screenshot - This may take a few seconds to write.
-		if (key == KEY_INSERT) LCDRezoom();	// LCD display rezoom
+		if (key == KEY_ZOOM) LCDRezoom();	// LCD display rezoom
 	}
 
 	return 0;

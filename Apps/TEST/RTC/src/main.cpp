@@ -265,7 +265,7 @@ int main()
 			break;
 
 		// Y: Program exit
-		case KEY_Y:
+		case KEY_PAD_Y:
 			Reboot();
 			break;
 

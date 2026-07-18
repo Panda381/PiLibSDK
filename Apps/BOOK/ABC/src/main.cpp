@@ -74,7 +74,7 @@ int main()
 		// keyboard
 		switch (KeyGet())
 		{
-		case KEY_Y:
+		case KEY_PAD_Y:
 			Reboot();	// Program exit
 			break;
 
@@ -95,7 +95,7 @@ int main()
 			break;
 
 		// LCD display rezoom
-		case KEY_INSERT:
+		case KEY_ZOOM:
 			LCDRezoom();
 			break;
 		}

@@ -460,12 +460,12 @@ int main()
 		int key = KeyGet();
 
 		// Program exit
-		if (key == KEY_Y) break;
+		if (key == KEY_PAD_Y) break;
 
 		//  Screenshot - This may take a few seconds to write.
 		if (key == KEY_SCREENSHOT) ScreenShot();
 
 		// LCD display rezoom
-		if (key == KEY_INSERT) LCDRezoom();
+		if (key == KEY_ZOOM) LCDRezoom();
 	}
 }

@@ -773,7 +773,7 @@ PlayNextSound:
 			break;
 
 		// pause
-		case KEY_A:
+		case KEY_PAD_A:
 			if (pause)
 			{
 				MP3Play(mp3, 0, False);
@@ -787,7 +787,7 @@ PlayNextSound:
 			break;
 
 		// info
-		case KEY_X:
+		case KEY_PAD_X:
 			DrawClear();
 			if (InfoMode && (JPGImage != NULL))
 			{
@@ -819,7 +819,7 @@ PlayNextSound:
 			break;
 
 		// quit
-		case KEY_Y:
+		case KEY_PAD_Y:
 			MP3PlayerTerm(mp3);
 			KeyFlush();
 			return;
@@ -941,7 +941,7 @@ int main()
 				break;
 
 			// Esc exit
-			case KEY_Y:
+			case KEY_PAD_Y:
 				Reboot();
 				break;
 
@@ -1063,7 +1063,7 @@ int main()
 				break;
 
 			// X - up directory
-			case KEY_X:
+			case KEY_PAD_X:
 				// not root directory yet
 				i = SoundPathLen;
 				if (i > 1)
@@ -1093,7 +1093,7 @@ int main()
 				break;
 
 			// play 1 or change directory
-			case KEY_A:
+			case KEY_PAD_A:
 				if (FileListSel < FileListNum)
 				{
 					sSoundFile* fd = &FileList[FileListSel];
@@ -1156,7 +1156,7 @@ int main()
 				break;
 
 			// Enter play all
-			case KEY_B:
+			case KEY_PAD_B:
 				if (FileListMP3 >= 0)
 				{
 					FileListSel = FileListMP3;
