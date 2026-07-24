@@ -29,8 +29,21 @@
 #define _DRV_LCD_H
 
 // LCD default transfer speed in Hz
+/*
+divider	speed		LCD320x240 update	LCD160x80 update	real speed	[%]
+0	125000000	11 ms			2 ms			110000 kHz	87% (data transfer is faulty)
+1	62500000	22 ms			4 ms			56000 kHz	90%
+2	41666667	32 ms			5 ms			38000 kHz	91%
+3	31250000	43 ms			7 ms			28500 kHz	91%
+4	25000000	54 ms			9 ms			23000 kHz	91%
+5	20833333	64 ms			11 ms			19000 kHz	91%
+6	17857143	75 ms			13 ms			16400 kHz	92%
+7	15625000	85 ms			14 ms			14400 kHz	92%
+8	13888889	96 ms			16 ms			12800 kHz	92%
+9	12500000	107 ms			18 ms			11500 kHz	92%
+*/
 #ifndef LCD_DEF_SPEED
-#define LCD_DEF_SPEED	30000000
+#define LCD_DEF_SPEED	62500000
 #endif
 
 /*
@@ -81,6 +94,11 @@ enum {
 	LCD_ROT_270,
 };
 
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+extern u32 LCD_FrameBuf[320*240/2];	// LCD temporary frame buffer
+extern volatile Bool LCD_FrameBufDirty; // flag - update frame buffer from core3
+#endif
+
 // LCD display device
 class cLCD
 {
@@ -119,10 +137,39 @@ public:
 	// check if LCD display is valid (model is not LCD_MODEL_NONE)
 	INLINE Bool IsValid() { return this->model != LCD_MODEL_NONE; }
 
-	// write byte
+	// write 8-bit byte
 	//  After sending a byte, it does not wait for the transmission
 	//  to complete - call WaitBusy() before ending the transaction.
-	void Write8(u8 data);
+	INLINE void Write8(int data)
+	{
+		data <<= 24;
+		while (SPI1_TxIsFull()) {}
+		SPI1_Write(data);
+	}
+
+	// write 16-bit word
+	INLINE void Write16(int data)
+	{
+		data <<= 16;
+		while (SPI1_TxIsFull()) {}
+		SPI1_Write(data);
+	}
+
+	// write 32-bit word
+	INLINE void Write32(int data)
+	{
+		while (SPI1_TxIsFull()) {}
+		SPI1_Write(data);
+	}
+
+	// setup 8-bit transfer (wait with WaitBusy() before setup)
+	INLINE void SetLen8() { SPI1_SetLen(8); }
+
+	// setup 16-bit transfer (wait with WaitBusy() before setup)
+	INLINE void SetLen16() { SPI1_SetLen(16); }
+
+	// setup 32-bit transfer (wait with WaitBusy() before setup)
+	INLINE void SetLen32() { SPI1_SetLen(32); }
 
 	// wait for the transmission to complet
 	void WaitBusy();
@@ -199,6 +246,11 @@ public:
 
 	// display update
 	void Update();
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+	// display udpate from core3 (returns time delta in [us])
+	int UpdateCore(int core);
+#endif
 
 	// display update from main frame buffer - only if driver is valid (does not use its own frame buffer)
 	void UpdateMain();

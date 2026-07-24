@@ -1,0 +1,14 @@
+^YTrain^0
+
+Logic game, 50 levels
+
+^WRight^0 ..... right
+^WUp^0 ........ up
+^WLeft^0 ...... left
+^WDown^0 ...... down
+^W[A]^0 ....... enter password
+^W[B]^0 ....... escape password
+^W[X]^0 ....... help solve scene
+^W[Y]^0 ....... quit
+^WAlt+[X]^0 ... screenshot
+^WAlt+[A]^0 ... LCD zoom

@@ -1052,8 +1052,8 @@ int main()
 	// speed multiply (if using slow display)
 #if RASPPI == 1
 	SpeedMul = 2;
-#else
-	if (LCDIsOn()) SpeedMul = 2;
+//#else
+//	if (LCDIsOn()) SpeedMul = 2;
 #endif
 
 	// intro screen

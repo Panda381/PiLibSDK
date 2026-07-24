@@ -91,7 +91,7 @@ USE_MINIKEY=0
 USE_PORT12=0
 
 # 1=use PWM sound output, 0=not used (drv_pwmsnd.*)
-USE_PWMSND=0
+USE_PWMSND=1
 
 # 1=use RTC driver, 0=not used (drv_rtc.*)
 USE_RTC=1

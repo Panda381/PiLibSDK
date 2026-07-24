@@ -31,6 +31,7 @@ int main()
 {
 	int key, rot, i, model;
 	int step = 0;
+	u32 t1, t2;
 
 	// On start of power - wait for at least 5ms to stabilize power supply of the display
 	WaitMs(10);
@@ -80,10 +81,20 @@ int main()
 			LCD.DrawImg(Img80x160);
 
 		// display update
+		cb();
+		t1 = Time();
+		cb();
 		LCD.Update();
+		cb();
+		t2 = Time();
+		cb();
+		i = (s32)((u64)LCD.w*LCD.h*16*1000/(t2-t1));
+		printf("LCD update on %dms, speed %'d kHz, %d%%\n", (t2-t1+500)/1000,
+			i, (s32)((u64)i*100*1000/SPI1_GetSpeed()));
+		//printf("SPI1 divider %d, speed %'d Hz\n", SPI1_GetDiv(), SPI1_GetSpeed());
 
 		// clear screen
-		DrawRect(0, 50, WIDTH, HEIGHT-50, COL_BLACK);			
+		DrawRect(0, 3*16, WIDTH, HEIGHT-3*16, COL_BLACK);
 
 		// copy to screen
 		LCD.CopyToScreen((WIDTH - LCD.w)/2, (HEIGHT - LCD.h)/2);

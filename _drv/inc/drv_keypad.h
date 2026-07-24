@@ -71,7 +71,7 @@
 #define KEY_UP		6		// UP button (Up, PgUp)
 #define KEY_LEFT	7		// LEFT button (Left, Home)
 #define KEY_DOWN	8		// DOWN button (Down, PgDn)
-#define KEY_ALT		9		// ALT button, alternatove function
+#define KEY_ALT		9		// ALT button, alternative function
 
 #define KEYPAD_NUM	9		// number of base keypad keys
 

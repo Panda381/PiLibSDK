@@ -91,6 +91,16 @@ SPI1:
 	- clock inversion (idle high or idle low)
 	- shift in/out MS or LS bit first
 	- SPI speed = CoreClock / (2*(divider+1)) ... range 30.5 kHz to 125MHz (on core clock 250 MHz)
+
+	divider		speed
+	0		125000000
+	1		62500000
+	2		41666667
+	3		31250000
+	4		25000000
+	5		20833333
+	6		17857143
+	7		15625000
 */
 
 #ifndef _SDK_AUX_H

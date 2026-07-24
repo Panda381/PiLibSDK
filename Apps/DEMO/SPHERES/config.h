@@ -17,7 +17,7 @@
 #define WIDTH		640		// draw width (0=do not initialize default videomode)
 #define HEIGHT		480		// draw height
 #define SCREENSCALE	1		// 0 = no back buffer, or use back buffer with screen scale 1, 2 or 4
-#define USE_LCD320x240	1		// 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240)
+//#define USE_LCD320x240	2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
 
 #define AUTOUPDATE_MS	50		// interval of display auto-update in [ms]
 

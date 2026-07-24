@@ -398,7 +398,7 @@ void KeyWriteKey(u8 key)
 	if (w2 != KeyReadOff)
 	{
 		// add flags
-		if (KeyPressed(KEY_ALT)) key |= KEYFLAG_ALT;
+		if (KeyPressed(KEY_ALT) && (key != KEY_ALT)) key |= KEYFLAG_ALT;
 
 		// write key
 		KeyBuf[w] = key;

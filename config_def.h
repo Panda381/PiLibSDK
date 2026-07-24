@@ -40,7 +40,17 @@
 #endif
 
 #ifndef USE_LCD320x240
-#define USE_LCD320x240		1		// 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240), 2=use core3
+#define USE_LCD320x240		2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+#endif
+
+#if (USE_LCD320x240==2) && (!USE_LCD || !USE_MULTICORE || (CORES<4)) // if LCD on core3 is not supported
+#undef USE_LCD320x240
+#define USE_LCD320x240		1
+#endif
+
+#if USE_LCD320x240 && !USE_LCD // 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240), 2=use core3
+#undef USE_LCD320x240
+#define USE_LCD320x240		0
 #endif
 
 // Print

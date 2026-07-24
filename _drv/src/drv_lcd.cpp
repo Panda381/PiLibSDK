@@ -213,29 +213,16 @@
 #define LCD_DC_CMD	{ cb(); GPIO_Out0(LCD_DC_GPIO); cb(); }	// set command mode
 #define LCD_DC_DATA	{ cb(); GPIO_Out1(LCD_DC_GPIO); cb(); }	// set data mode
 
-// write byte
-//  After sending a byte, it does not wait for the transmission
-//  to complete - call WaitBusy() before ending the transaction.
-void cLCD::Write8(u8 data)
-{
-	// wait write enabled
-	while (SPI1_TxIsFull())
-	{
-		if (!SPI1_RxIsEmpty()) (void)SPI1_Read();
-	}
-
-	// write byte
-	SPI1_Write(data<<24);
-
-	// flush received byted
-	while (!SPI1_RxIsEmpty()) (void)SPI1_Read();
-}
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+u32 LCD_FrameBuf[320*240/2];	// LCD temporary frame buffer
+volatile Bool LCD_FrameBufDirty = False; // flag - update frame buffer from core3
+#endif
 
 // wait for the transmission to complet
 void cLCD::WaitBusy()
 {
 	while (!SPI1_TxIsEmpty() || SPI1_IsBusy()) {}
-	WaitUs(5); // wait for last shift
+	WaitUs(10); // wait for last shift
 }
 
 // display connect (activate chip selection)
@@ -353,6 +340,9 @@ void cLCD::SetWindow(int x, int y, int w, int h)
 
 	// command to start sending data
 	this->WriteCmd(ST77XX_RAMWR);
+
+	// set data mode
+	LCD_DC_DATA;		// set data mode
 }
 
 // set backlight control (range 0..10)
@@ -597,9 +587,9 @@ void cLCD::Init(int model, int dispw, int disph, int offx, int offy, u32* frameb
 	AUX->spi1.CTRL0 = B9;	// reset FIFO,
 	WaitMs(1);
 	if (model == LCD_MODEL_ST7789)
-		AUX->spi1.CTRL0 = 8|B6|B7|B8|B17|B18|B19; // 8 data bits, start MSB first, reset FIFO,
+		AUX->spi1.CTRL0 = 8|B6|B7|B8|B17|B18|B19; // 8 data bits, start MSB first, reset FIFO, no hold time
 	else
-		AUX->spi1.CTRL0 = 8|B6|B17|B18|B19; // 8 data bits, start MSB first, reset FIFO,
+		AUX->spi1.CTRL0 = 8|B6|B17|B18|B19; // 8 data bits, start MSB first, reset FIFO, no hold time
 
 	// set transfer speed in Hz
 	SPI1_SetSpeed(speed);
@@ -685,6 +675,8 @@ void cLCD::ReInit(int dispw, int disph, int offx, int offy)
 // terminate
 void cLCD::Term()
 {
+	this->model = LCD_MODEL_NONE;
+
 	SPI1_Term();
 
 	// terminate GPIO pins
@@ -704,7 +696,7 @@ void cLCD::Term()
 }
 
 // convert 32-bit color to 16-bit color
-INLINE u16 Col32To16(u32 d)
+INLINE u32 Col32To16(u32 d)
 {
 	return ((d & 0xf8) >> 3) | ((d & 0xfc00) >> (8+2-5)) | ((d & 0xf80000) >> (16+3-5-6));
 }
@@ -735,19 +727,40 @@ void cLCD::UpdateClearCol(u32 col)
 void cLCD::Update()
 {
 	int i;
-	u16 b;
+	u32 b;
 
 	// set drawing window
 	this->SetWindow(0, 0, this->w, this->h);
 
 	// send data	
 	u32* s = this->framebuf;
-	for (i = this->w*this->h; i > 0; i--)
+	i = this->w*this->h;
+	if ((i & 1) == 0) // size is aligned to 32-bits
 	{
-		b = Col32To16(*s++);
-		this->WriteData(b >> 8);
-		this->WriteData((u8)b);
+		this->SetLen32();	// set 32-bit transfer
+		i >>= 1;
+		for (; i > 0; i--)
+		{
+			b = Col32To16(s[0]) << 16;
+			b |= Col32To16(s[1]);
+			s += 2;
+			this->Write32(b);
+		}
 	}
+	else
+	{
+		this->SetLen16();	// set 16-bit transfer
+		for (; i > 0; i--)
+		{
+			b = Col32To16(*s++);
+			this->Write16(b);
+		}
+	}
+	this->WaitBusy();	// wait for the transmission to complet
+	this->SetLen8();	// set 8-bit transfer
+
+	// flush received bytes
+	while (!SPI1_RxIsEmpty()) (void)SPI1_Read();
 
 	// enable display
 	if (!this->on)
@@ -760,20 +773,91 @@ void cLCD::Update()
 	this->Disconnect();
 }
 
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+// display udpate from core3 (returns time delta in [us])
+int FASTCODE cLCD::UpdateCore(int core)
+{
+	// wait for update requrest
+	dsb();
+	while (!LCD_FrameBufDirty)
+	{
+		wfe();	// wait signal
+		dsb();
+		if (CoreStopReq(core)) return 0;
+	}
+	LCD_FrameBufDirty = False;
+	dsb();
+
+	// destination size of LCD display
+	int wd = this->w;
+	int hd = this->h;
+	u32 t1 = Time();
+
+	// set drawing window
+	this->SetWindow(0, 0, wd, hd);
+
+	// set 32-bit transfer
+	this->SetLen32();
+
+	// send data
+	int i = wd*hd/2/4;
+	const u32* s = LCD_FrameBuf;
+	int j;
+	for (; i > 0; i--)
+	{
+		// delay 2us - to minimize access to the peripheral bus, which would slow down core 0
+		for (j = 1000; j > 0; j--) nop();
+
+		// wait transmit FIFO to be empty
+		while (!SPI1_TxIsEmpty()) {}
+
+		// send 4 samples (batch processing puts less load on the bus)
+		SPI1_Write(s[0]);
+		SPI1_Write(s[1]);
+		SPI1_Write(s[2]);
+		SPI1_Write(s[3]);
+		s += 4;
+	}
+
+	// end
+	this->WaitBusy();	// wait for the transmission to complet
+	this->SetLen8();	// set 8-bit transfer
+
+	// flush received bytes
+	while (!SPI1_RxIsEmpty()) (void)SPI1_Read();
+
+	// disconnect display
+	this->Disconnect();
+
+	return Time() - t1;
+}
+#endif
+
 // display update from main frame buffer - only if driver is valid (does not use its own frame buffer)
 void cLCD::UpdateMain()
 {
 	int i, j, xs, ys, xd, yd, ws, hs, wd, hd, wbs;
 	const u32 *s, *s2, *s0;
 	u32 c1, c2, c3, c4, a, b;
-	u16 d;
+	int d;
 	Bool scale;
 
 	// check if driver is valid
 	if (!this->IsValid()) return;
 
 	// clear display if not yet enabled - to clear unused parts of the display
-	if (!this->on) this->UpdateClearCol(COL_BLACK);
+	if (!this->on)
+	{
+		this->UpdateClearCol(COL_BLACK);
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+		// enable display
+		this->Connect();
+		this->on = True;
+		this->WriteCmd(ST77XX_DISPON);
+		this->Disconnect();
+#endif
+	}
 
 	// destination size of LCD display
 	wd = this->w;
@@ -785,6 +869,11 @@ void cLCD::UpdateMain()
 	ws = f->drawwidth;	// width of drawing buffer
 	hs = f->drawheight;	// height of drawing buffer
 	wbs = f->drawpitchpix; // line width in pixels
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+	u32* dst = LCD_FrameBuf;
+	u16* dst16 = (u16*)dst;
+#endif
 
 	xs = 0;
 	ys = 0;
@@ -824,28 +913,76 @@ void cLCD::UpdateMain()
 		// set drawing window
 		xd = (wd - ws)/2;
 		yd = (hd - hs)/2;
+#if USE_LCD320x240!=2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
 		this->SetWindow(xd, yd, ws, hs);
+
+		if ((ws & 1) == 0) // width is aligned to 32-bits
+			this->SetLen32();	// set 32-bit transfer
+		else
+			this->SetLen16();	// set 16-bit transfer
+#endif
 
 		// send data
 		for (i = hs; i > 0; i--)
 		{
 			s = s0;
 			s2 = s0 + wbs;
-			for (j = ws; j > 0; j--)
+			j = ws;
+			if ((j & 1) == 0) // width is aligned to 32-bits
 			{
-				c1 = s[0];
-				c2 = s[1];
-				c3 = s2[0];
-				c4 = s2[1];
-				a = ((c1 & 0xfc00fc) + (c2 & 0xfc00fc) + (c3 & 0xfc00fc) + (c4 & 0xfc00fc)) >> 2;
-				b = ((c1 & 0xfc00) + (c2 & 0xfc00) + (c3 & 0xfc00) + (c4 & 0xfc00)) >> 2;
+				j >>= 1;
+				for (; j > 0; j--)
+				{
+					c1 = s[0];
+					c2 = s[1];
+					c3 = s2[0];
+					c4 = s2[1];
+					a = ((c1 & 0xfc00fc) + (c2 & 0xfc00fc) + (c3 & 0xfc00fc) + (c4 & 0xfc00fc)) >> 2;
+					b = ((c1 & 0xfc00) + (c2 & 0xfc00) + (c3 & 0xfc00) + (c4 & 0xfc00)) >> 2;
 
-				s += 2;
-				s2 += 2;
+					d = Col32To16(a|b) << 16;
 
-				d = Col32To16(a|b);
-				this->WriteData(d >> 8);
-				this->WriteData((u8)d);
+					c1 = s[2];
+					c2 = s[3];
+					c3 = s2[2];
+					c4 = s2[3];
+					a = ((c1 & 0xfc00fc) + (c2 & 0xfc00fc) + (c3 & 0xfc00fc) + (c4 & 0xfc00fc)) >> 2;
+					b = ((c1 & 0xfc00) + (c2 & 0xfc00) + (c3 & 0xfc00) + (c4 & 0xfc00)) >> 2;
+
+					s += 4;
+					s2 += 4;
+
+					d |= Col32To16(a|b);
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+					*dst++ = d;
+#else
+					this->Write32(d);
+#endif
+				}
+			}
+			else
+			{
+				for (; j > 0; j--)
+				{
+					c1 = s[0];
+					c2 = s[1];
+					c3 = s2[0];
+					c4 = s2[1];
+					a = ((c1 & 0xfc00fc) + (c2 & 0xfc00fc) + (c3 & 0xfc00fc) + (c4 & 0xfc00fc)) >> 2;
+					b = ((c1 & 0xfc00) + (c2 & 0xfc00) + (c3 & 0xfc00) + (c4 & 0xfc00)) >> 2;
+
+					s += 2;
+					s2 += 2;
+
+					d = Col32To16(a|b);
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+					*dst16++ = (u16)d;
+#else
+					this->Write16(d);
+#endif
+				}
 			}
 			s0 += 2*wbs;
 		}
@@ -857,21 +994,59 @@ void cLCD::UpdateMain()
 		yd = (hd - hs)/2;
 		
 		// set drawing window
+#if USE_LCD320x240!=2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
 		this->SetWindow(xd, yd, ws, hs);
+
+		if ((ws & 1) == 0) // width is aligned to 32-bits
+			this->SetLen32();	// set 32-bit transfer
+		else
+			this->SetLen16();	// set 16-bit transfer
+#endif
 
 		// send data
 		for (i = hs; i > 0; i--)
 		{
 			s = s0;
-			for (j = ws; j > 0; j--)
+			j = ws;
+			if ((j & 1) == 0) // width is aligned to 32-bits
 			{
-				d = Col32To16(*s++);
-				this->WriteData(d >> 8);
-				this->WriteData((u8)d);
+				j >>= 1;
+				for (; j > 0; j--)
+				{
+					d = Col32To16(s[0]) << 16;
+					d |= Col32To16(s[1]);
+					s += 2;
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+					*dst++ = d;
+#else
+					this->Write32(d);
+#endif
+				}
+			}
+			else
+			{
+				for (; j > 0; j--)
+				{
+					d = Col32To16(*s++);
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+					*dst16++ = (u16)d;
+#else
+					this->Write16(d);
+#endif
+				}
 			}
 			s0 += wbs;
 		}
 	}
+
+#if USE_LCD320x240!=2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+	this->WaitBusy();	// wait for the transmission to complet
+	this->SetLen8();	// set 8-bit transfer
+
+	// flush received bytes
+	while (!SPI1_RxIsEmpty()) (void)SPI1_Read();
 
 	// enable display
 	if (!this->on)
@@ -882,6 +1057,14 @@ void cLCD::UpdateMain()
 
 	// disconnect display
 	this->Disconnect();
+
+#else		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+	dsb();
+	LCD_FrameBufDirty = True; // flag - update frame buffer from core3
+	dsb();
+	sev();	// send signal
+	dmb();
+#endif
 }
 
 // set font

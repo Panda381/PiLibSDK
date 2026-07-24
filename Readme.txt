@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.41, in progress - under development
-Last update: 07/18/2026
+Pre-alpha version 0.42, in progress - under development
+Last update: 07/24/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -248,6 +248,21 @@ Test
 
 
 ----------------
+
+Order of includes:
+
+-> project "include.h"
+   -> root "includes.h" (INCLUDES_H)
+       -> root "global.h"
+          -> project "config.h"
+             -> root "config_def.h" (CONFIG_DEF_H)
+                -> device "_devices/barepi/_config.h"
+       -> fonts "_font/_include.h"
+       -> SDK "_sdk/_include.h"
+       -> drivers "_drv/_include.h"
+       -> LIB "_lib/_include.h"
+       -> device "_devices/barepi/_include.h"
+
 
 Notes:
 

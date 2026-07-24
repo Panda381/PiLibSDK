@@ -18,7 +18,22 @@
 #define WIDTH		640		// draw width (0=do not initialize default videomode)
 #define HEIGHT		480		// draw height
 #define SCREENSCALE	1		// 0 = no back buffer, using back buffer with screen scale 1, 2 or 4
-#define USE_LCD320x240	0		// 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240)
+#define USE_LCD320x240	0		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+
+/*
+divider	speed		LCD320x240 update	LCD160x80 update	real speed	[%]
+0	125000000	11 ms			2 ms			110000 kHz	87% (data transfer is faulty)
+1	62500000	22 ms			4 ms			56000 kHz	90%
+2	41666667	32 ms			5 ms			38000 kHz	91%
+3	31250000	43 ms			7 ms			28500 kHz	91%
+4	25000000	54 ms			9 ms			23000 kHz	91%
+5	20833333	64 ms			11 ms			19000 kHz	91%
+6	17857143	75 ms			13 ms			16400 kHz	92%
+7	15625000	85 ms			14 ms			14400 kHz	92%
+8	13888889	96 ms			16 ms			12800 kHz	92%
+9	12500000	107 ms			18 ms			11500 kHz	92%
+*/
+#define LCD_DEF_SPEED	62500000
 
 // 1=use multicore (for applications), 0=do not use other cores (for loader)
 // Loader must be run without multicore, because cannot park other cores to their original address

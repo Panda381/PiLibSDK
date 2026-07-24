@@ -31,8 +31,10 @@ int main()
 	TestLedImg = (u8*)JPGLOAD(TestLedImgJpg);
 	if (TestLedImg == NULL) Reboot(); // emergency exit
 
+#if USE_KEYPAD	// 1=use BarePi KeyPad, 0=not used (drv_keypad.*)
 	// keyboard service terminate
 	KeyTerm();
+#endif
 
 	// setup all GPIOs
 	for (i = 27; i != 0; i--)

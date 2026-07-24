@@ -1,0 +1,12 @@
+^YTetris^0
+
+Game stacking blocks
+
+^WLeft^0 .......... left
+^WRight^0 ......... right
+^WUp or [X]^0 ..... turn stone
+^WDOWN or [A]^0 ... drop stone
+^W[B]^0 ........... pause
+^W[Y]^0 ........... quit
+^WAlt+[X]^0 ....... screenshot
+^WAlt+[A]^0 ....... LCD zoom

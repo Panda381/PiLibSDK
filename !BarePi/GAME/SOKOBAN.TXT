@@ -1,0 +1,15 @@
+^YSokoban^0
+
+Logic game, 3008 levels
+
+^Warrows^0 ...... move
+^W[A]^0 ......... OK, Enter
+^W[Y]^0 ......... escape
+^W[X]^0 ......... help solution
+^W[B]^0 ......... restart scene
+^WAlt+LEFT^0 .... previous level
+^WAlt+RIGHT^0 ... next level
+^WAlt+UP^0 ...... fast mode
+^WAlt+DOWN^0 .... slow mode
+^WAlt+[X]^0 ..... screenshot
+^WAlt+[A]^0 ..... LCD zoom

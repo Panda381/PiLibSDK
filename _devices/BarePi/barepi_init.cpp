@@ -11,6 +11,7 @@
 cLCD LCDDisp;				// LCD display driver
 u32 LCDDispLast;			// last time of start of LCD frame
 volatile int LCDDispTime;		// time delta of LCD frame in [us], to get FPS
+volatile int LCDDispSend;		// time to send LCD frame in [us]
 volatile int LCDDispZoom = 0;		// LCD display zoom (0..4, 0=full screen)
 
 // shift LCD display zoom (on key Insert)
@@ -21,6 +22,20 @@ void LCDRezoom()
 	LCDDisp.zoom = z;
 	LCDDisp.UpdateMain();	// display update
 } 
+#endif
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+// drawing from code 3
+void CoreFncLCD(int core, void* arg)
+{
+	while (!CoreStopReq(core))
+	{
+		u32 t = Time();
+		LCDDispTime = t - LCDDispLast;
+		LCDDispLast = t;
+		LCDDispSend = LCDDisp.UpdateCore(core);
+	}
+}
 #endif
 
 // Initialize device
@@ -48,15 +63,22 @@ void DevInit()
 
 	// output to LCD SPI display
 #if USE_LCD && USE_LCD320x240		// 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240), 2=use core3
+	LCDDisp.model = LCD_MODEL_NONE;
 	if (LCDDisp.Detect() == LCD_MODEL_ST7789)
 	{
 		LCDDisp.Init(LCD_MODEL_ST7789, 240, 320, 0, 0, NULL, LCD_ROT_270, LCD_DEF_SPEED);
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+		// drawing from code 3
+		RunCore(CORES-1, CoreFncLCD, NULL);
+#endif
 	}
 #endif
 
+#if USE_KEYPAD	// 1=use BarePi KeyPad, 0=not used (drv_keypad.*)
 	// keyboard initialize
 	// - Must be initialized after initialization of the I2C bus driver.
 	KeyInit();
+#endif
 
 #if USE_CALCKEY		// 1=use BarePi CalcKey, 0=not used (drv_calckey.*)
 	// CalcKey initialize
@@ -72,13 +94,19 @@ void DevTerm()
 	CalcKeyTerm();
 #endif
 
+#if USE_KEYPAD	// 1=use BarePi KeyPad, 0=not used (drv_keypad.*)
 	// keyboard terminate
 	KeyTerm();
+#endif
 
 	// LCD SPI display
 #if USE_LCD && USE_LCD320x240		// 1=enable output to LCD SPI display ST7789 320x240 (BarePi module LCD320x240), 2=use core3
 	if (LCDDisp.IsValid())
 	{
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+		StopCore(CORES-1);	// stop core 3
+		WaitCoreIdle(CORES-1);	// wait core 3
+#endif
 		LCDDisp.Term();		// terminate LCD
 	}
 #endif
