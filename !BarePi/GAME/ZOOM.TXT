@@ -1,0 +1,11 @@
+^YBuck Rogers-Planet of Zoom^0
+
+A game based on the
+(c) 1984 Sega Interprises
+DOS game of the same name.
+
+^WLeft/Right^0 .. left/right
+^WUp/Down^0 ..... speed
+^W[A]^0 ......... fire
+^W[Y]^0 ......... exit game
+^WAlt+[X]^0 ..... screenshot

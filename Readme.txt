@@ -247,6 +247,8 @@ Games
  TETRIS ... Game stacking blocks
  TRAIN ... Logic game, 50 levels
  TVTENNIS ... Classic TV game
+ VEGASLOT ... Winning Slot Machine
+ ZOOM ... Buck Rogers-Planet of Zoom
 
 MP3
  MP3 ... MP3 player
