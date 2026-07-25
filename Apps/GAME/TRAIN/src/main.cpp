@@ -59,7 +59,7 @@ PlayIntro:
 	DrawImg(Light1Img, 512, 320);
 	DispUpdate();
 
-	// wait a key (max. 20 seconds)
+	// wait a key (max. 15 seconds)
 	u32 t1 = Time();
 	WaitMs(200);
 	KeyFlush();

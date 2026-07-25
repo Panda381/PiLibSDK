@@ -32,10 +32,10 @@ content="text/html; charset=utf-8">
 <p align="center"><font color="#FF8000" size="4" face="Arial"><strong>Raspberry
 Pi bare-metal SDK library</strong></font></p>
 
-<p align="center"><font face="Arial">Pre-alpha version 0.42, <strong>in
+<p align="center"><font face="Arial">Pre-alpha version 0.43, <strong>in
 progress - under development</strong></font></p>
 
-<p align="center"><font face="Arial">Last Update: 07/24/2026</font></p>
+<p align="center"><font face="Arial">Last Update: 07/25/2026</font></p>
 
 <p align="center"><font face="Arial">(c) 2026 Miroslav Nemecek</font></p>
 
@@ -44,7 +44,7 @@ face="Arial">https://github.com/Panda381/PiLibSDK</font></a></p>
 
 <p align="center"><a href="dwn/PiLibSDK.zip"><font face="Arial">Download
 library along with sample applications and all resources</font></a><font
-face="Arial"> (360 MB)</font></p>
+face="Arial"> (370 MB)</font></p>
 
 <p align="center"><a href="img/ZeroTiny.jpg"><font face="Arial"><img
 src="img/ZeroTiny_m.jpg" border="0" width="300" height="192"></font></a></p>
@@ -316,6 +316,68 @@ edit paths in _c1.bat (set GCC_PI_PATH).</font></p>
 it to FAT32, copy the contents of the !BarePi folder to it, as
 well as one of the !BarePi_* folder (depending on the module
 type).</font></p>
+
+<p align="left"><font face="Arial">Order of calling included
+files:</font></p>
+
+<p align="left"><font face="Arial">-&gt; project
+&quot;include.h&quot;</font></p>
+
+<blockquote>
+    <p align="left"><font face="Arial">-&gt; root
+    &quot;includes.h&quot; (INCLUDES_H)</font></p>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <p align="left"><font face="Arial">-&gt; root
+        &quot;global.h&quot;</font></p>
+    </blockquote>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <blockquote>
+            <p align="left"><font face="Arial">-&gt; project
+            &quot;config.h&quot;</font></p>
+        </blockquote>
+    </blockquote>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <blockquote>
+            <blockquote>
+                <p align="left"><font face="Arial">-&gt; root
+                &quot;config_def.h&quot; (CONFIG_DEF_H)</font></p>
+            </blockquote>
+        </blockquote>
+    </blockquote>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <blockquote>
+            <blockquote>
+                <blockquote>
+                    <p align="left"><font face="Arial">-&gt; (called
+                    from start of config_def.h) device
+                    &quot;_devices/barepi/_config.h&quot;</font></p>
+                </blockquote>
+            </blockquote>
+        </blockquote>
+        <p align="left"><font face="Arial">-&gt; fonts
+        &quot;_font/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; SDK
+        &quot;_sdk/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; drivers
+        &quot;_drv/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; LIB
+        &quot;_lib/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; device
+        &quot;_devices/barepi/_include.h&quot;</font></p>
+    </blockquote>
+</blockquote>
 
 <p align="left">&nbsp;</p>
 
@@ -741,10 +803,20 @@ Applications</font></h3>
         height="120"></font></a><font face="Arial"><br>
         TRAIN - Logic game, 50 levels</font></td>
     </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/TVTENNIS_Intro.PNG"><font face="Arial"><img
+        src="img/apps/TVTENNIS_Intro_m.jpg" border="0"
+        width="160" height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/TVTENNIS.PNG"><font face="Arial"><img
+        src="img/apps/TVTENNIS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        TVTENNIS - Classic TV game</font></td>
+        <td align="center" valign="top">&nbsp;</td>
+        <td align="center" valign="top">&nbsp;</td>
+    </tr>
 </table>
 </div>
-
-<p align="left">&nbsp;</p>
 
 <p align="left"><a name="mp3"></a><font face="Arial"><strong>MP3</strong></font></p>
 

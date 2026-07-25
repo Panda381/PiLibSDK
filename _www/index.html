@@ -32,10 +32,10 @@ content="text/html; charset=utf-8">
 <p align="center"><font color="#FF8000" size="4" face="Arial"><strong>Bare-metal
 SDK knihovna pro moduly Raspberry Pi</strong></font></p>
 
-<p align="center"><font face="Arial">Před-alfa verze 0.42, <strong>rozpracováno
+<p align="center"><font face="Arial">Před-alfa verze 0.43, <strong>rozpracováno
 - ve vývoji</strong></font></p>
 
-<p align="center"><font face="Arial">Poslední aktualizace: 24.07.2026</font></p>
+<p align="center"><font face="Arial">Poslední aktualizace: 25.07.2026</font></p>
 
 <p align="center"><font face="Arial">(c) 2026 Miroslav Němeček</font></p>
 
@@ -44,7 +44,7 @@ face="Arial">https://github.com/Panda381/PiLibSDK</font></a></p>
 
 <p align="center"><a href="dwn/PiLibSDK.zip"><font face="Arial">Download
 knihovny spolu s ukázkovými aplikacemi a všemi podklady</font></a><font
-face="Arial"> (360 MB)</font></p>
+face="Arial"> (370 MB)</font></p>
 
 <p align="center"><a href="img/ZeroTiny.jpg"><font face="Arial"><img
 src="img/ZeroTiny_m.jpg" border="0" width="300" height="192"></font></a></p>
@@ -316,6 +316,70 @@ upravte cesty v _c1.bat (&quot;set GCC_PI_PATH&quot;).</font></p>
 <p align="left"><font face="Arial">K přípravě SD karty
 připravte SD kartu ve formátu FAT32, nahrajte na ni obsah složky
 !BarePi a také jednu ze složek !BarePi_* (podle typu modulu).</font></p>
+
+<p align="left"><font face="Arial">Pořadí volání vnořených
+souborů:</font></p>
+
+<p align="left"><font face="Arial">-&gt; project
+&quot;include.h&quot;</font></p>
+
+<blockquote>
+    <p align="left"><font face="Arial">-&gt; root
+    &quot;includes.h&quot; (INCLUDES_H)</font></p>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <p align="left"><font face="Arial">-&gt; root
+        &quot;global.h&quot;</font></p>
+    </blockquote>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <blockquote>
+            <p align="left"><font face="Arial">-&gt; project
+            &quot;config.h&quot;</font></p>
+        </blockquote>
+    </blockquote>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <blockquote>
+            <blockquote>
+                <p align="left"><font face="Arial">-&gt; root
+                &quot;config_def.h&quot; (CONFIG_DEF_H)</font></p>
+            </blockquote>
+        </blockquote>
+    </blockquote>
+</blockquote>
+
+<blockquote>
+    <blockquote>
+        <blockquote>
+            <blockquote>
+                <blockquote>
+                    <p align="left"><font face="Arial">-&gt;
+                    (voláno ze začátku config_def.h) device
+                    &quot;_devices/barepi/_config.h&quot;</font></p>
+                </blockquote>
+            </blockquote>
+        </blockquote>
+        <p align="left"><font face="Arial">-&gt; fonts
+        &quot;_font/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; SDK
+        &quot;_sdk/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; drivers
+        &quot;_drv/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; LIB
+        &quot;_lib/_include.h&quot;</font></p>
+        <p align="left"><font face="Arial">-&gt; device
+        &quot;_devices/barepi/_include.h&quot;</font></p>
+    </blockquote>
+</blockquote>
+
+<p align="left"><font face="Arial"></font>&nbsp;</p>
 
 <p align="left">&nbsp;</p>
 
@@ -742,6 +806,18 @@ aplikace</font></h3>
         src="img/apps/TRAIN_m.jpg" border="0" width="160"
         height="120"></font></a><font face="Arial"><br>
         TRAIN - Logic game, 50 levels</font></td>
+    </tr>
+    <tr>
+        <td align="center" valign="top"><a
+        href="img/apps/TVTENNIS_Intro.PNG"><font face="Arial"><img
+        src="img/apps/TVTENNIS_Intro_m.jpg" border="0"
+        width="160" height="120"></font></a><font face="Arial"> </font><a
+        href="img/apps/TVTENNIS.PNG"><font face="Arial"><img
+        src="img/apps/TVTENNIS_m.jpg" border="0" width="160"
+        height="120"></font></a><font face="Arial"><br>
+        TVTENNIS - Classic TV game</font></td>
+        <td align="center" valign="top"><font face="Arial"></font>&nbsp;</td>
+        <td align="center" valign="top"><font face="Arial"></font>&nbsp;</td>
     </tr>
 </table>
 </div>

@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.42, in progress - under development
-Last update: 07/24/2026
+Pre-alpha version 0.43, in progress - under development
+Last update: 07/25/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -154,6 +154,20 @@ To prepare the SD card, format it to FAT32, copy the contents of the !BarePi
 folder to it, as well as one of the !BarePi_* folder (depending on the module
 type).
 
+Order of includes:
+
+-> project "include.h"
+   -> root "includes.h" (INCLUDES_H)
+       -> root "global.h"
+          -> project "config.h"
+             -> root "config_def.h" (CONFIG_DEF_H)
+                -> (called from start of config_def.h) device "_devices/barepi/_config.h"
+       -> fonts "_font/_include.h"
+       -> SDK "_sdk/_include.h"
+       -> drivers "_drv/_include.h"
+       -> LIB "_lib/_include.h"
+       -> device "_devices/barepi/_include.h"
+
 
 ZeroTiny
 ========
@@ -229,6 +243,10 @@ Games
  PACMAN ... Action game Pac-Man
  PICTOR ... Picopad Collector
  RAPTOR ... Shooting game
+ SOKOBAN ... Logic game, 3008 levels
+ TETRIS ... Game stacking blocks
+ TRAIN ... Logic game, 50 levels
+ TVTENNIS ... Classic TV game
 
 MP3
  MP3 ... MP3 player
@@ -249,19 +267,6 @@ Test
 
 ----------------
 
-Order of includes:
-
--> project "include.h"
-   -> root "includes.h" (INCLUDES_H)
-       -> root "global.h"
-          -> project "config.h"
-             -> root "config_def.h" (CONFIG_DEF_H)
-                -> device "_devices/barepi/_config.h"
-       -> fonts "_font/_include.h"
-       -> SDK "_sdk/_include.h"
-       -> drivers "_drv/_include.h"
-       -> LIB "_lib/_include.h"
-       -> device "_devices/barepi/_include.h"
 
 
 Notes:

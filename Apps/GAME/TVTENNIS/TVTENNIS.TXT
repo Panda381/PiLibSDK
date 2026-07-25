@@ -1,0 +1,10 @@
+^YTV Tennis^0
+
+Classic TV game
+
+^WUp/Down^0 .......... left player
+^W[X]/[A]^0 .......... right player
+^W[B]/Left/Right^0 ... serve
+^W[Y]^0 .............. quit
+^WAlt+[X]^0 .......... screenshot
+^WAlt+[A]^0 .......... LCD zoom
