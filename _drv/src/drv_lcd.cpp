@@ -987,9 +987,42 @@ void cLCD::UpdateMain()
 			s0 += 2*wbs;
 		}
 	}
+
+	// destination Disp = 2*source FrameBuf
+	else if ((2*ws == wd) && (2*hs == hd))
+	{
+		xd = 0;
+		yd = 0;
+		
+		// set drawing window
+#if USE_LCD320x240!=2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+		this->SetWindow(xd, yd, wd, hd);
+		this->SetLen32();	// set 32-bit transfer
+#endif
+
+		// send data
+		for (i = hd; i > 0; i--)
+		{
+			s = s0;
+			for (j = ws; j > 0; j--)
+			{
+				d = Col32To16(s[0]);
+				d |= d << 16;
+				s++;
+
+#if USE_LCD320x240==2		// 1=enable output to LCD SPI display ST7789 320x240, 2=use core3
+				*dst++ = d;
+#else
+				this->Write32(d);
+#endif
+			}
+			if ((i & 1) != 0) s0 += wbs;
+		}
+	}
+
+	// source is less or equal to destination
 	else
 	{
-		// destination is less or equal to source
 		xd = (wd - ws)/2;
 		yd = (hd - hs)/2;
 		

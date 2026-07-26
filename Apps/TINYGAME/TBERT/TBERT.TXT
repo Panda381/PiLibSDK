@@ -1,0 +1,9 @@
+^YTiny Bert^0
+
+   Adaptation of the game
+ Tiny Bert on the Raspberry
+ Zero, originally created
+ for the Arduboy platform
+ and Tinyjoypad Attiny85.
+
+ (c) Daniel Champagne

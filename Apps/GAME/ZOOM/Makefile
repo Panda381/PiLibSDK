@@ -57,7 +57,7 @@ USE_JPG=0
 USE_MAT2D=0
 
 # 1=use MP3 decoder, 0=not used (mp3/lib_mp3.*)
-USE_MP3=1
+USE_MP3=0
 
 # 1=use PNG support, 0=not used (_lib/pic/lib_png*)
 USE_PNG=1

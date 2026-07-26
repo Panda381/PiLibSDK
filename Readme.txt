@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.43, in progress - under development
-Last update: 07/25/2026
+Pre-alpha version 0.45, in progress - under development
+Last update: 07/26/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -265,6 +265,24 @@ Test
  RTC ... Display and set current time, using RTC module
  SSD1306 ... Test SSD1306 display
  TESTLED ... Test BarePi bus with TESTLED module
+
+TinyGames
+ TARKAN .. Tiny Arkanoid
+ TBERT ... Tiny Bert
+ TBIKE ... Tiny Bike
+ TBOMBER ... Tiny Bomber
+ TDDUG ... Tiny DDug
+ TDOC ... Tiny Doctor
+ TDUNGEON ... Tiny Dungeon
+ TINVADER ... Tiny Invaders
+ TMISSILE ... Tiny Missile
+ TMORPION ... Tiny Morpion
+ TPIPE ... Tiny Pipe
+ TPLAQUE ... Tiny Plaque
+ TSQUEST ... Tiny SQuest
+ TTRICK ... Tiny Trick
+ TTRIS ... Tiny Tris
+
 
 
 ----------------

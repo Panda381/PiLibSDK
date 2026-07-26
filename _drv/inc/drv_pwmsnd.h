@@ -109,7 +109,7 @@
 #define NOTE_LEN16	(NOTE_LEN_BASE*4)		// 1/16
 #define NOTE_LEN32DOT	(NOTE_LEN_BASE*3)		// 1/32.
 #define NOTE_LEN32	(NOTE_LEN_BASE*2)		// 1/32
-#define NOTE_LEN64DOT	(NOTE_LEN_BASE+NOTE_LEN_BASE/2)	// 1/64
+#define NOTE_LEN64DOT	(NOTE_LEN_BASE+NOTE_LEN_BASE/2)	// 1/64.
 #define NOTE_LEN64	(NOTE_LEN_BASE*1)		// 1/64
 
 #define NOTE_STOP	0		// stop mark of the melody
@@ -251,7 +251,7 @@
 
 // tone of the melody
 typedef struct {
-	u32	len;			// tone length counter (0=end of melody)
+	u32	len;			// tone length counter in number of PWMSND_RATE ticks (0=end of melody)
 	u32	inc;			// tone phase fraction increment (0=silent)
 } sMelodyTone;
 

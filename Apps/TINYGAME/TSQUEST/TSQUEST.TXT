@@ -1,0 +1,10 @@
+^YTiny SQuest^0
+
+   Adaptation of the game
+ Tiny SQuest on the
+ Raspberry Zero, originally
+ created for the Arduboy
+ platform and Tinyjoypad
+ Attiny85.
+
+ (c) Daniel Champagne
