@@ -1,0 +1,29 @@
+^YMandelbrot^0
+Fast fractal pattern generator.
+^WArrows^0 ........... move
+^W[B]^0 .............. animation
+^W[X]^0 .............. info
+^W[Y]^0 .............. quit
+^W[A]+Up/Down^0 ...... zoom
+^W[A]+Left/Right^0 ... steps
+^WAlt+Up/Down^0 ...... save slot
+^WAlt+Left/Right^0 ... palette
+^WAlt+[A]^0 .......... LCD zoom
+^WAlt+[B]^0 .......... load
+^WAlt+[Y]^0 .......... save
+^WAlt+[X]^0 .......... screenshot
+
+Save slots: 10
+Max. zoom: 10^225 (SizeN 748)
+Max. digits: 230
+Max. steps: 100000
+Palettes: 4294967296
+Animation sub-frames: 8
+
+Mode SizeN levels:
+0..11: float
+12..40: double
+41..135: float perturbation
+136..748: double perturbation
+
+Calculations are NEON optimised.

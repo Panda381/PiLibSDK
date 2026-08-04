@@ -120,8 +120,8 @@ CORE_STACK_SIZE=0x1C000		# stack size per 1 core (= 0x10000 + 3*0x4000 = SYS + 3
 PREFIX=arm-none-eabi-
 LOAD_ADDR=0x8000		# load address
 else
-INT_STACK_SIZE=0x8000		# interrupt stack size (used for ABORT, IRQ and FIQ)
 SYS_STACK_SIZE=0x20000		# kernel stack size
+INT_STACK_SIZE=0x8000		# interrupt stack size (used for ABORT, IRQ and FIQ)
 CORE_STACK_SIZE=0x28000		# stack size per 1 core (= 0x8000 + 0x20000 = INT + SYS)
 PREFIX=aarch64-none-elf-
 LOAD_ADDR=0x80000		# load address

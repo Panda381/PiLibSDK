@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
-Pre-alpha version 0.45, in progress - under development
-Last update: 07/26/2026
+Pre-alpha version 0.46, in progress - under development
+Last update: 08/04/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -74,10 +74,10 @@ The higher speed is due not only to a higher processor frequency but also to a
 newer architecture. In addition, the Zero 2 module has 4 cores, while the
 Zero 1 has only one core. Therefore, it is strongly recommended to use the
 Zero 2 module. Use the Zero 1 module only if you own it and have no better use
-for it. The Zero 2 module can be operated in 32-bit or 64-bit mode. The
-compilations are prepared for both modes. From a user's point of view, there is
-no noticeable difference between the modes. It is recommended to prefer 64-bit
-mode, which may be slightly faster in some cases.
+for it. The Zero 2 module can be operated in 32-bit or 64-bit mode. 64-bit mode
+is faster. The compilations are prepared for both modes. From a user's point of
+view, there is no noticeable difference between the modes. It is recommended to
+prefer 64-bit mode, which may be slightly faster in some cases.
 
 The BarePi kit can be controlled using either the "KeyPad" gaming keyboard or
 the "MiniKey" alphanumeric keyboard. The keys on the "KeyPad" keyboard are also
@@ -252,6 +252,9 @@ Games
 
 MP3
  MP3 ... MP3 player
+
+Program
+ MANDELBROT ... Fractal pattern generator
 
 Test
  CALCKEY ... Test CalcKey keyboard

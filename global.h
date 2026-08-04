@@ -319,4 +319,8 @@ INLINE void operator delete (void* adr, void* p)
 #include <stdarg.h>		// va_list
 #include <math.h>		// HUGE_VAL
 
+#if RASPPI > 1
+#include <arm_neon.h>		// NEON-functions
+#endif
+
 #endif // _GLOBAL_H
