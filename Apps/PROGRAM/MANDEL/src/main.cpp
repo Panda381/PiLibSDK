@@ -2262,7 +2262,7 @@ int main()
 				}
 				else
 				{
-					if (Form = FORM_MANDEL) Anim();
+					if (Form == FORM_MANDEL) Anim();
 				}
 				break;
 
