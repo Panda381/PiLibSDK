@@ -255,6 +255,7 @@ MP3
 
 Program
  MANDELBROT ... Fast fractal pattern generator
+   Demo fractal video on YouTube: https://www.youtube.com/watch?v=IikX4hZGXIg
 
 Test
  CALCKEY ... Test CalcKey keyboard
