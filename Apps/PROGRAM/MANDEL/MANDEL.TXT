@@ -6,6 +6,7 @@ Fast fractal pattern generator.
 ^W[Y]^0 .............. quit
 ^W[A]+Up/Down^0 ...... zoom
 ^W[A]+Left/Right^0 ... steps
+^W[A]+[X]/[B]^0 ...... formula
 ^WAlt+Up/Down^0 ...... save slot
 ^WAlt+Left/Right^0 ... palette
 ^WAlt+[A]^0 .......... LCD zoom
@@ -27,3 +28,10 @@ Mode SizeN levels:
 136..748: double perturbation
 
 Calculations are NEON optimised.
+
+To use Julia fractal:
+Search for the boundary of the Mandelbrot
+set and switch to the Julia formula. Use
+the arrow keys to adjust the appearance of
+the Julia fractal - zooming controls the
+step size.

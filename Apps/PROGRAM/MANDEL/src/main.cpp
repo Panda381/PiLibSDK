@@ -32,7 +32,7 @@ Calculations are NEON optimised.
 #define PALETTE_NUM	0x1000		// number of palettes (must be power of 2)
 #define PALETTE_MASK	(PALETTE_NUM-1)	// mask of palette index
 
-#define SLOT_NUM	10		// count of save slots (index 0..9)
+#define SLOT_NUM	36		// count of save slots (index 0..9,A-Z)
 
 #define CARDIO_TEST	1		// 1=do cardioid tests (applied only on main and left bubble)
 
@@ -46,14 +46,38 @@ int Slot = 0;			// current memory slot
 #define MANDELPATH_MAX	256
 char MandelPath[MANDELPATH_MAX+1]; // path with saves (without tailing '/')
 char MandelPathFile[14];	// save file
-#define MANDELSAVE_MAX	(2*FIX_DIGNUM+100) // max. length of save file (PalSet, SizeN, Steps, OffX, OffY)
-char MandelSaveBuf[MANDELSAVE_MAX+5]; // save file buffer (reserve: 5x NL)
+#define MANDELSAVE_MAX	(2*FIX_DIGNUM+100) // max. length of save file (Form, PalSet, SizeN, Steps, OffX, OffY)
+char MandelSaveBuf[MANDELSAVE_MAX+6]; // save file buffer (reserve: 6x NL)
 
 // 2nd back buffer
 u32 BackBuf2[WIDTH*HEIGHT];
 Bool DrawBackBuf2 = False;	// draw to back buffer 2
 
+// Formula
+#define FORM_MANDEL	0	// Mandelbrot
+#define FORM_JULIA_Z2C	1	// Julia Z^2 + C
+#define FORM_JULIA_Z3C	2	// Julia Z^3 + C
+#define FORM_JULIA_Z4C	3	// Julia Z^4 + C
+#define FORM_JULIA_Z5C	4	// Julia Z^5 + C
+#define FORM_JULIA_Z6C	5	// Julia Z^6 + C
+#define FORM_JULIA_Z8C	6	// Julia Z^8 + C
+#define FORM_JULIA_Z12C	7	// Julia Z^12 + C
+
+#define FORM_NUM	8	// number of formulas
+
+const char* FormName[FORM_NUM] = {
+	"Mandelbrot  ",		// FORM_MANDEL		Mandelbrot
+	"Julia Z^2+C ",		// FORM_JULIA_Z2C	Julia Z^2 + C
+	"Julia Z^3+C ",		// FORM_JULIA_Z3C	Julia Z^3 + C
+	"Julia Z^4+C ",		// FORM_JULIA_Z4C	Julia Z^4 + C
+	"Julia Z^5+C ",		// FORM_JULIA_Z5C	Julia Z^5 + C
+	"Julia Z^6+C ",		// FORM_JULIA_Z6C	Julia Z^6 + C
+	"Julia Z^8+C ",		// FORM_JULIA_Z8C	Julia Z^8 + C
+	"Julia Z^12+C",		// FORM_JULIA_Z12C	Julia Z^12 + C
+};
+
 // base state (to save)
+int Form = FORM_MANDEL;		// Formula (0=Mandelbrot)
 u32 PalSet = 54;		// selected color palette (0=custom)
 int SizeN = 0;			// size step ... Size = 1 >> SizeN, Zoom = 1 << SizeN
 int Steps = STEPS_BASE;		// number of steps
@@ -103,6 +127,7 @@ u32 StopTime;		// stop time of render
 #if CORES>1
 u32* volatile CoreDst[CORES] = { NULL, NULL, NULL, NULL }; // cores "dst" (NULL = core is ready to accept new task)
 fix CoreCii[CORES];	// cores "Cii"
+int CoreY[CORES];	// cores "CurY"
 #endif
 
 u32 Palette[PALETTE_NUM];
@@ -1411,6 +1436,202 @@ void MandelDblPer(u32* dst, fix* ci)
 
 #endif // AARCH == 32
 
+// Julia fractal generator
+void JuliaDbl(u32* dst, int cury)
+{
+	int x, i;
+	int w = WIDTH;		// screen width
+	int h = HEIGHT;		// screen height
+	int steps = Steps;	// max. number of iterarion steps
+
+	// Julia constant C = current Mandelbrot coordinate
+	double cr = OffX.ToDouble();	// C real = X
+	double ci = OffY.ToDouble();	// C imag = Y
+
+	// fixed view window [-2,2] x [-2,2], centered, uniform scale to keep circles round
+	int wh = (w < h) ? w : h;		// smaller screen dimension
+	double step = 4.0/(double)wh;		// same increment for both axes
+	double x0 = -step * (double)w * 0.5;	// centered start X
+	double y0 = -step * (double)h * 0.5;	// centered start Y
+	double sx = step;			// X increment per pixel
+	double sy = step;			// Y increment per pixel
+
+	// starting Z for this line: Re(Z0) = x0 (updated per pixel), Im(Z0) = current row
+	double zrr = x0;			// pixel real coordinate = start Re(Z0)
+	double zii = y0 + (double)cury * sy;	// Im(Z0), constant for the whole line
+
+	// X loop
+	for (x = 0; x < w; x++)
+	{
+		// start condition
+		double zr = zrr;
+		double zi = zii;
+		double mod2 = 0;
+
+		switch (Form)
+		{
+		// Julia Z^2 + C
+		default:
+		case FORM_JULIA_Z2C:
+			for (i = 0; i < steps; i++)
+			{
+				double zr2 = zr*zr;
+				double zi2 = zi*zi;
+				mod2 = zr2 + zi2;
+				if (mod2 > 4.0) break;
+
+				// re = re*re - im*im
+				// im = 2*re*im
+				zr = zr * zi;
+				zr = zr*2;
+				zi = zr + ci;
+
+				zr2 = zr2 - zi2;
+				zr = zr2 + cr;
+			}
+			break;
+
+		// Julia Z^3 + C
+		case FORM_JULIA_Z3C:
+			for (i = 0; i < steps; i++)
+			{
+				double zr2 = zr*zr;
+				double zi2 = zi*zi;
+				mod2 = zr2 + zi2;
+				if (mod2 > 4.0) break;
+
+				// re = re*re*re - 3*re*im*im
+				// im = 3*re*re*im - im*im*im
+				zr = zr2*zr - 3*zr*zi2 + cr;
+				zi = 3*zr2*zi - zi2*zi + ci;
+			}
+			break;
+
+		// Julia Z^4 + C
+		case FORM_JULIA_Z4C:
+			for (i = 0; i < steps; i++)
+			{
+				double zr2 = zr*zr;
+				double zi2 = zi*zi;
+				mod2 = zr2 + zi2;
+				if (mod2 > 4.0) break;
+
+				// Z^2 = (p, q)
+				double p = zr2 - zi2;
+				double q = 2*zr*zi;
+
+				// Z^4 = (Z^2)^2
+				zr = p*p - q*q + cr;
+				zi = 2*p*q + ci;
+			}
+			break;
+
+		// Julia Z^5 + C
+		case FORM_JULIA_Z5C:
+			for (i = 0; i < steps; i++)
+			{
+				double zr2 = zr*zr;
+				double zi2 = zi*zi;
+				mod2 = zr2 + zi2;
+				if (mod2 > 4.0) break;
+
+				// Z^2 = (p, q)
+				double p = zr2 - zi2;
+				double q = 2*zr*zi;
+
+				// Z^4 = (Z^2)^2 = (p4, q4)
+				double p4 = p*p - q*q;
+				double q4 = 2*p*q;
+
+				// Z^5 = Z^4 * Z
+				double new_zr = p4*zr - q4*zi + cr;
+				double new_zi = p4*zi + q4*zr + ci;
+
+				zr = new_zr;
+				zi = new_zi;
+			}
+			break;
+
+		// Julia Z^6 + C
+		case FORM_JULIA_Z6C:
+			for (i = 0; i < steps; i++)
+			{
+				double zr2 = zr*zr;
+				double zi2 = zi*zi;
+				mod2 = zr2 + zi2;
+				if (mod2 > 4.0) break;
+
+				// Z^3 = (a3, b3)
+				double a3 = zr2*zr - 3*zr*zi2;
+				double b3 = 3*zr2*zi - zi2*zi;
+
+				// Z^6 = (Z^3)^2
+				double new_zr = a3*a3 - b3*b3 + cr;
+				double new_zi = 2*a3*b3 + ci;
+				zr = new_zr;
+				zi = new_zi;
+			}
+			break;
+
+		// Julia Z^8 + C
+		case FORM_JULIA_Z8C:
+			for (i = 0; i < steps; i++)
+			{
+				double zr2 = zr*zr;
+				double zi2 = zi*zi;
+				mod2 = zr2 + zi2;
+				if (mod2 > 4.0) break;
+
+				// Z^2 = (p, q)
+				double p = zr2 - zi2;
+				double q = 2*zr*zi;
+
+				// Z^4 = (Z^2)^2 = (p4, q4)
+				double p4 = p*p - q*q;
+				double q4 = 2*p*q;
+
+				// Z^8 = (Z^4)^2
+				zr = p4*p4 - q4*q4 + cr;
+				zi = 2*p4*q4 + ci;
+			}
+			break;
+
+		// Julia Z^12 + C
+		case FORM_JULIA_Z12C:
+			for (i = 0; i < steps; i++)
+			{
+				double zr2 = zr*zr;
+				double zi2 = zi*zi;
+				mod2 = zr2 + zi2;
+				if (mod2 > 4.0) break;
+
+				// Z^3 = (a3, b3)
+				double a3 = zr2*zr - 3*zr*zi2;
+				double b3 = 3*zr2*zi - zi2*zi;
+
+				// Z^6 = (Z^3)^2 = (a6, b6)
+				double a6 = a3*a3 - b3*b3;
+				double b6 = 2*a3*b3;
+
+				// Z^12 = (Z^6)^2
+				zr = a6*a6 - b6*b6 + cr;
+				zi = 2*a6*b6 + ci;
+			}
+			break;
+		}
+
+		// set color
+		if (i >= steps)
+			*dst = COL_BLACK;
+		else
+			*dst = GetColor(mod2, i);
+
+		// shift to next pixel
+		dst++;
+		zrr = zrr + sx;
+	}
+}
+
 /*
 // calculate Mandelbrot line using fixed integer - very slow, do not use
 void MandelFix(u32* dst, fix* ci)
@@ -1472,7 +1693,7 @@ void Load()
 		MandelPathFile[len++] = '.';
 		MandelPathFile[len++] = 'S';
 		MandelPathFile[len++] = 'A';
-		MandelPathFile[len++] = Slot + '0';
+		MandelPathFile[len++] = (Slot < 10) ? (Slot + '0') : (Slot - 10 + 'A');
 		MandelPathFile[len] = 0;
 		
 		// load file
@@ -1486,12 +1707,20 @@ void Load()
 			// close file
 			FileClose(&file);
 
-			// add 5 NL characters
+			// add 6 NL characters
 			s[maxlen] = 10;
 			s[maxlen+1] = 10;
 			s[maxlen+2] = 10;
 			s[maxlen+3] = 10;
 			s[maxlen+4] = 10;
+			s[maxlen+5] = 10;
+
+			// parse Form
+			Form = StrToUInt(s, (const char**)&s);
+			if (*s == 13) s++;
+			if (*s == 10) s++;
+			if (Form < 0) Form = 0;
+			if (Form > FORM_NUM) Form = FORM_NUM;
 
 			// parse PalSet
 			PalSet = StrToUInt(s, (const char**)&s);
@@ -1550,10 +1779,16 @@ void Save()
 {
 	// prepare save buffer
 	char* d = MandelSaveBuf;
-	int maxlen = MANDELSAVE_MAX - 5;
+	int maxlen = MANDELSAVE_MAX - 6;
+
+	// print Form
+	int len = DecUNum(d, Form, 0);
+	d += len;
+	*d++ = 10; // LF
+	maxlen = maxlen - len + 1;
 
 	// print PalSet
-	int len = DecUNum(d, PalSet, 0);
+	len = DecUNum(d, PalSet, 0);
 	d += len;
 	*d++ = 10; // LF
 	maxlen = maxlen - len + 1;
@@ -1598,7 +1833,7 @@ void Save()
 		MandelPathFile[len++] = '.';
 		MandelPathFile[len++] = 'S';
 		MandelPathFile[len++] = 'A';
-		MandelPathFile[len++] = Slot + '0';
+		MandelPathFile[len++] = (Slot < 10) ? (Slot + '0') : (Slot - 10 + 'A');
 		MandelPathFile[len] = 0;
 		
 		// create file
@@ -1617,7 +1852,7 @@ void Save()
 			{
 				FrameBuffer.printpos = 0;
 				FrameBuffer.printrow = 0;
-				printf("Save slot: %d OK   \n", Slot);
+				printf("Save slot: %d OK    \n", Slot);
 				DispUpdate();
 				return;
 			}
@@ -1627,13 +1862,19 @@ void Save()
 	// save error
 	FrameBuffer.printpos = 0;
 	FrameBuffer.printrow = 0;
-	printf("Save slot: %d ERROR\n", Slot);
+	printf("Save slot: %d ERROR \n", Slot);
 	DispUpdate();
 }
 
 // render line
-void RenderLine(u32* dst, fix* ci)
+void RenderLine(u32* dst, fix* ci, int y)
 {
+	if (Form != FORM_MANDEL)
+	{
+		JuliaDbl(dst, y);
+		return;
+	}
+
 	switch (Mode)
 	{
 	case MODE_FLT:	// float
@@ -1673,7 +1914,7 @@ void CoreFnc(int core, void* arg)
 		{
 			// render line
 			dmb();
-			RenderLine(dst, &CoreCii[core]);
+			RenderLine(dst, &CoreCii[core], CoreY[core]);
 
 			// delete this task
 			dmb();
@@ -1742,6 +1983,9 @@ Bool RenderLineSet()
 	int c;
 	for (c = 1; c < CORES; c++)
 	{
+		// Y line
+		CoreY[c] = CurY;
+
 		// Cii coordinate
 		CoreCii[c].Copy(&Cii);
 		dmb();
@@ -1764,7 +2008,7 @@ Bool RenderLineSet()
 
 	{
 		// render line on core 0
-		RenderLine(Dst, &Cii);
+		RenderLine(Dst, &Cii, CurY);
 	}
 
 #if CORES > 1
@@ -2003,15 +2247,43 @@ int main()
 		{
 			switch (c)
 			{
-			// Animation
+			// Animation, Julia mode
 			case KEY_PAD_B:
-				Anim();
+				if (KeyPressed(KEY_PAD_A))
+				{
+					Form--;
+					if (Form < 0) Form =  FORM_NUM-1;
+					DrawClear();
+					FrameBuffer.printpos = 0;
+					FrameBuffer.printrow = 1;
+					printf("Formula: %s \n", FormName[Form]);
+					DispUpdate();
+					MandelStart(False);
+				}
+				else
+				{
+					if (Form = FORM_MANDEL) Anim();
+				}
 				break;
 
 			// display info
 			case KEY_PAD_X:
-				Info = !Info;
-				if (!Info) MandelStart();
+				if (KeyPressed(KEY_PAD_A))
+				{
+					Form++;
+					if (Form >= FORM_NUM) Form = 0;
+					DrawClear();
+					FrameBuffer.printpos = 0;
+					FrameBuffer.printrow = 1;
+					printf("Formula: %s \n", FormName[Form]);
+					DispUpdate();
+					MandelStart(False);
+				}
+				else
+				{
+					Info = !Info;
+					if (!Info) MandelStart();
+				}
 				break;
 
 			// quit
@@ -2117,26 +2389,22 @@ int main()
 
 			// next slot
 			case KEY_PGUP:
-				if (Slot < SLOT_NUM-1)
-				{
-					Slot++;
-					FrameBuffer.printpos = 0;
-					FrameBuffer.printrow = 0;
-					printf("Save slot: %d      \n", Slot);
-					DispUpdate();
-				}
+				Slot++;
+				if (Slot >= SLOT_NUM) Slot = 0;
+				FrameBuffer.printpos = 0;
+				FrameBuffer.printrow = 0;
+				printf("Save slot: %d       \n", Slot);
+				DispUpdate();
 				break;
 
 			// previous slot
 			case KEY_PGDN:
-				if (Slot > 0)
-				{
-					Slot--;
-					FrameBuffer.printpos = 0;
-					FrameBuffer.printrow = 0;
-					printf("Save slot: %d      \n", Slot);
-					DispUpdate();
-				}
+				Slot--;
+				if (Slot < 0) Slot = SLOT_NUM-1;
+				FrameBuffer.printpos = 0;
+				FrameBuffer.printrow = 0;
+				printf("Save slot: %d       \n", Slot);
+				DispUpdate();
 				break;
 
 			// palette prev
@@ -2194,7 +2462,8 @@ int main()
 				// display info
 				FrameBuffer.printpos = 0;
 				FrameBuffer.printrow = 0;
-				printf("Save slot: %d      \n", Slot);
+				printf("Save slot: %d       \n", Slot);
+				printf("Formula: %s \n", FormName[Form]);
 				printf("SizeN: %d, Zoom: %e\n", SizeN, 1/Size.ToDouble());
 				printf("Steps: %d\n", Steps);
 				printf("PalSet: %d\n", PalSet);
@@ -2212,6 +2481,7 @@ int main()
 				printf("[Y] .............. quit\n");
 				printf("[A]+Up/Down ...... zoom\n");
 				printf("[A]+Left/Right ... steps\n");
+				printf("[A]+[X]/[B] ...... formula\n");
 				printf("Alt+Up/Down ...... save slot\n");
 				printf("Alt+Left/Right ... palette\n");
 				printf("Alt+[A] .......... LCD zoom\n");

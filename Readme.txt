@@ -1,7 +1,7 @@
 PiLibSDK - Raspberry Pi bare-metal SDK library
 ==============================================
 Pre-alpha version 0.46, in progress - under development
-Last update: 08/04/2026
+Last update: 08/05/2026
 
 
 Copyright (c) 2026 Miroslav Nemecek
@@ -254,7 +254,7 @@ MP3
  MP3 ... MP3 player
 
 Program
- MANDELBROT ... Fractal pattern generator
+ MANDELBROT ... Fast fractal pattern generator
 
 Test
  CALCKEY ... Test CalcKey keyboard
